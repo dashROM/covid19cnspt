@@ -1,0 +1,1 @@
+SELECT e.idempleador, e.emp_nombre, e.emp_nro_empleador, e.emp_nro_padron, e.emp_telefono, e.emp_fecha_iniciacion, a.act_nombre FROM hcl_empleador e, hcl_actividad_economica a WHERE e.idactividad=a.idactividad
