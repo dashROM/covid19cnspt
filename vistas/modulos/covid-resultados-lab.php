@@ -42,89 +42,85 @@
         
         <div class="col-12">
            
-          <div class="card">
+          <div class="card card-outline card-info">
         
             <div class="card-header">
 
-              <div class="form-row mb-3">
-        
-               <!--  <a href="nuevo-covid-resultado-no-afiliado">
-
-                  <button class="btn btn-primary">
-
-                    <i class="fas fa-plus"></i>
-                    Agregar Resultado de NO Asegurado
-                  
-                  </button>
-
-                </a> -->
-
-              </div>
-
-              <div class="form-row">
+              <div class="row right_col alert alert-info">
                 
-                <div class="input-group col-md-4">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 
-                  <label class="px-2 mt-1 font-weight-normal">Fecha de Resultado: </label>
+                  <label>Fecha de Resultado</label>
+
+                  <div class="input-group">
                   
-                  <input type="date" class="form-control" id="fechaCovidResultados" min="2020-01-01" max="<?= date("Y-m-d") ?>">
+                    <input type="date" class="form-control" id="fechaCovidResultados" min="2020-01-01" max="<?= date("Y-m-d") ?>">
+
+                    <span class="input-group-btn ml-2">
+
+                      <button type="button" class="btn btn-primary px-2 btnCovidResultados" perfilOculto="<?= $_SESSION['perfilUsuarioCOVID']; ?>" actionCovidResultados="fecha_resultado">
+                        <i class="fas fa-search"></i> Buscar
+                      </button> 
+
+                    </span>
+
+                    <input type="hidden" value="<?= $_SESSION['paternoUsuarioCOVID'].' '.$_SESSION['maternoUsuarioCOVID'].' '.$_SESSION['nombreUsuarioCOVID']; ?>" id="nombreUsuarioOculto">
+
+                  </div>     
 
                 </div>
-
-                <div class="form-group col-md-2">
-                  
-                  <button type="button" class="btn btn-primary px-2 btnCovidResultados" perfilOculto="<?= $_SESSION['perfilUsuarioCOVID']; ?>" actionCovidResultados="fecha_resultado">
-                
-                    <i class="fas fa-search"></i> Buscar
-                  
-                  </button>  
-                  
-                  <input type="hidden" value="<?= $_SESSION['paternoUsuarioCOVID'].' '.$_SESSION['maternoUsuarioCOVID'].' '.$_SESSION['nombreUsuarioCOVID']; ?>" id="nombreUsuarioOculto">
-
-                </div>       
 
               </div>
 
             </div>
+
+            <!--=====================================
+            SE MUESTRA LAS TABLAS GENERADAS
+            ======================================-->   
         
             <div class="card-body" id="resultadosCovid">
+
+              <div class="table-responsive"> 
               
-              <table class="table table-bordered table-striped dt-responsive table-hover" id="tablaCovidResultados" width="100%">
-                
-                <thead>
+                <table class="table table-bordered table-striped dt-responsive table-hover" id="tablaCovidResultados" width="100%">
                   
-                  <tr>
-                    <th>COD. LAB.</th>
-                    <th>COD. ASEGURADO</th>
-                    <th>COD. AFILIADO</th>
-                    <th>APELLIDOS Y NOMBRES</th>
-                    <th>CI</th>
-                    <th>FECHA RECEPCIÓN</th>
-                    <th>FECHA MUESTRA</th>
-                    <th>TIPO DE MUESTRA</th>
-                    <th>MUESTRA DE CONTROL</th>
-                    <th>DEPARTAMENTO</th>
-                    <th>ESTABLECIMIENTO</th>
-                    <th>SEXO</th>
-                    <th>FECHA NACIMIENTO</th>
-                    <th>TELÉFONO</th>
-                    <th>EMAIL</th>
-                    <th>LOCALIDAD</th>
-                    <th>ZONA</th>
-                    <th>DIRECCION</th>
-                    <th>RESULTADO</th>
-                    <th>FECHA RESULTADO</th>
-                    <th>OBSERVACIONES</th>
-                    <th>ACCIONES</th>
-                  </tr>
+                  <thead>
+                    
+                    <tr>
+                      <th>COD. LAB.</th>
+                      <th>COD. ASEGURADO</th>
+                      <th>COD. AFILIADO</th>
+                      <th>APELLIDOS Y NOMBRES</th>
+                      <th>CI</th>
+                      <th>FECHA RECEPCIÓN</th>
+                      <th>FECHA MUESTRA</th>
+                      <th>TIPO DE MUESTRA</th>
+                      <th>MUESTRA DE CONTROL</th>
+                      <th>DEPARTAMENTO</th>
+                      <th>ESTABLECIMIENTO</th>
+                      <th>SEXO</th>
+                      <th>FECHA NACIMIENTO</th>
+                      <th>TELÉFONO</th>
+                      <th>EMAIL</th>
+                      <th>LOCALIDAD</th>
+                      <th>ZONA</th>
+                      <th>DIRECCION</th>
+                      <th>MÉTODO DE DIAGNÓSTICO</th>
+                      <th>RESULTADO</th>
+                      <th>FECHA RESULTADO</th>
+                      <th>OBSERVACIONES</th>
+                      <th>ACCIONES</th>
+                    </tr>
 
-                </thead>
-                
-              </table>
+                  </thead>
+                  
+                </table>
 
-              <input type="hidden" value="<?= $_SESSION['perfilUsuarioCOVID']; ?>" id="perfilOculto">
+                <input type="hidden" value="<?= $_SESSION['perfilUsuarioCOVID']; ?>" id="perfilOculto">
 
-              <input type="hidden" value="lab" id="actionCovidResultados">
+                <input type="hidden" value="lab" id="actionCovidResultados">
+
+              </div>
 
             </div>
             

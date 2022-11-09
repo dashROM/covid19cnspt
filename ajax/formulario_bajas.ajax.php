@@ -18,7 +18,9 @@ require_once "../modelos/establecimientos.modelo.php";
 require_once "../controladores/localidades.controlador.php";
 require_once "../modelos/localidades.modelo.php";
 
-require_once('../extensiones/tcpdf/tcpdf.php');
+// require_once('../extensiones/tcpdf/tcpdf.php');
+
+require_once('../extensiones/TCPDF-main/tcpdf.php');
 
 class AjaxFormularioBajas {
 
@@ -30,7 +32,7 @@ class AjaxFormularioBajas {
 		$item = "id";
 		$valor = $this->idCovidResultado;
 
-		$respuesta =ControladorCovidResultados::ctrMostrarCovidResultados($item, $valor);
+		$respuesta = ControladorCovidResultados::ctrMostrarCovidResultados($item, $valor);
 
 		echo json_encode($respuesta);
 
@@ -43,27 +45,31 @@ class AjaxFormularioBajas {
 	public $lugar;
 	public $fecha;
 	public $clave;
+	public $codAsegurado;
 
 	public function ajaxIngresarFormularioBaja() {
 
 		// Patrón (admite letras acentuadas y espacios):
 		$patron_texto_numero = "/^[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ ]+$/";
 
-		if (!empty($this->idCovidResultado) || !empty($this->riesgo) || !empty($this->fechaIni) || !empty($this->fechaFin) || !empty($this->diasIncapacidad) || !empty($this->lugar) || !empty($this->fecha) || !empty($this->clave)) {
+		if (!empty($this->idCovidResultado) || !empty($this->riesgo) || !empty($this->fechaIni) || !empty($this->fechaFin) || !empty($this->diasIncapacidad) || !empty($this->lugar) || !empty($this->fecha) || !empty($this->clave) || !empty($this->codAsegurado)) {
 
 			if (preg_match($patron_texto_numero, $this->lugar) &&
 				preg_match($patron_texto_numero, $this->clave)) {
+
+				$codigo = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 6);;
 
 				$tabla = "formulario_bajas";
 
 				$datos = array("id_covid_resultado" => $this->idCovidResultado,
 						        "riesgo" 		    => $this->riesgo,
-						        "fecha_ini" 		=> date("Y-m-d", strtotime($this->fechaIni)), 
-								"fecha_fin"         => date("Y-m-d", strtotime($this->fechaFin)),
+						        "fecha_ini" 		=> $this->fechaIni, 
+								"fecha_fin"         => $this->fechaFin,
 								"dias_incapacidad"	=> $this->diasIncapacidad,
 								"lugar" 		    => $this->lugar,
-								"fecha"		        => date("Y-m-d", strtotime($this->fecha)),
-								"clave"   		    => $this->clave
+								"fecha"		        => $this->fecha,
+								"clave"   		    => $this->clave,
+								"codigo"   		    => $this->codAsegurado.'-'.$codigo
 				);
 
 				$respuesta = ModeloFormularioBajas::mdlIngresarFormularioBaja($tabla, $datos);
@@ -98,19 +104,19 @@ class AjaxFormularioBajas {
 		=============================================*/
 
 		$item = "id";
-        $valor = $this->idFormularioBaja;
-        $covid_respuesta = ControladorFormularioBajas::ctrMostrarFormularioBajas($item, $valor); 
+    $valor = $this->idFormularioBaja;
+    $covid_respuesta = ControladorFormularioBajas::ctrMostrarFormularioBajas($item, $valor); 
 
-        /*=============================================
-        TRAEMOS LOS DATOS DE COVID RESULTADOS
-        =============================================*/
+    /*=============================================
+    TRAEMOS LOS DATOS DE COVID RESULTADOS
+    =============================================*/
 
-        $valorCovidResultado = $covid_respuesta["id_covid_resultado"];
-        $covidResultado = ControladorCovidResultados::ctrMostrarCovidResultados($item, $valorCovidResultado);
+    $valorCovidResultado = $covid_respuesta["id_covid_resultado"];
+    $covidResultado = ControladorCovidResultados::ctrMostrarCovidResultados($item, $valorCovidResultado);
 
-        /*=============================================
-        Extend the TCPDF class to create custom Header and Footer
-        =============================================*/
+    /*=============================================
+    Extend the TCPDF class to create custom Header and Footer
+    =============================================*/
 
 		$pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 
@@ -155,12 +161,13 @@ class AjaxFormularioBajas {
 		);
 
 		//	Datos a mostrar en el código QR
-		$codeContents = 'AP. PATERNO: '.$covidResultado["paterno"]."\n";
-		$codeContents .= 'AP. MATERNO: '.$covidResultado["materno"]."\n";
-		$codeContents .= 'NOMBRE: '.$covidResultado["nombre"]."\n";
-		$codeContents .= 'Nro. Asegurado: '.$covidResultado["cod_asegurado"]."\n";
-		$codeContents .= 'NOMBRE DEL EMPLEADOR: '.$covidResultado["nombre_empleador"]."\n";
-		$codeContents .= 'Nro. Empleador: '.$covidResultado["cod_empleador"]."\n";
+		// $codeContents = 'AP. PATERNO: '.$covidResultado["paterno"]."\n";
+		// $codeContents .= 'AP. MATERNO: '.$covidResultado["materno"]."\n";
+		// $codeContents .= 'NOMBRE: '.$covidResultado["nombre"]."\n";
+		// $codeContents .= 'Nro. Asegurado: '.$covidResultado["cod_asegurado"]."\n";
+		// $codeContents .= 'NOMBRE DEL EMPLEADOR: '.$covidResultado["nombre_empleador"]."\n";
+		// $codeContents .= 'Nro. Empleador: '.$covidResultado["cod_empleador"]."\n";
+		$codeContents = 'Cod. del Documento: '.$covid_respuesta["codigo"];
 
 		/*=============================================
 		CONTRUCCION DEL FORMULARIO PRINCIPAL Y SU COPIA
@@ -168,7 +175,7 @@ class AjaxFormularioBajas {
 
 		$n = 5;
 		
-		for ($i = 0; $i < 2; $i++) {
+		for ($i = 0; $i < 1; $i++) {
 			
 			/*=============================================
 			PRIMERA SECCION CABEZERA DEL FORMULARIOS
@@ -176,15 +183,15 @@ class AjaxFormularioBajas {
 
 			$pdf->MultiCell(200, 22, '', 1, 'C', 0, 0, 5, 2 + $n, true);
 
-			$image_file = K_PATH_IMAGES.'cns-logo.png';
-	        $pdf->Image($image_file, 10, 5 + $n, 10, '', 'PNG', '', 'T', false, 100, '', false, false, 0, false, false, false);
+			$image_file = K_PATH_IMAGES.'cns-logo-simple.png';
+	        $pdf->Image($image_file, 10, 5 + $n, 18, '', 'PNG', '', 'T', false, 100, '', false, false, 0, false, false, false);
 
 			// Multicell test
-			$pdf->MultiCell(90, 20, $title1, 0, 'C', 0, 0, '', '', true);
+			$pdf->MultiCell(110, 20, $title1, 0, 'C', 0, 0, '', '', true);
 
-			$pdf->MultiCell(90, 20, 'AVC-09', 0, 'R', 0, 1, '', '', true);
+			$pdf->MultiCell(60, 20, 'AVC-09', 0, 'R', 0, 1, '', '', true);
 
-			$pdf->write2DBarcode($codeContents, 'QRCODE,L', 150, 2 + $n, 24, 24, $style, 'N');	
+			$pdf->write2DBarcode($codeContents, 'QRCODE,H', 180, 156 + $n, 24, 24, $style, 'N');	
 
 			/*=============================================
 			SEGUNDA SECCION DATOS ASEGURADO
@@ -303,8 +310,68 @@ class AjaxFormularioBajas {
 			$pdf->MultiCell(95, 5, 'Firma del Asegurado', 0, 'C', 0, 0, '', 128 + $n, true, 0);
 			$pdf->MultiCell(90, 5, 'Sello Y Firma Empresa', 0, 'C', 0, 1, 90, '', true);
 
+			/*=============================================
+			QUINTA SECCION DATOS FORMULARIO DE BAJA
+			=============================================*/
 
-			$n = $n + 145;
+			$left_column2 = '
+			<table>
+				<tr>
+					<td><p>Se emite la baja de incapacidad temporal digital excepcionalmente por COVID-19, en cumplimiento y en sujeción al D.S. 4293 por lo que se considera una declaración jurada del asegurado.</p></td>
+				</tr>
+			</table>';
+
+			$right_column2 = '
+			<table>
+				<tr>
+					<td align="center"><br><br>Queda incólume y subsistente la casilla 9 y 11<br><br></td>
+				</tr>
+			</table>';
+
+			// // writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
+
+			// get current vertical position
+			$y = $pdf->getY();
+
+
+			// write the first column
+			$pdf->writeHTMLCell(100, 20, '', 135 + $n, $left_column2, 1, 0, 0, true, 'J', true);
+
+			$pdf->writeHTMLCell(100, 20, 105, '', $right_column2, 1, 1, 0, true, 'J', true);
+
+			$left_column3 = '
+			<table>
+				<tr>
+					<td><p>Nota: Al momento de incorporarse el asegurado a su lugar de trabajo, deberá proceder a la firma del presente formulario a objeto de otorgarle el valor legal correspondiente</p><br><br><br></td>
+				</tr>
+			</table>';
+
+			$right_column3 = '
+			<table>
+				<tr>
+					<td>
+						Código del documento
+						<br>
+						<br>
+						<span style="font-weight: bold; font-size: 14px;">'.$covid_respuesta["codigo"].'</span>
+					</td>
+					
+				</tr>
+			</table>';
+
+			// // writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
+
+			// get current vertical position
+			$y = $pdf->getY();
+
+
+			// write the first column
+			$pdf->writeHTMLCell(100, 25, '', 155 + $n, $left_column3, 1, 0, 0, true, 'J', true);
+
+			$pdf->writeHTMLCell(100, 25, 105, '', $right_column3, 1, 1, 0, true, 'J', true);
+
+
+			$n = $n + 185;
 			
 		}	
 
@@ -312,7 +379,7 @@ class AjaxFormularioBajas {
 
 		$pdf->lastPage();
 
-		$pdf->output('../temp/formularioIncapacidad-'.$valor.'.pdf', 'F');
+		$pdf->output(__DIR__ . '/temp/formularioIncapacidad-'.$valor.'.pdf', 'F');
 
 	}
 
@@ -345,6 +412,7 @@ if (isset($_POST["agregarFormBaja"])) {
 	$formularioBaja -> lugar = $_POST["lugar"];
 	$formularioBaja -> fecha = $_POST["fecha"];
 	$formularioBaja -> clave = $_POST["clave"];
+	$formularioBaja -> codAsegurado = $_POST["codAsegurado"];	
 	$formularioBaja -> ajaxIngresarFormularioBaja();
 
 }

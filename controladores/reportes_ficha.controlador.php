@@ -146,5 +146,28 @@ class ControladorReportesFicha {
 
 	}
 
+	/*=============================================
+	MOSTRAR RESULTADOS DATOS FICHA COVID FILTRADO POR RANGO DE FECHAS DE RESULTADO
+	=============================================*/
+	
+	static public function ctrMostrarReportesDatosFichaFechas($valor1, $valor2) {
+
+		$respuesta = ModeloReportesFicha::mdlMostrarReportesDatosFichaFechas($valor1, $valor2);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	MOSTRAR RESULTADOS DATOS FICHA COVID FILTRADO POR RANGO DE FECHAS DE RESULTADO
+	=============================================*/
+	
+	static public function ctrExportarDatosFichaSive($valor1, $valor2) {
+
+		$respuesta = ModeloReportesFicha::mdlExportarDatosFichaSive($valor1, $valor2);
+
+		return $respuesta;
+
+	}
 
 }

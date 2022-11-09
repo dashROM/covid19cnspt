@@ -145,7 +145,7 @@
 
                         <div class="row">
                           <div class="col-2 text-center">
-                            <img src="vistas/img/cns/cns-logo.png" alt="" width="50%">
+                            <img src="vistas/img/cns/cns-logo-simple.png" alt="" width="80%">
                           </div>
                           <div class="col-6 text-center">
                             <p class="mb-1">CAJA NACIONAL DE SALUD</p>
@@ -153,7 +153,7 @@
                             <p class="mb-1">CERTIFICADO DE INCAPACIDAD TEMPORAL</p>
                           </div>
                           <div class="col-4 text-right text-uppercase">
-                            <p>Form AVC-00</p>
+                            <p>Form AVC-09</p>
                           </div>
                         </div>
 
@@ -279,14 +279,14 @@
                             <div class="form-group row m-1">
                               <label class="col-form-label col-form-label-sm">DESDE</label>
                               <div class="col-md-5">
-                                <input type="text" class="form-control form-control-sm calendarioFormBaja" id="fechaIniFormBaja" name="fechaIniFormBaja" value="<?= date("d-m-Y", strtotime($formularioBaja["fecha_ini"])) ?>" required>
+                                <input type="date" class="form-control form-control-sm calendarioFormBaja" id="fechaIniFormBaja" name="fechaIniFormBaja" value="<?= $formularioBaja["fecha_ini"] ?>" required>
                               </div>
                             </div>
 
                             <div class="form-group row m-1">
                               <label class="col-form-label col-form-label-sm">HASTA</label>
                               <div class="col-md-5">
-                                <input type="text" class="form-control form-control-sm calendarioFormBaja" id="fechaFinFormBaja" name="fechaFinFormBaja" value="<?= date("d-m-Y", strtotime($formularioBaja["fecha_fin"])) ?>" required>
+                                <input type="date" class="form-control form-control-sm" id="fechaFinFormBaja" name="fechaFinFormBaja" value="<?= $formularioBaja["fecha_fin"] ?>" required>
                               </div>
                             </div>
 
@@ -304,8 +304,8 @@
                                   <option value="<?= $formularioBaja["lugar"] ?>"><?= $formularioBaja["lugar"] ?></option>
                                 </select>
                               </div>
-                              <div class="col-md-4">
-                                <input type="text" class="form-control form-control-sm calendarioFormBaja" id="fechaFormBaja" name="fechaFormBaja" value="<?= date("d-m-Y", strtotime($formularioBaja["fecha"])) ?>" required>
+                              <div class="col-md-5">
+                                <input type="date" class="form-control form-control-sm" id="fechaFormBaja" name="fechaFormBaja" value="<?= $formularioBaja["fecha"] ?>" required>
                               </div>
                             </div>
 

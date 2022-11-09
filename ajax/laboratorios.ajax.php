@@ -9,12 +9,14 @@ require_once "../modelos/usuarios.modelo.php";
 class AjaxLaboratorios {
 	
 	public $estado_muestra;
+	public $no_toma_muestra;
 	public $id_establecimiento;
 	public $tipo_muestra;
 	public $nombre_laboratorio;
 	public $fecha_muestra;
 	public $fecha_envio;
 	public $cod_laboratorio;
+	public $metodo_diagnostico;
 	public $responsable_muestra;
 	public $observaciones_muestra;
 	public $resultado_laboratorio;
@@ -54,12 +56,14 @@ class AjaxLaboratorios {
 		$tabla = "Laboratorios";
 
 		$datos = array( "estado_muestra"		 => $this->estado_muestra, 
+						"no_toma_muestra"		 => $this->no_toma_muestra, 
 						"id_establecimiento"	 => $this->id_establecimiento, 
 						"tipo_muestra"     	     => mb_strtoupper($this->tipo_muestra,'utf-8'),
 						"nombre_laboratorio"     => mb_strtoupper($this->nombre_laboratorio,'utf-8'),
 						"fecha_muestra"  		 => $this->fecha_muestra,
 						"fecha_envio"     	     => $this->fecha_envio,
 						"cod_laboratorio"   	 => $this->cod_laboratorio,
+						"metodo_diagnostico"   	 => $this->metodo_diagnostico,
 						"responsable_muestra" 	 => mb_strtoupper($this->responsable_muestra),
 						"observaciones_muestra"  => mb_strtoupper($this->observaciones_muestra),
 						"resultado_laboratorio"  => $this->resultado_laboratorio,
@@ -109,11 +113,14 @@ class AjaxLaboratorios {
 
 		$tabla = "Laboratorios";
 
-		$datos = array( "tipo_muestra"     	     => mb_strtoupper($this->tipo_muestra,'utf-8'),
+		$datos = array( "estado_muestra"     	 => $this->estado_muestra,
+						"no_toma_muestra"     	 => mb_strtoupper($this->no_toma_muestra,'utf-8'),
+						"tipo_muestra"     	     => mb_strtoupper($this->tipo_muestra,'utf-8'),
 						"nombre_laboratorio"     => mb_strtoupper($this->nombre_laboratorio,'utf-8'),
 						"fecha_muestra"  		 => $this->fecha_muestra,
 						"fecha_envio"     	     => $this->fecha_envio,
 						"cod_laboratorio"   	 => $this->cod_laboratorio,
+						"metodo_diagnostico"   	 => $this->metodo_diagnostico,
 						"responsable_muestra" 	 => mb_strtoupper($this->responsable_muestra),
 						"observaciones_muestra"  => mb_strtoupper($this->observaciones_muestra),
 						"resultado_laboratorio"  => $this->resultado_laboratorio,
@@ -161,12 +168,14 @@ if (isset($_POST["guardarLaboratorio"])) {
 
 	$guardarLaboratorio = new AjaxLaboratorios();
 	$guardarLaboratorio -> estado_muestra = $_POST["estado_muestra"];
+	$guardarLaboratorio -> no_toma_muestra = $_POST["no_toma_muestra"];
 	$guardarLaboratorio -> id_establecimiento = $_POST["id_establecimiento"];
 	$guardarLaboratorio -> tipo_muestra = $_POST["tipo_muestra"];
 	$guardarLaboratorio -> nombre_laboratorio = $_POST["nombre_laboratorio"];
 	$guardarLaboratorio -> fecha_muestra = $_POST["fecha_muestra"];
 	$guardarLaboratorio -> fecha_envio = $_POST["fecha_envio"];
 	$guardarLaboratorio -> cod_laboratorio = $_POST["cod_laboratorio"];
+	$guardarLaboratorio -> metodo_diagnostico = $_POST["metodo_diagnostico"];
 	$guardarLaboratorio -> responsable_muestra = $_POST["responsable_muestra"];
 	$guardarLaboratorio -> observaciones_muestra = $_POST["observaciones_muestra"];
 	$guardarLaboratorio -> resultado_laboratorio = $_POST["resultado_laboratorio"];
@@ -203,10 +212,13 @@ CREAR DATOS DE LABORATORIO DE LA FICHA CONTROL Y SEGUIMIENTO
 if (isset($_POST["guardarLaboratorioControl"])) {
 
 	$guardarLaboratorio = new AjaxLaboratorios();
+	$guardarLaboratorio -> estado_muestra = $_POST["estado_muestra"];
+	$guardarLaboratorio -> no_toma_muestra = $_POST["no_toma_muestra"];
 	$guardarLaboratorio -> tipo_muestra = $_POST["tipo_muestra"];
 	$guardarLaboratorio -> nombre_laboratorio = $_POST["nombre_laboratorio"];
 	$guardarLaboratorio -> fecha_muestra = $_POST["fecha_muestra"];
 	$guardarLaboratorio -> fecha_envio = $_POST["fecha_envio"];
+	$guardarLaboratorio -> metodo_diagnostico = $_POST["metodo_diagnostico"];
 	$guardarLaboratorio -> cod_laboratorio = $_POST["cod_laboratorio"];
 	$guardarLaboratorio -> responsable_muestra = $_POST["responsable_muestra"];
 	$guardarLaboratorio -> observaciones_muestra = $_POST["observaciones_muestra"];

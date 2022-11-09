@@ -42,17 +42,13 @@
 
         <div class="col-md-12">
 
-          <div class="card">
+          <div class="card card-outline card-info">
 
             <div class="card-header"> 
 
-              <div class="form-row">
-
-                <div class="input-group col-md-7"></div>
+              <div class="row alert alert-info">
                 
-                <div class="input-group col-md-5">
-
-                  <span class="mt-2 mr-2">Buscar:</span>
+                <div class="input-group col-md-6">
                   
                   <input type="text" class="form-control mr-2" id="buscardorAfiliados" placeholder="Ingrese Apellidos o Nombre(s) o Codigo Asegurado para la Búsqueda.">
 
@@ -63,16 +59,6 @@
                   </button>  
 
                 </div>
-
-               <!--  <div class="form-group col-md-3">
-                  
-                  <button type="button" class="btn btn-primary px-2 btnCovidResultadosReporte">
-                
-                    <i class="fas fa-search"></i> Buscar
-                  
-                  </button>   
-
-                </div>     -->       
 
               </div>
                      

@@ -42,7 +42,7 @@
         
         <div class="col-12">
 
-          <div class="card">
+          <div class="card card-outline card-info">
             
             <div class="card-header">
         
@@ -185,130 +185,134 @@ MODAL AGREGAR USUARIO
 
         <div class="modal-body">
 
-          <div class="form-row">
+          <div class="form-inline col-md-12 mb-2">
 
-            Campos Obligatorios<h5 class="text-danger"> *</h5>
-            
-          </div>
-          
-          <div class="form-row">
-
-            <!-- ENTRADA PARA EL APELLIDO PATERNO -->
-            
-            <div class="form-group col-md-4">
-              
-              <label  for="nuevoPaterno">Apellido Paterno</label>
-              <input type="text" class="form-control mayuscula" id="nuevoPaterno" name="nuevoPaterno" placeholder="Ingresar Apellido Paterno" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ ]+" title="Solo deben ir letras en el campo">
-
-            </div>
-
-            <!-- ENTRADA PARA EL APELLIDO MATERNO -->
-          
-            <div class="form-group col-md-4">
-            
-              <label for="nuevoMaterno">Apellido Materno</label>
-              <input type="text" class="form-control mayuscula" id="nuevoMaterno" name="nuevoMaterno" placeholder="Ingresar Apellido Materno" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ ]+" title="Solo deben ir letras en el campo">
-
-            </div>
-
-            <!-- ENTRADA PARA EL NOMBRE -->
-          
-            <div class="form-group col-md-4">
-              
-              <label for="nuevoNombre">Nombre(s)<span class="text-danger"> *</span></label>
-              <input type="text" class="form-control mayuscula" id="nuevoNombre" name="nuevoNombre" placeholder="Ingresar Nombre(s)" required pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ ]+" title="Solo deben ir letras en el campo">
-
-            </div>
+            Todos los campos con (<i class="fas fa-asterisk asterisk mr-1"></i>) son obligatorios
 
           </div>
           
-          <div class="form-row">
+          <div class="row">
 
-            <!-- ENTRADA PARA LA MATRICULA USUARIO -->
-            
-            <div class="form-group col-md-4">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+
+              <!-- ENTRADA PARA EL APELLIDO PATERNO -->
               
-              <label for="nuevaMatricula">Matricula o Nick Usuario<span class="text-danger"> *</span></label>
-              <input type="text" class="form-control" id="nuevaMatricula" name="nuevaMatricula" placeholder="INGRESAR MATRICULA O NICK DE USUARIO" required pattern="[A-Za-z0-9-]+" title="Solo deben ir letras y números en el campo">
-
-            </div>
-
-            <!-- ENTRADA PARA EL CI -->
-            
-            <div class="form-group col-md-4">
-              
-              <label for="nuevoCI">Nro. CI<span class="text-danger"> *</span></label>
-              <input type="text" class="form-control" id="nuevoCI" name="nuevoCI" placeholder="INGRESAR NRO. CI" required pattern="[a-zA-Z0-9-]+" title="Solo deben ir letras y números en el campo">
-
-            </div>
-
-            <!-- ENTRADA PARA LA CONTRASEÑA -->
-            
-            <div class="form-group col-md-4">
-              
-              <label for="nuevoPassword">Contraseña<span class="text-danger"> *</span></label>
-              <input type="password" class="form-control" id="nuevoPassword" name="nuevoPassword" placeholder="INGRESAR CONTRASEÑA" required pattern="[a-zA-Z0-9]+" title="Solo deben ir letras y números en el campo">
-
-            </div>
-
-          </div>  
-
-          <div class="form-row">     
-
-            <!-- ENTRADA PARA EL CARGO DEL USUARIO -->
-            
-            <div class="form-group col-md-4">
-              
-              <label for="nuevoCargo">Cargo<span class="text-danger"> *</span></label>
-              <input type="text" class="form-control mayuscula" id="nuevoCargo" name="nuevoCargo" placeholder="Ingresar Cargo del Usuario" required pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
-
-            </div>
-
-            <!-- ENTRADA PARA SELECCIONAR SU PERFIL -->
-          
-            <div class="form-group col-md-4">
-              
-              <label for="nuevoPerfil">Perfil de Usuario<span class="text-danger"> *</span></label>
-              <select class="custom-select" id="nuevoPerfil" name="nuevoPerfil" required>
-                <option value="">SELECCIONAR PERFIL</option>
-                <option value="ADMIN_SYSTEM">ADMYN_SYSTEM</option>
-                <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
-                <option value="MEDICO">MEDICO</option>
-                <option value="LABORATORISTA">LABORATORISTA</option>
-                <option value="SECRETARIO">SECRETARIO</option>
-              </select>
-
-            </div>
-    
-            <!-- ENTRADA PARA SUBIR FOTO -->
-            
-            <div class="form-group col-md-4">
-
-              <div class="input-group mb-3">
-
-                <div class="input-group-prepend">
-                  
-                  <label class="input-group-text" for="nuevaFoto" id="inputFoto"><i class="fas fa-portrait"></i></label>
-
-                </div>
+              <div class="form-group">
                 
-                <div class="custom-file">
-                  
-                  <input type="file" class="custom-file-input nuevaFoto" name="nuevaFoto" id="nuevaFoto" aria-describedby="inputFoto">
-
-                  <label class="custom-file-label" for="nuevaFoto" data-browse="Elegir">SUBIR FOTO</label>
-
-                </div>
+                <label  for="nuevoPaterno">Apellido Paterno</label>
+                <input type="text" class="form-control mayuscula" id="nuevoPaterno" name="nuevoPaterno" placeholder="Ingresar Apellido Paterno" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ ]+" title="Solo deben ir letras en el campo">
 
               </div>
 
-              <p class="help-block">Peso máximo de la foto 2MB</p>
+              <!-- ENTRADA PARA EL APELLIDO MATERNO -->
+            
+              <div class="form-group">
+              
+                <label for="nuevoMaterno">Apellido Materno</label>
+                <input type="text" class="form-control mayuscula" id="nuevoMaterno" name="nuevoMaterno" placeholder="Ingresar Apellido Materno" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ ]+" title="Solo deben ir letras en el campo">
 
-              <img src="vistas/img/usuarios/default/anonymous.png" class="img-thumbnail previsualizar" width="100px">
+              </div>
 
-            </div>  
+              <!-- ENTRADA PARA EL NOMBRE -->
+            
+              <div class="form-group">
+                
+                <label for="nuevoNombre">Nombre(s)</label>(<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <input type="text" class="form-control mayuscula" id="nuevoNombre" name="nuevoNombre" placeholder="Ingresar Nombre(s)" required pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ ]+" title="Solo deben ir letras en el campo">
 
-          </div>   
+              </div>
+
+              <!-- ENTRADA PARA LA MATRICULA USUARIO -->
+              
+              <div class="form-group">
+                
+                <label for="nuevaMatricula">Matricula o Nick Usuario</label>(<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <input type="text" class="form-control" id="nuevaMatricula" name="nuevaMatricula" placeholder="INGRESAR MATRICULA O NICK DE USUARIO" required pattern="[A-Za-z0-9-]+" title="Solo deben ir letras y números en el campo">
+
+              </div>
+
+              <!-- ENTRADA PARA EL CI -->
+              
+              <div class="form-group">
+                
+                <label for="nuevoCI">Nro. CI</label>(<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <input type="text" class="form-control" id="nuevoCI" name="nuevoCI" placeholder="INGRESAR NRO. CI" required pattern="[a-zA-Z0-9-]+" title="Solo deben ir letras y números en el campo">
+
+              </div>
+
+              <!-- ENTRADA PARA LA CONTRASEÑA -->
+              
+              <div class="form-group">
+                
+                <label for="nuevoPassword">Contraseña</label>(<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <input type="password" class="form-control" id="nuevoPassword" name="nuevoPassword" placeholder="INGRESAR CONTRASEÑA" required pattern="[a-zA-Z0-9]+" title="Solo deben ir letras y números en el campo">
+
+              </div>
+
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-xs-12">     
+
+              <!-- ENTRADA PARA EL CARGO DEL USUARIO -->
+              
+              <div class="form-group">
+                
+                <label for="nuevoCargo">Cargo</label> (<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <input type="text" class="form-control mayuscula" id="nuevoCargo" name="nuevoCargo" placeholder="Ingresar Cargo del Usuario" required pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
+
+              </div>
+
+              <!-- ENTRADA PARA SELECCIONAR SU PERFIL -->
+            
+              <div class="form-group">
+                
+                <label for="nuevoPerfil">Perfil de Usuario</label>(<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <select class="custom-select" id="nuevoPerfil" name="nuevoPerfil" required>
+                  <option value="">SELECCIONAR PERFIL</option>
+                  <option value="ADMIN_SYSTEM">ADMYN_SYSTEM</option>
+                  <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
+                  <option value="MEDICO">MEDICO</option>
+                  <option value="LABORATORISTA">LABORATORISTA</option>
+                  <option value="SECRETARIO">SECRETARIO</option>
+                </select>
+
+              </div>
+      
+              <!-- ENTRADA PARA SUBIR FOTO -->
+              
+              <div class="form-group">
+
+                <div class="input-group mb-3">
+
+                  <div class="input-group-prepend">
+                    
+                    <label class="input-group-text" for="nuevaFoto" id="inputFoto"><i class="fas fa-portrait"></i></label>
+
+                  </div>
+                  
+                  <div class="custom-file">
+                    
+                    <input type="file" class="custom-file-input nuevaFoto" name="nuevaFoto" id="nuevaFoto" aria-describedby="inputFoto">
+
+                    <label class="custom-file-label" for="nuevaFoto" data-browse="Elegir">SUBIR FOTO</label>
+
+                  </div>
+
+                </div>
+
+                <div class="text-center">
+
+                  <p class="help-block">Peso máximo de la foto 2MB</p>
+
+                  <img src="vistas/img/usuarios/default/anonymous.png" class="img-thumbnail previsualizar" width="100px">
+
+                </div>
+
+              </div>  
+
+            </div>   
+
+          </div>
 
         </div>
 
@@ -380,102 +384,107 @@ MODAL EDITAR USUARIO
         ======================================-->
 
         <div class="modal-body">
-          
-          <div class="form-row">
 
-            <!-- ENTRADA PARA EL APELLIDO PATERNO -->
-            
-            <div class="form-group col-md-4">
-              
-              <label for="editarPaterno">Apellido Paterno</label>
-              <input type="text" class="form-control" id="editarPaterno" name="editarPaterno" placeholder="Ingresar Apellido Paterno" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ]+" title="Solo deben ir letras en el campo">
+          <div class="form-inline col-md-12 mb-2">
 
-            </div>
-
-            <!-- ENTRADA PARA EL APELLIDO MATERNO -->
-            
-            <div class="form-group col-md-4">
-              
-              <label for="editarMaterno">Apellido Materno</label>
-              <input type="text" class="form-control" id="editarMaterno" name="editarMaterno" placeholder="Ingresar Apellido Materno" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ]+" title="Solo deben ir letras en el campo">
-
-            </div>
-
-            <!-- ENTRADA PARA EL NOMBRE -->
-            
-            <div class="form-group col-md-4">
-              
-              <label for="editarNombre">Nombre</label>
-              <input type="text" class="form-control" id="editarNombre" name="editarNombre" value="" required pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ ]+" title="Solo deben ir letras en el campo">
-
-            </div>
-
-          </div>
-          
-          <div class="form-row">
-
-            <!-- ENTRADA PARA LA MATRICULA USUARIO -->
-            
-            <div class="form-group col-md-4">
-              
-              <label for="editarMatricula">Matricula o Nick Usuario</label>
-              <input type="text" class="form-control" id="editarMatricula" name="editarMatricula" placeholder="Ingresar Matricula o Nick Usuario" readonly>
-
-            </div>
-
-            <!-- ENTRADA PARA EL CI -->
-            
-            <div class="form-group col-md-4">
-              
-              <label for="editarCI">Nro. CI</label>
-              <input type="text" class="form-control" id="editarCI" name="editarCI" placeholder="Ingresar Nro. CI" required pattern="[A-Za-z0-9-]+" title="Solo deben ir letras y números en el campo">
-
-            </div>
-
-            <!-- ENTRADA PARA LA CONTRASEÑA -->
-            
-            <div class="form-group col-md-4">
-              
-              <label for="editarPassword">Contraseña</label>
-              <input type="password" class="form-control" id="editarPassword" name="editarPassword" placeholder="Escriba la nueva contraseña" pattern="[a-zA-Z0-9]+" title="Solo deben ir letras y números en el campo">
-              <input type="hidden" id="passwordActual" name="passwordActual">
-
-            </div>
+            Todos los campos con (<i class="fas fa-asterisk asterisk mr-1"></i>) son obligatorios
 
           </div>
 
-          <div class="form-row">
+          <div class="row">
+
+            <div class="col-md-6 col-sm-6 col-xs-12">
           
-            <div class="form-group col-md-4">
-
-            <!-- ENTRADA PARA EL CARGO DEL USUARIO -->
+           
+              <!-- ENTRADA PARA EL APELLIDO PATERNO -->
               
-              <label for="editarCargo">Cargo</label>
-              <input type="text" class="form-control" id="editarCargo" name="editarCargo" placeholder="Ingresar Cargo del Usuario" required pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
+              <div class="form-group">
+                
+                <label for="editarPaterno">Apellido Paterno</label>
+                <input type="text" class="form-control" id="editarPaterno" name="editarPaterno" placeholder="Ingresar Apellido Paterno" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ]+" title="Solo deben ir letras en el campo">
+
+              </div>
+
+              <!-- ENTRADA PARA EL APELLIDO MATERNO -->
+              
+              <div class="form-group">
+                
+                <label for="editarMaterno">Apellido Materno</label>
+                <input type="text" class="form-control" id="editarMaterno" name="editarMaterno" placeholder="Ingresar Apellido Materno" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ]+" title="Solo deben ir letras en el campo">
+
+              </div>
+
+              <!-- ENTRADA PARA EL NOMBRE -->
+              
+              <div class="form-group">
+                
+                <label for="editarNombre">Nombre</label> (<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <input type="text" class="form-control" id="editarNombre" name="editarNombre" value="" required pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ ]+" title="Solo deben ir letras en el campo">
+
+              </div>
+
+              <!-- ENTRADA PARA LA MATRICULA USUARIO -->
+              
+              <div class="form-group">
+                
+                <label for="editarMatricula">Matricula o Nick Usuario</label> (<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <input type="text" class="form-control" id="editarMatricula" name="editarMatricula" placeholder="Ingresar Matricula o Nick Usuario" readonly>
+
+              </div>
+
+              <!-- ENTRADA PARA EL CI -->
+              
+              <div class="form-group">
+                
+                <label for="editarCI">Nro. CI</label> (<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <input type="text" class="form-control" id="editarCI" name="editarCI" placeholder="Ingresar Nro. CI" required pattern="[A-Za-z0-9-]+" title="Solo deben ir letras y números en el campo">
+
+              </div>
+
+              <!-- ENTRADA PARA LA CONTRASEÑA -->
+              
+              <div class="form-group">
+                
+                <label for="editarPassword">Contraseña</label>
+                <input type="password" class="form-control" id="editarPassword" name="editarPassword" placeholder="Escriba la nueva contraseña" pattern="[a-zA-Z0-9]+" title="Solo deben ir letras y números en el campo">
+                <input type="hidden" id="passwordActual" name="passwordActual">
+
+              </div>
 
             </div>
 
-            <!-- ENTRADA PARA SELECCIONAR SU PERFIL -->
-            
-            <div class="form-group col-md-4">
-              
-              <label for="editarPerfil">Perfil de Usuario</label>
-              <select class="custom-select" name="editarPerfil" required>
-                
-                <option value="" id="editarPerfil"></option>
-                <option value="ADMIN_SYSTEM">ADMIN_SYSTEM</option>
-                <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
-                <option value="MEDICO">MEDICO</option>
-                <option value="LABORATORISTA">LABORATORISTA</option>
-                <option value="SECRETARIO">SECRETARIO</option>
-                
-              </select>
+            <div class="col-md-6 col-sm-6 col-xs-12">   
+          
+              <div class="form-group">
 
-            </div>
+              <!-- ENTRADA PARA EL CARGO DEL USUARIO -->
+                
+                <label for="editarCargo">Cargo</label> (<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <input type="text" class="form-control" id="editarCargo" name="editarCargo" placeholder="Ingresar Cargo del Usuario" required pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
+
+              </div>
+
+              <!-- ENTRADA PARA SELECCIONAR SU PERFIL -->
+              
+              <div class="form-group">
+                
+                <label for="editarPerfil">Perfil de Usuario</label> (<i class="fas fa-asterisk asterisk mr-1"></i>)
+                <select class="custom-select" name="editarPerfil" required>
+                  
+                  <option value="" id="editarPerfil"></option>
+                  <option value="ADMIN_SYSTEM">ADMIN_SYSTEM</option>
+                  <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
+                  <option value="MEDICO">MEDICO</option>
+                  <option value="LABORATORISTA">LABORATORISTA</option>
+                  <option value="SECRETARIO">SECRETARIO</option>
+                  
+                </select>
+
+              </div>
 
             <!-- ENTRADA PARA SUBIR FOTO -->
             
-            <div class="form-group col-md-4">
+            <div class="form-group">
 
               <div class="input-group mb-3">
 
@@ -495,11 +504,15 @@ MODAL EDITAR USUARIO
 
               </div>
 
-              <p class="help-block">Peso máximo de la foto 2MB</p>
+              <div class="text-center">
 
-              <img src="vistas/img/usuarios/default/anonymous.png" class="img-thumbnail previsualizar" width="100px">
+                <p class="help-block">Peso máximo de la foto 2MB</p>
 
-              <input type="hidden" name="fotoActual" id="fotoActual">
+                <img src="vistas/img/usuarios/default/anonymous.png" class="img-thumbnail previsualizar" width="100px">
+
+                <input type="hidden" name="fotoActual" id="fotoActual">
+
+              </div>
 
             </div>
 

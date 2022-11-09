@@ -36,89 +36,61 @@
  
   <section class="content">
 
-    <div class="container-fluid">
+    <div class="container-fluid">        
 
-      <div class="row">
+      <div class="card card-outline card-info">
 
-        <div class="col-md-12">
+        <div class="card-header">
 
-          <div class="card">
+          <div class="right_col alert alert-info" role="main"> 
 
-            <div class="card-header"> 
+            <div class="row">  
 
-              <div class="form-row">
-                
-                <div class="input-group col-md-3">
+              <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
 
-                  <label class="px-2 mt-1 font-weight-normal">Desde: </label>
+                <div class="form-group">
+                  
+                  <label>Desde</label> (<i class="fas fa-asterisk asterisk mr-1"></i>)
                   
                   <input type="date" class="form-control" id="reporteFechaInicio" min="2020-01-01" max="<?= date("Y-m-d") ?>">
 
                 </div>
 
-                <div class="input-group col-md-3">
+              </div>
 
-                  <label class="px-2 mt-1 font-weight-normal">Hasta: </label>
+              <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+                <label>Hasta </label> (<i class="fas fa-asterisk asterisk mr-1"></i>)
+
+                <div class="input-group">
                   
                   <input type="date" class="form-control" id="reporteFechaFin" min="2020-01-01" max="<?= date("Y-m-d") ?>">
+
+                  <span class="input-group-btn ml-2">
+
+                    <button type="button" class="btn btn-primary px-2 btnFichaEpidemiologicaReporte">
+                      <i class="fas fa-search"></i> Buscar
+                    </button> 
+
+                  </span>
 
                 </div>
 
               </div>
 
-              <div class="form row mt-3">
-
-                <div class="form-group col-md-3">
-                  
-                  <button type="button" class="btn btn-primary px-2 btnFichaEpidemiologicaReporte">
-                
-                    <i class="fas fa-search"></i> Buscar
-                  
-                  </button>  
-
-                  <button type="button" class="btn btn-danger px-2 btnFichaEpidemiologicaPDF" id="daterange-btn2">
-                
-                    <i class="fas fa-file-pdf"></i></i> Exportar PDF
-                  
-                  </button>   
-
-                  <span><img src="vistas/img/cargando.gif" class="cargando hide"></span>
-
-                  <input type="hidden" value="<?= $_SESSION['paternoUsuarioCOVID'].' '.$_SESSION['maternoUsuarioCOVID'].' '.$_SESSION['nombreUsuarioCOVID']; ?>" id="nombreUsuarioOculto">
-
-                </div>           
-
-              </div>
-                     
-            </div>
-
-            <!--=====================================
-            SE MUESTRA LAS TABLAS GENERADAS
-            ======================================-->            
-
-            <div class="card-body" id="reporteFicha">   
-
-                      
             </div>
 
           </div>
 
         </div>
 
-      </div>
+        <!--=====================================
+        SE MUESTRA LAS TABLAS GENERADAS
+        ======================================-->            
 
-      <div class="row">
+        <div class="card-body" id="reporteFicha">   
 
-        <div class="col-md-6 col-xs-12">
-
-   
-          
-        </div>
-
-        <div class="col-md-6 col-xs-12">
-
-
-          
+                  
         </div>
 
       </div>

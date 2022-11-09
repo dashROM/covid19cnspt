@@ -42,10 +42,6 @@
 
         <div class="row">     
 
-          <!--=============================================
-          SECCION PARA LA ENTRADA DE DATOS PERSONALES
-          =============================================-->
-
           <div class="col-md-12 col-xs-12">
             
             <div class="card card-outline card-info">
@@ -62,235 +58,341 @@
                 
               ?>  
                 
-                <p><b>Matricula: </b><?= $afiliados['pac_numero_historia'] ?></p>
+                <!-- <p><b>Matricula: </b><?= $afiliados['pac_numero_historia'] ?></p>
                 <p><b>Nombre o Razón Social del Empleador: </b><?= $afiliados['emp_nombre'] ?></p>
-                <p><b>Nro. Empleador: </b><?= $afiliados['emp_nro_empleador'] ?></p>
+                <p><b>Nro. Empleador: </b><?= $afiliados['emp_nro_empleador'] ?></p> -->
 
               </div>
 
               <div class="card-body">
 
-                <div class="form-row">
+                <div class="form-inline col-md-12 mb-2">
 
-                  Campos Obligatorios<h5 class="text-danger"> *</h5>
-                  
-                </div>
-
-                <div class="form-row">
-
-                  <div class="form-group col-md-3">
-                    <label for="nuevaFechaMuestra">Fecha Toma de Muestra<span class="text-danger"> *</span></label>
-                    <input type="date" class="form-control" id="nuevaFechaMuestra" name="nuevaFechaMuestra" required>
-                  </div>
-                  
-                  <div class="form-group col-md-3">
-                    <label for="nuevaMuestraControl">Muestra de Control<span class="text-danger"> *</span></label>
-                    <select class="form-control" id="nuevaMuestraControl" name="nuevaMuestraControl" required>
-                      <option value="">Elegir...</option>
-                      <option value="SI">SI</option>
-                      <option value="NO">NO</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group col-md-3">
-                    <label for="nuevaMuestraControl">Tipo de Muestra<span class="text-danger"> *</span></label>
-                    <input list="tipoMuestra" class="form-control mayuscula" id="nuevoTipoMuestra" name="nuevoTipoMuestra" required pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
-                    <datalist id="tipoMuestra">
-                      <option value="ELISA">
-                      <option value="ASPIRADO">
-                      <option value="LAVADO BRONCO ALVEOLAR">
-                      <option value="HISOPADO NASOFARÍNGEO">
-                      <option value="HISOPADO COMBINADO">
-                    </datalist>
-                  </div>         
-
-                  <div class="form-group col-md-3">
-                    <label for="nuevaFechaRecepcion">Fecha Recepción<span class="text-danger"> *</span></label>
-                    <input type="date" class="form-control" id="nuevaFechaRecepcion" name="nuevaFechaRecepcion" required>
-                  </div>         
+                  Todos los campos con<i class="fas fa-asterisk asterisk mr-1"></i>son obligatorios
 
                 </div>
 
-                <div class="form-row">
+                <!--=============================================
+                SECCION PARA DATOS PERSONALES
+                =============================================-->
 
-                  <div class="form-group col-md-2">
-                    <label for="nuevoCodLab">Cód. Lab.<span class="text-danger"> *</span></label>
-                    <input type="text" class="form-control mayuscula" id="nuevoCodLab" name="nuevoCodLab" required pattern="[a-zA-Z0-9]+" title="Solo deben ir letras y números en el campo">
-                  </div>
+                <div class="col-md-12 callout callout-info">
 
-                  <div class="form-group col-md-3">
-                    <label for="nuevoNombreLab">Nombre Lab.</label>
-                    <input type="text" class="form-control mayuscula" id="nuevoNombreLab" name="nuevoNombreLab" pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
-                  </div>
+                  <p class="font-weight-bold">DATOS PERSONALES</p>
 
-                  <div class="form-group col-md-3">
-                    <label for="nuevoDepartamento">Departamento<span class="text-danger"> *</span></label>
-                    <select class="form-control" id="nuevoDepartamento" name="nuevoDepartamento" required>
-                      <option value="">Elegir...</option>
-                      <?php 
+                  <div class="row">
 
-                        $item = null;
-                        $valor = null;
-
-                        $departamentos = ControladorDepartamentos::ctrMostrarDepartamentos($item, $valor);
-
-                        foreach ($departamentos as $key => $value) {
-                          
-                          echo '<option value="'.$value["id"].'">'.$value["nombre_depto"].'</option>';
-                        }
-
-                      ?>
-                    </select>
-                  </div>
-                  
-                  <div class="form-group col-md-4">
-                    <label for="nuevoEstablecimiento">Establecimiento<span class="text-danger"> *</span></label>
-                    <select class="form-control" id="nuevoEstablecimiento" name="nuevoEstablecimiento" required>
-                      <option value="">Elegir...</option>
-                      <?php 
-
-                        $item = null;
-                        $valor = null;
-
-                        $establecimientos = ControladorEstablecimientos::ctrMostrarEstablecimientos($item, $valor);
-
-                        foreach ($establecimientos as $key => $value) {
-                          
-                          echo '<option value="'.$value["id"].'">'.$value["nombre_establecimiento"].'</option>';
-                        } 
-                      ?>
-                    </select>
-                  </div>
-
-                </div>
-               
-                <div class="form-row">
-
-                  <div class="form-group col-md-4">
-                    <label for="nuevoPaterno">Apellido Paterno</label>
-                    <input type="text" class="form-control mayuscula" id="nuevoPaterno" name="nuevoPaterno" value="<?= rtrim($afiliados['pac_primer_apellido']) ?>" readonly required>
-                  </div>
-
-                  <div class="form-group col-md-4">
-                    <label for="nuevoMaterno">Apellido Materno</label>
-                    <input type="text" class="form-control mayuscula" id="nuevoMaterno" name="nuevoMaterno" value="<?= rtrim($afiliados['pac_segundo_apellido']) ?>" readonly required>
-                  </div>
-
-                  <div class="form-group col-md-4">
-                    <label for="nuevoNombre">Nombre</label>
-                    <input type="text" class="form-control mayuscula" id="nuevoNombre" name="nuevoNombre" value="<?= rtrim($afiliados['pac_nombre']) ?>" readonly required>
-                  </div>
-
-                </div>
-
-                <div class="form-row">
-
-                  <div class="form-group col-md-4">
-                    <label for="nuevoDocumentoCI">Nro. CI<span class="text-danger"> *</span></label>
-                    <input type="text" class="form-control" id="nuevoDocumentoCI" name="nuevoDocumentoCI" required pattern="[A-Za-z0-9-]+" title="Solo deben ir letras y números en el campo">
-                  </div>
-
-                  <div class="form-group col-md-4">
-                    <label for="nuevoSexo">Sexo<span class="text-danger"> *</span></label>
-                    <select class="form-control" id="nuevoSexo" name="nuevoSexo" required>
-                      <option value="">Elegir...</option>
-                      <option value="F">FEMENINO</option>
-                      <option value="M">MASCULINO</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group col-md-4">
-                    <label for="nuevaFechaNacimiento">Fecha de Nacimiento</label>
-                    <input type="date" class="form-control" id="nuevaFechaNacimiento" name="nuevaFechaNacimiento" value="<?= $afiliados['pac_fecha_nac'] ?>" readonly>
-                  </div>
-
-                </div>
-
-                <div class="form-row">
-
-                  <div class="form-group col-md-4">
-                    <label for="nuevoTelefono">Teléfono o Celular</label>
-                    <input type="text" class="form-control" id="nuevoTelefono" name="nuevoTelefono" data-inputmask="'mask': '9{7,8}'" pattern="[0-9]{7,8}+" title="Solo deben ir números en el campo">
-                  </div>
-
-                  <div class="form-group col-md-8">
-                    <label for="nuevoEmail">Em@il</label>
-                     <input type="text" class="form-control" id="nuevoEmail" name="nuevoEmail" data-inputmask="'alias': 'email'" inputmode="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Introduzca formato de email válido">
-                  </div>
-
-                </div>
-
-                <div class="form-row">
-
-                  <div class="form-group col-md-4">
-                    <label for="nuevaLocalidad">Localidad<span class="text-danger"> *</span></label>
-                    <select class="form-control" id="nuevaLocalidad" name="nuevaLocalidad" required>
-                      <option value="">Elegir...</option>
-                      <?php 
-
-                        $item = null;
-                        $valor = null;
-
-                        $localidades = ControladorLocalidades::ctrMostrarLocalidades($item, $valor);
-
-                        foreach ($localidades as $key => $value) {
-                          
-                          echo '<option value="'.$value["id"].'">'.$value["nombre_localidad"].'</option>';
-                        } 
-                      ?>
-                    </select>
-                  </div>
-
-                  <div class="form-group col-md-3">
-                    <label for="nuevaZona">Zona<span class="text-danger"> *</span></label>
-                    <input type="text" class="form-control mayuscula" id="nuevaZona" name="nuevaZona" required pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
-                  </div>
-
-                  <div class="form-group col-md-3">
-                    <label for="nuevaCalle">Calle<span class="text-danger"> *</span></label>
-                    <input type="text" class="form-control mayuscula" id="nuevaCalle" name="nuevaCalle" required pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
-                  </div>
-
-                  <div class="form-group col-md-2">
-                    <label for="nuevoNroCalle">Nro</label>
-                    <input type="text" class="form-control" id="nuevoNroCalle" name="nuevoNroCalle" pattern="[a-zA-Z0-9 .-/]+" title="Caracteres no admitidos">
-                  </div>
-
-                </div>
-
-                <div class="form-row">
-
-                  <div class="form-group col-md-3 text-center clearfix">
-
-                    <label>Resultados Laboratorio<br>Covid-19</label>
-          
-                    <div class="icheck-danger">
-                      <input type="radio" name="nuevoResultado" id="radio1" value="POSITIVO">
-                      <label for="radio1">
-                        POSITIVO
-                      </label>
+                    <div class="form-group col-md-4">
+                      <label for="nuevoPaterno">Apellido Paterno</label>
+                      <input type="text" class="form-control form-control-sm mayuscula" id="nuevoPaterno" name="nuevoPaterno" value="<?= rtrim($afiliados['pac_primer_apellido']) ?>" readonly required>
                     </div>
-                    <div class="icheck-success">
-                      <input type="radio" name="nuevoResultado" checked id="radio2" value="NEGATIVO">
-                      <label for="radio2">
-                        NEGATIVO
-                      </label>
-                    </div>                   
+
+                    <div class="form-group col-md-4">
+                      <label for="nuevoMaterno">Apellido Materno</label>
+                      <input type="text" class="form-control form-control-sm mayuscula" id="nuevoMaterno" name="nuevoMaterno" value="<?= rtrim($afiliados['pac_segundo_apellido']) ?>" readonly required>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                      <label for="nuevoNombre">Nombre</label>
+                      <input type="text" class="form-control form-control-sm mayuscula" id="nuevoNombre" name="nuevoNombre" value="<?= rtrim($afiliados['pac_nombre']) ?>" readonly required>
+                    </div>
 
                   </div>
 
-            
-                  <div class="form-group col-md-3">
-                    <label for="nuevaFechaResultado">Fecha del Resultado<span class="text-danger"> *</span></label>
-                    <input type="date" class="form-control" id="nuevaFechaResultado" name="nuevaFechaResultado" required>
+                  <div class="row">
+
+                    <div class="form-group col-md-4">
+                      <label for="nuevoDocumentoCI">Nro. CI</label><i class="fas fa-asterisk asterisk"></i>
+                      <input type="text" class="form-control form-control-sm" id="nuevoDocumentoCI" name="nuevoDocumentoCI" required pattern="[A-Za-z0-9-]+" title="Solo deben ir letras y números en el campo">
+                    </div>
+
+                    <div class="form-group col-md-4">
+                      <label for="nuevoSexo">Sexo</label><i class="fas fa-asterisk asterisk"></i>
+                      <select class="form-control form-control-sm select2" id="nuevoSexo" name="nuevoSexo" data-dropdown-css-class="select2-info" style="width: 100%;" required>
+                        <option value="">Elegir...</option>
+                        <option value="F">FEMENINO</option>
+                        <option value="M">MASCULINO</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                      <label for="nuevaFechaNacimiento">Fecha de Nacimiento</label>
+                      <input type="date" class="form-control form-control-sm" id="nuevaFechaNacimiento" name="nuevaFechaNacimiento" value="<?= $afiliados['pac_fecha_nac'] ?>" readonly>
+                    </div>
+
                   </div>
 
-                  <div class="form-group col-md-6 observacion">
-                    <label for="nuevaObservacion">Observaciones</label>
-                    <textarea class="form-control mayuscula" id="nuevaObservacion" name="nuevaObservacion" placeholder="Ingresar observaciones (Opcional)" rows="3" pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-(),/#]+" title="Caracteres no admitidos"></textarea>
+                  <div class="row">
+
+                    <div class="form-group col-md-4">
+                      <label for="nuevoTelefono">Teléfono o Celular</label>
+                      <input type="text" class="form-control form-control-sm" id="nuevoTelefono" name="nuevoTelefono" data-inputmask="'mask': '9{7,8}'" pattern="[0-9]{7,8}+" title="Solo deben ir números en el campo">
+                    </div>
+
+                    <div class="form-group col-md-8">
+                      <label for="nuevoEmail">Em@il</label>
+                       <input type="text" class="form-control form-control-sm" id="nuevoEmail" name="nuevoEmail" data-inputmask="'alias': 'email'" inputmode="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Introduzca formato de email válido">
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+
+                    <div class="form-group col-md-4">
+                      <label for="nuevaLocalidad">Localidad</label><i class="fas fa-asterisk asterisk"></i>
+                      <select class="form-control form-control-sm select2" id="nuevaLocalidad" name="nuevaLocalidad" data-dropdown-css-class="select2-info" style="width: 100%;" required>
+                        <option value="">Elegir...</option>
+                        <?php 
+
+                          $item = null;
+                          $valor = null;
+
+                          $localidades = ControladorLocalidades::ctrMostrarLocalidades($item, $valor);
+
+                          foreach ($localidades as $key => $value) {
+                            
+                            echo '<option value="'.$value["id"].'">'.$value["nombre_localidad"].'</option>';
+                          } 
+                        ?>
+                      </select>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="nuevaZona">Zona</label><i class="fas fa-asterisk asterisk"></i>
+                      <input type="text" class="form-control form-control-sm mayuscula" id="nuevaZona" name="nuevaZona" required pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="nuevaCalle">Calle</label><i class="fas fa-asterisk asterisk"></i>
+                      <input type="text" class="form-control form-control-sm mayuscula" id="nuevaCalle" name="nuevaCalle" required pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
+                    </div>
+
+                    <div class="form-group col-md-2">
+                      <label for="nuevoNroCalle">Nro</label>
+                      <input type="text" class="form-control form-control-sm" id="nuevoNroCalle" name="nuevoNroCalle" pattern="[a-zA-Z0-9 .-/]+" title="Caracteres no admitidos">
+                    </div>
+
                   </div>
 
                 </div>
+
+                <!-- FIN DATOS PERSONALES -->
+
+                <!--=============================================
+                SECCION PARA DATOS LABORALES
+                =============================================-->
+
+                <div class="col-md-12 callout callout-info">
+
+                  <p class="font-weight-bold">DATOS LABORALES</p>
+
+                  <div class="row">
+
+                    <div class="form-group col-md-3">
+                      <label for="nuevoMatricula">Matrícula / Cod. Asegurado</label>
+                      <input type="text" class="form-control form-control-sm mayuscula" id="nuevoMatricula" name="nuevoMatricula" readonly required>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="nuevoNroEmpleador">Nro. Empleador:</label>
+                      <input type="text" class="form-control form-control-sm mayuscula" id="nuevoNroEmpleador" name="nuevoNroEmpleador" readonly required>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <label for="nuevoRazonSocial">Nombre o Razón Social</label>
+                      <input type="text" class="form-control form-control-sm mayuscula" id="nuevoRazonSocial" name="nuevoRazonSocial" readonly required>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <!-- FIN DATOS LABORALES -->
+
+                <!--=============================================
+                SECCION PARA DATOS DE LABORATOTIO
+                =============================================-->
+
+                <div class="col-md-12 callout callout-info">
+
+                  <p class="font-weight-bold">DATOS LABORATORIO</p> 
+
+                  <div class="row">
+
+                    <div class="form-group col-md-3">
+                      <label for="nuevaFechaMuestra">Fecha Toma de Muestra</label><i class="fas fa-asterisk asterisk"></i>
+                      <input type="date" class="form-control form-control-sm" id="nuevaFechaMuestra" name="nuevaFechaMuestra" required>
+                    </div>
+                    
+                    <div class="form-group col-md-3">
+                      <label for="nuevaMuestraControl">Muestra de Control</label><i class="fas fa-asterisk asterisk"></i>
+                      <select class="form-control form-control-sm select2" id="nuevaMuestraControl" name="nuevaMuestraControl" data-dropdown-css-class="select2-info" style="width: 100%;" required>
+                        <option value="">Elegir...</option>
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</o ption>
+                      </select>
+                    </div>
+
+                    <div class="form-group col-md-3">
+              
+                      <label for="nuevoTipoMuestra">Tipo de muestra tomada</label><i class="fas fa-asterisk asterisk"></i>
+
+                      <select class="form-control form-control-sm select2_dinamic" id="nuevoTipoMuestra" name="nuevoTipoMuestra" data-dropdown-css-class="select2-info" style="width: 100%;">
+
+                        <option value=""></option>
+                        <option value="ASPIRADO">ASPIRADO</option>
+                        <option value="ESPUTO">ESPUTO</option>
+                        <option value="LAVADO BRONCO ALVELAR">LAVADO BRONCO ALVELAR</option>
+                        <option value="HISOPADO NASOFARÍNGEO">HISOPADO NASOFARÍNGEO</option>
+                        <option value="HISOPADO COMBINADO">HISOPADO COMBINADO</option>
+
+                      </select>
+                
+                    </div> 
+
+                    <div class="form-group col-md-3">
+                      <label for="nuevaFechaRecepcion">Fecha Recepción</label><i class="fas fa-asterisk asterisk"></i>
+                      <input type="date" class="form-control form-control-sm" id="nuevaFechaRecepcion" name="nuevaFechaRecepcion" required>
+                    </div>         
+
+                  </div>
+
+                  <div class="row">
+
+                    <div class="form-group col-md-6">
+
+                      <div class="icheck-primary d-inline">
+                        <input type="radio" name="tipoLaboratorio" checked id="interno" value="INTERNO">
+                        <label for="interno">
+                          Laboratorio Interno
+                        </label>
+                      </div>
+                      <div class="icheck-primary d-inline">
+                        <input type="radio" name="tipoLaboratorio" id="externo" value="EXTERNO">
+                        <label for="externo">
+                          Laboratorio Externo
+                        </label>
+                      </div>    
+
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+
+                    <div class="form-group col-md-2">
+                      <label for="nuevoCodLab">Cód. Lab.</label><i class="fas fa-asterisk asterisk"></i>
+                      <input type="text" class="form-control form-control-sm mayuscula" id="nuevoCodLab" name="nuevoCodLab" required pattern="[a-zA-Z0-9]+" title="Solo deben ir letras y números en el campo">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="nuevoNombreLab">Nombre Lab.</label>
+                      <input type="text" class="form-control form-control-sm mayuscula" id="nuevoNombreLab" name="nuevoNombreLab" pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-]+" title="Solo deben ir letras y números en el campo">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="nuevoDepartamento">Departamento</label><i class="fas fa-asterisk asterisk"></i>
+                      <select class="form-control form-control-sm select2" id="nuevoDepartamento" name="nuevoDepartamento" data-dropdown-css-class="select2-info" style="width: 100%;" required>
+                        <option value="">Elegir...</option>
+                        <?php 
+
+                          $item = null;
+                          $valor = null;
+
+                          $departamentos = ControladorDepartamentos::ctrMostrarDepartamentos($item, $valor);
+
+                          foreach ($departamentos as $key => $value) {
+                            
+                            echo '<option value="'.$value["id"].'">'.$value["nombre_depto"].'</option>';
+                          }
+
+                        ?>
+                      </select>
+                    </div>
+                    
+                    <div class="form-group col-md-4">
+                      <label for="nuevoEstablecimiento">Establecimiento</label><i class="fas fa-asterisk asterisk"></i>
+                      <select class="form-control form-control-sm select2" id="nuevoEstablecimiento" name="nuevoEstablecimiento" data-dropdown-css-class="select2-info" style="width: 100%;" required>
+                        <option value="">Elegir...</option>
+                        <?php 
+
+                          $item = null;
+                          $valor = null;
+
+                          $establecimientos = ControladorEstablecimientos::ctrMostrarEstablecimientos($item, $valor);
+
+                          foreach ($establecimientos as $key => $value) {
+                            
+                            echo '<option value="'.$value["id"].'">'.$value["nombre_establecimiento"].'</option>';
+                          } 
+                        ?>
+                      </select>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <!-- FIN DATOS DE LABORATORIO -->
+
+                <!--=============================================
+                SECCION PARA DATOS DE RESULTADO DE LABORATORIO
+                =============================================-->
+
+                <div class="col-md-12 callout callout-info">
+
+                  <p class="font-weight-bold">RESULTADO LABORATORIO</p>
+
+                  <div class="row">
+
+                    <div class="form-group col-md-3">
+
+                      <label class="m-0" for="nuevoMetodoDiagnostico">Método de Diagnostico<i class="fas fa-asterisk asterisk"></i></label>
+                      <select class="form-control form-control-sm select2" name="nuevoMetodoDiagnostico" id="nuevoMetodoDiagnostico" data-dropdown-css-class="select2-info" style="width: 100%;">
+                        <option value="">Elegir...</option>
+                        <option value="RT-PCR EN TIEMPO REAL">RT-PCR EN TIEMPO REAL</option>
+                        <option value="RT-PCR GENEXPERT">RT-PCR GENEXPERT</option>
+                        <option value="PRUEBA ANTIGÉNICA">PRUEBA ANTIGÉNICA</option>';
+    
+                      </select>
+
+                    </div>
+
+                    <div class="form-group col-md-3 text-center clearfix">
+
+                      <label>Resultados Laboratorio<br>Covid-19</label>
+            
+                      <div class="icheck-danger">
+                        <input type="radio" name="nuevoResultado" id="radio1" value="POSITIVO">
+                        <label for="radio1">
+                          POSITIVO
+                        </label>
+                      </div>
+                      <div class="icheck-success">
+                        <input type="radio" name="nuevoResultado" checked id="radio2" value="NEGATIVO">
+                        <label for="radio2">
+                          NEGATIVO
+                        </label>
+                      </div>                   
+
+                    </div>
+
+              
+                    <div class="form-group col-md-3">
+                      <label for="nuevaFechaResultado">Fecha del Resultado</label><i class="fas fa-asterisk asterisk"></i>
+                      <input type="date" class="form-control form-control-sm" id="nuevaFechaResultado" name="nuevaFechaResultado" required>
+                    </div>
+
+                    <div class="form-group col-md-3 observacion">
+                      <label for="nuevaObservacion">Observaciones</label>
+                      <textarea class="form-control form-control-sm mayuscula" id="nuevaObservacion" name="nuevaObservacion" placeholder="Ingresar observaciones (Opcional)" rows="3" pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-(),/#]+" title="Caracteres no admitidos"></textarea>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <!-- FIN DATOS RESULTADO DE LABORATORIO -->  
 
               </div> 
 
@@ -329,8 +431,8 @@
 
       <?php
 
-        $guardarCovidResultado = new ControladorCovidResultados();
-        $guardarCovidResultado -> ctrCrearCovidResultado();
+      $guardarCovidResultado = new ControladorCovidResultados();
+      $guardarCovidResultado -> ctrCrearCovidResultado();
 
       ?>    
 

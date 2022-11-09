@@ -46,15 +46,17 @@ class ModeloLaboratorios {
 		 
 		    //Consulta 1: Actualizando datos de la ficha Epidemiologica
 			
-			$stmt = $pdo1->prepare("UPDATE $tabla SET estado_muestra = :estado_muestra, id_establecimiento = :id_establecimiento, tipo_muestra = :tipo_muestra, nombre_laboratorio = :nombre_laboratorio, fecha_muestra = :fecha_muestra, fecha_envio =:fecha_envio, cod_laboratorio = :cod_laboratorio, responsable_muestra = :responsable_muestra, observaciones_muestra = :observaciones_muestra, resultado_laboratorio = :resultado_laboratorio, fecha_resultado = :fecha_resultado WHERE id_ficha = :id_ficha");
+			$stmt = $pdo1->prepare("UPDATE $tabla SET estado_muestra = :estado_muestra, no_toma_muestra = :no_toma_muestra, id_establecimiento = :id_establecimiento, tipo_muestra = :tipo_muestra, nombre_laboratorio = :nombre_laboratorio, fecha_muestra = :fecha_muestra, fecha_envio =:fecha_envio, cod_laboratorio = :cod_laboratorio, metodo_diagnostico = :metodo_diagnostico, responsable_muestra = :responsable_muestra, observaciones_muestra = :observaciones_muestra, resultado_laboratorio = :resultado_laboratorio, fecha_resultado = :fecha_resultado WHERE id_ficha = :id_ficha");
 
 			$stmt->bindParam(":estado_muestra", $datos["estado_muestra"], PDO::PARAM_STR);
+			$stmt->bindParam(":no_toma_muestra", $datos["no_toma_muestra"], PDO::PARAM_STR);
 			$stmt->bindParam(":id_establecimiento", $datos["id_establecimiento"], PDO::PARAM_INT);
 			$stmt->bindParam(":tipo_muestra", $datos["tipo_muestra"], PDO::PARAM_STR);
 			$stmt->bindParam(":nombre_laboratorio", $datos["nombre_laboratorio"], PDO::PARAM_STR);
 			$stmt->bindParam(":fecha_muestra", $datos["fecha_muestra"], PDO::PARAM_STR);
 			$stmt->bindParam(":fecha_envio", $datos["fecha_envio"], PDO::PARAM_STR);
 			$stmt->bindParam(":cod_laboratorio", $datos["cod_laboratorio"], PDO::PARAM_STR);
+			$stmt->bindParam(":metodo_diagnostico", $datos["metodo_diagnostico"], PDO::PARAM_STR);
 			$stmt->bindParam(":responsable_muestra", $datos["responsable_muestra"], PDO::PARAM_STR);
 			$stmt->bindParam(":observaciones_muestra", $datos["observaciones_muestra"], PDO::PARAM_STR);
 			$stmt->bindParam(":resultado_laboratorio", $datos["resultado_laboratorio"], PDO::PARAM_STR);
@@ -65,15 +67,15 @@ class ModeloLaboratorios {
 
 				//Consulta 2: Actualizando datos del listado de Covid Resultados
 
-				$stmt2 = $pdo2->prepare("INSERT INTO covid_resultados (cod_asegurado, cod_afiliado, cod_empleador, nombre_empleador, fecha_recepcion, fecha_muestra, cod_laboratorio, nombre_laboratorio, muestra_control, tipo_muestra, id_departamento, id_establecimiento, documento_ci, foto, paterno, materno, nombre, sexo, fecha_nacimiento, telefono, email, id_localidad, zona, calle, nro_calle, resultado, fecha_resultado, observaciones, id_usuario, id_ficha) VALUES (:cod_asegurado, :cod_afiliado, :cod_empleador, :nombre_empleador, :fecha_recepcion, :fecha_muestra, :cod_laboratorio, :nombre_laboratorio, :muestra_control, :tipo_muestra, :id_departamento, :id_establecimiento, :documento_ci, :foto, :paterno, :materno, :nombre, :sexo, :fecha_nacimiento, :telefono, :email, :id_localidad, :zona, :calle, :nro_calle, :resultado, :fecha_resultado, :observaciones, :id_usuario, :id_ficha)");
+				$stmt2 = $pdo2->prepare("INSERT INTO covid_resultados (cod_asegurado, cod_afiliado, cod_empleador, nombre_empleador, fecha_recepcion, fecha_muestra, cod_laboratorio, nombre_laboratorio, muestra_control, tipo_muestra, id_departamento, id_establecimiento, documento_ci, foto, paterno, materno, nombre, sexo, fecha_nacimiento, telefono, email, id_localidad, zona, calle, nro_calle, metodo_diagnostico, resultado, fecha_resultado, observaciones, id_usuario, id_ficha) VALUES (:cod_asegurado, :cod_afiliado, :cod_empleador, :nombre_empleador, :fecha_recepcion, :fecha_muestra, :cod_laboratorio, :nombre_laboratorio, :muestra_control, :tipo_muestra, :id_departamento, :id_establecimiento, :documento_ci, :foto, :paterno, :materno, :nombre, :sexo, :fecha_nacimiento, :telefono, :email, :id_localidad, :zona, :calle, :nro_calle, :metodo_diagnostico, :resultado, :fecha_resultado, :observaciones, :id_usuario, :id_ficha)");
 
 				$stmt2->bindParam(":cod_asegurado", $datos["cod_asegurado"], PDO::PARAM_STR);
 				$stmt2->bindParam(":cod_afiliado", $datos["cod_afiliado"], PDO::PARAM_STR);
-				$stmt2->bindParam(":cod_empleador", $datos["cod_empleador"], PDO::PARAM_INT);
+				$stmt2->bindParam(":cod_empleador", $datos["cod_empleador"], PDO::PARAM_STR);
 				$stmt2->bindParam(":nombre_empleador", $datos["nombre_empleador"], PDO::PARAM_STR);
 				$stmt2->bindParam(":fecha_recepcion", $datos["fecha_envio"], PDO::PARAM_STR);
 				$stmt2->bindParam(":fecha_muestra", $datos["fecha_muestra"], PDO::PARAM_STR);
-				$stmt2->bindParam(":cod_laboratorio", $datos["cod_laboratorio"], PDO::PARAM_INT);
+				$stmt2->bindParam(":cod_laboratorio", $datos["cod_laboratorio"], PDO::PARAM_STR);
 				$stmt2->bindParam(":nombre_laboratorio", $datos["nombre_laboratorio"], PDO::PARAM_STR);
 				$stmt2->bindParam(":muestra_control", $datos["muestra_control"], PDO::PARAM_STR);
 				$stmt2->bindParam(":tipo_muestra", $datos["tipo_muestra"], PDO::PARAM_STR);
@@ -92,6 +94,7 @@ class ModeloLaboratorios {
 				$stmt2->bindParam(":zona", $datos["zona"], PDO::PARAM_STR);
 				$stmt2->bindParam(":calle", $datos["calle"], PDO::PARAM_STR);
 				$stmt2->bindParam(":nro_calle", $datos["nro_calle"], PDO::PARAM_STR);
+				$stmt2->bindParam(":metodo_diagnostico", $datos["metodo_diagnostico"], PDO::PARAM_STR);
 				$stmt2->bindParam(":resultado", $datos["resultado_laboratorio"], PDO::PARAM_STR);
 				$stmt2->bindParam(":fecha_resultado", $datos["fecha_resultado"], PDO::PARAM_STR);
 				$stmt2->bindParam(":observaciones", $datos["observaciones_muestra"], PDO::PARAM_STR);
@@ -161,13 +164,16 @@ class ModeloLaboratorios {
 		 
 		    //Query 1: Attempt to insert the payment record into our database.
 		
-			$stmt = $pdo1->prepare("UPDATE $tabla SET tipo_muestra = :tipo_muestra, nombre_laboratorio = :nombre_laboratorio, fecha_muestra = :fecha_muestra, fecha_envio =:fecha_envio, cod_laboratorio = :cod_laboratorio, responsable_muestra = :responsable_muestra, observaciones_muestra = :observaciones_muestra, resultado_laboratorio = :resultado_laboratorio, fecha_resultado = :fecha_resultado WHERE id_ficha = :id_ficha");
+			$stmt = $pdo1->prepare("UPDATE $tabla SET estado_muestra = :estado_muestra, no_toma_muestra = :no_toma_muestra, tipo_muestra = :tipo_muestra, nombre_laboratorio = :nombre_laboratorio, fecha_muestra = :fecha_muestra, fecha_envio =:fecha_envio, cod_laboratorio = :cod_laboratorio, metodo_diagnostico = :metodo_diagnostico, responsable_muestra = :responsable_muestra, observaciones_muestra = :observaciones_muestra, resultado_laboratorio = :resultado_laboratorio, fecha_resultado = :fecha_resultado WHERE id_ficha = :id_ficha");
 
+			$stmt->bindParam(":estado_muestra", $datos["estado_muestra"], PDO::PARAM_STR);
+			$stmt->bindParam(":no_toma_muestra", $datos["no_toma_muestra"], PDO::PARAM_STR);
 			$stmt->bindParam(":tipo_muestra", $datos["tipo_muestra"], PDO::PARAM_STR);
 			$stmt->bindParam(":nombre_laboratorio", $datos["nombre_laboratorio"], PDO::PARAM_STR);
 			$stmt->bindParam(":fecha_muestra", $datos["fecha_muestra"], PDO::PARAM_STR);
 			$stmt->bindParam(":fecha_envio", $datos["fecha_envio"], PDO::PARAM_STR);
 			$stmt->bindParam(":cod_laboratorio", $datos["cod_laboratorio"], PDO::PARAM_STR);
+			$stmt->bindParam(":metodo_diagnostico", $datos["metodo_diagnostico"], PDO::PARAM_STR);
 			$stmt->bindParam(":responsable_muestra", $datos["responsable_muestra"], PDO::PARAM_STR);
 			$stmt->bindParam(":observaciones_muestra", $datos["observaciones_muestra"], PDO::PARAM_STR);
 			$stmt->bindParam(":resultado_laboratorio", $datos["resultado_laboratorio"], PDO::PARAM_STR);
@@ -176,11 +182,11 @@ class ModeloLaboratorios {
 
 			if ($stmt->execute()) {
 
-				$stmt2 = $pdo2->prepare("INSERT INTO covid_resultados (cod_asegurado, cod_afiliado, cod_empleador, nombre_empleador, fecha_recepcion, fecha_muestra, cod_laboratorio, nombre_laboratorio, muestra_control, tipo_muestra, id_departamento, id_establecimiento, documento_ci, foto, paterno, materno, nombre, sexo, fecha_nacimiento, telefono, email, id_localidad, zona, calle, nro_calle, resultado, fecha_resultado, observaciones, id_usuario, id_ficha) VALUES (:cod_asegurado, :cod_afiliado, :cod_empleador, :nombre_empleador, :fecha_recepcion, :fecha_muestra, :cod_laboratorio, :nombre_laboratorio, :muestra_control, :tipo_muestra, :id_departamento, :id_establecimiento, :documento_ci, :foto, :paterno, :materno, :nombre, :sexo, :fecha_nacimiento, :telefono, :email, :id_localidad, :zona, :calle, :nro_calle, :resultado, :fecha_resultado, :observaciones, :id_usuario, :id_ficha)");
+				$stmt2 = $pdo2->prepare("INSERT INTO covid_resultados (cod_asegurado, cod_afiliado, cod_empleador, nombre_empleador, fecha_recepcion, fecha_muestra, cod_laboratorio, nombre_laboratorio, muestra_control, tipo_muestra, id_departamento, id_establecimiento, documento_ci, foto, paterno, materno, nombre, sexo, fecha_nacimiento, telefono, email, id_localidad, zona, calle, nro_calle, metodo_diagnostico, resultado, fecha_resultado, observaciones, id_usuario, id_ficha) VALUES (:cod_asegurado, :cod_afiliado, :cod_empleador, :nombre_empleador, :fecha_recepcion, :fecha_muestra, :cod_laboratorio, :nombre_laboratorio, :muestra_control, :tipo_muestra, :id_departamento, :id_establecimiento, :documento_ci, :foto, :paterno, :materno, :nombre, :sexo, :fecha_nacimiento, :telefono, :email, :id_localidad, :zona, :calle, :nro_calle, :metodo_diagnostico, :resultado, :fecha_resultado, :observaciones, :id_usuario, :id_ficha)");
 
 				$stmt2->bindParam(":cod_asegurado", $datos["cod_asegurado"], PDO::PARAM_STR);
 				$stmt2->bindParam(":cod_afiliado", $datos["cod_afiliado"], PDO::PARAM_STR);
-				$stmt2->bindParam(":cod_empleador", $datos["cod_empleador"], PDO::PARAM_INT);
+				$stmt2->bindParam(":cod_empleador", $datos["cod_empleador"], PDO::PARAM_STR);
 				$stmt2->bindParam(":nombre_empleador", $datos["nombre_empleador"], PDO::PARAM_STR);
 				$stmt2->bindParam(":fecha_recepcion", $datos["fecha_envio"], PDO::PARAM_STR);
 				$stmt2->bindParam(":fecha_muestra", $datos["fecha_muestra"], PDO::PARAM_STR);
@@ -203,6 +209,7 @@ class ModeloLaboratorios {
 				$stmt2->bindParam(":zona", $datos["zona"], PDO::PARAM_STR);
 				$stmt2->bindParam(":calle", $datos["calle"], PDO::PARAM_STR);
 				$stmt2->bindParam(":nro_calle", $datos["nro_calle"], PDO::PARAM_STR);
+				$stmt2->bindParam(":metodo_diagnostico", $datos["metodo_diagnostico"], PDO::PARAM_STR);
 				$stmt2->bindParam(":resultado", $datos["resultado_laboratorio"], PDO::PARAM_STR);
 				$stmt2->bindParam(":fecha_resultado", $datos["fecha_resultado"], PDO::PARAM_STR);
 				$stmt2->bindParam(":observaciones", $datos["observaciones_muestra"], PDO::PARAM_STR);

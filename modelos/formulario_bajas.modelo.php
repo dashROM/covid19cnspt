@@ -46,7 +46,7 @@ class ModeloFormularioBajas {
 	static public function mdlIngresarFormularioBaja($tabla, $datos) {
 
 		$pdo = Conexion::conectar();
-		$stmt = $pdo->prepare("INSERT INTO $tabla(id_covid_resultado, riesgo, fecha_ini, fecha_fin, dias_incapacidad, lugar, fecha, clave) VALUES (:id_covid_resultado, :riesgo, :fecha_ini, :fecha_fin, :dias_incapacidad, :lugar, :fecha, :clave)");
+		$stmt = $pdo->prepare("INSERT INTO $tabla(id_covid_resultado, riesgo, fecha_ini, fecha_fin, dias_incapacidad, lugar, fecha, clave, codigo) VALUES (:id_covid_resultado, :riesgo, :fecha_ini, :fecha_fin, :dias_incapacidad, :lugar, :fecha, :clave, :codigo)");
 
 		$stmt->bindParam(":id_covid_resultado", $datos["id_covid_resultado"], PDO::PARAM_INT);
 		$stmt->bindParam(":riesgo", $datos["riesgo"], PDO::PARAM_STR);
@@ -54,8 +54,9 @@ class ModeloFormularioBajas {
 		$stmt->bindParam(":fecha_fin", $datos["fecha_fin"], PDO::PARAM_STR);
 		$stmt->bindParam(":dias_incapacidad", $datos["dias_incapacidad"], PDO::PARAM_STR);
 		$stmt->bindParam(":lugar", $datos["lugar"], PDO::PARAM_STR);
-		$stmt->bindParam(":fecha", $datos["fecha"], PDO::PARAM_INT);
+		$stmt->bindParam(":fecha", $datos["fecha"], PDO::PARAM_STR);
 		$stmt->bindParam(":clave", $datos["clave"], PDO::PARAM_STR);
+		$stmt->bindParam(":codigo", $datos["codigo"], PDO::PARAM_STR);
 
 		if ($stmt->execute()) {
 
@@ -84,7 +85,7 @@ class ModeloFormularioBajas {
 		$stmt->bindParam(":id", $datos["id"], PDO::PARAM_INT);
 		$stmt->bindParam(":id_covid_resultado", $datos["id_covid_resultado"], PDO::PARAM_INT);
 		$stmt->bindParam(":riesgo", $datos["riesgo"], PDO::PARAM_STR);
-		$stmt->bindParam(":fecha_ini", $datos["fecha_ini"], PDO::PARAM_INT);
+		$stmt->bindParam(":fecha_ini", $datos["fecha_ini"], PDO::PARAM_STR);
 		$stmt->bindParam(":fecha_fin", $datos["fecha_fin"], PDO::PARAM_STR);
 		$stmt->bindParam(":dias_incapacidad", $datos["dias_incapacidad"], PDO::PARAM_STR);
 		$stmt->bindParam(":lugar", $datos["lugar"], PDO::PARAM_STR);

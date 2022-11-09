@@ -21,18 +21,15 @@
 			
 			<div class="image">
 
-			<?php 
-
-			if ($_SESSION["fotoUsuarioCOVID"] != "") {
+			<?php if ($_SESSION["fotoUsuarioCOVID"] != "") {
 				
 				echo '<img src="'.$_SESSION["fotoUsuarioCOVID"].'" class="img-circle elevation-2">';
 
 			} else {
 
 				echo '<img src="vistas/img/usuarios/default/anonymous.png" class="img-circle elevation-2">';
-			}
-
-			?>
+			
+			} ?>
 			
       </div>
 
@@ -59,11 +56,7 @@
 
 				</li>
 
-				<?php 
-
-				if ($_SESSION["perfilUsuarioCOVID"] == "ADMIN_SYSTEM") {
-
-				?>
+				<?php if ($_SESSION["perfilUsuarioCOVID"] == "ADMIN_SYSTEM") { ?>
 
 				<li class="nav-item has-treeview">
 			
@@ -94,13 +87,7 @@
 
 				</li>
 
-				<?php
-					
-				}
-
-				if ($_SESSION["perfilUsuarioCOVID"] == "ADMIN_SYSTEM" || $_SESSION["perfilUsuarioCOVID"] == "LABORATORISTA" || $_SESSION["perfilUsuarioCOVID"] == "SECRETARIO") {
-
-				?>
+				<?php } if ($_SESSION["perfilUsuarioCOVID"] == "ADMIN_SYSTEM" || $_SESSION["perfilUsuarioCOVID"] == "LABORATORISTA" || $_SESSION["perfilUsuarioCOVID"] == "SECRETARIO") { ?>
 
 				<li class="nav-item has-treeview">
 					
@@ -116,7 +103,7 @@
 
 					<ul class="nav nav-treeview">
 
-						<li class="nav-item">
+						<!-- <li class="nav-item">
 							
 							<a href="empleadoresSIAIS" class="nav-link menu" id="empleadoresSIAIS">
 								
@@ -125,7 +112,7 @@
 							
 							</a>
 						
-						</li>
+						</li> -->
 
 						<li class="nav-item">
 							
@@ -133,6 +120,35 @@
 								
 								<i class="nav-icon fas fa-user-friends"></i>
 								<p>Poblacion Afiliada SIAIS</p>
+							
+							</a>
+						
+						</li>
+
+					</ul>
+
+				</li>
+
+				<li class="nav-item has-treeview">
+					
+					<a href="" class="nav-link menu" id="afiliacion-erp">
+						
+						<i class="nav-icon fas fa-user-cog"></i>
+						<p>
+							Datos Afiliación ERP
+							<i class="right fas fa-angle-left"></i>
+						</p>
+
+					</a>
+
+					<ul class="nav nav-treeview">
+
+						<li class="nav-item">
+							
+							<a href="nuevo-covid-resultado-erp" class="nav-link menu" id="nuevo-covid-resultado-erp">
+								
+								<i class="nav-icon fas fa-list-ul"></i>
+								<p>Agregar Resultado Covid-19</p>
 							
 							</a>
 						
@@ -158,7 +174,7 @@
 						
 						<li class="nav-item">
 							
-							<a href="ficha-epidemiologica" class="nav-link menu" id="ficha-epidemiologica-lab">
+							<a href="ficha-epidemiologica-lab" class="nav-link menu" id="ficha-epidemiologica-lab">
 								
 								<i class="nav-icon far fa-list-alt"></i>
 								<p>Ficha Epidemiologica</p>
@@ -182,13 +198,7 @@
 
 				</li>
 
-				<?php
-					
-				}
-
-				if ($_SESSION["perfilUsuarioCOVID"] == "ADMIN_SYSTEM" || $_SESSION["perfilUsuarioCOVID"] == "MEDICO") {
-
-				?>
+				<?php } if ($_SESSION["perfilUsuarioCOVID"] == "ADMIN_SYSTEM" || $_SESSION["perfilUsuarioCOVID"] == "MEDICO") { ?>
 
 				<li class="nav-item has-treeview">
 					
@@ -226,7 +236,7 @@
 						
 						</li>
 
-						<li class="nav-item">
+						<!-- <li class="nav-item">
 							
 							<a href="formulario-bajas" class="nav-link menu" id="formulario-bajas">
 								
@@ -235,15 +245,13 @@
 							
 							</a>
 						
-						</li>
+						</li> -->
 
 					</ul>
 
 				</li>
 
-				<?php
-					
-				}
+				<?php }
 
 				if ($_SESSION["perfilUsuarioCOVID"] == "ADMIN_SYSTEM" ||
 					$_SESSION["perfilUsuarioCOVID"] == "ADMINISTRATIVO" || 
@@ -291,6 +299,17 @@
 
 						<li class="nav-item">
 							
+							<a href="reportes-ficha-sive" class="nav-link menu" id="reporte-ficha-sive">
+								
+								<i class="nav-icon far fa-circle"></i>
+								<p>Reporte Ficha Exportar SIVE</p>
+							
+							</a>
+						
+						</li>
+
+						<!-- <li class="nav-item">
+							
 							<a href="" class="nav-link menu" id="reporte3">
 								
 								<i class="nav-icon far fa-circle"></i>
@@ -298,17 +317,13 @@
 							
 							</a>
 						
-						</li>
+						</li> -->
 
 					</ul>
 
 				</li>
 
-				<?php
-					
-				}
-
-				?>
+				<?php } ?>
 
 			</ul>
 

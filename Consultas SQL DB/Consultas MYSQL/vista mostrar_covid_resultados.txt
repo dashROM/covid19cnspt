@@ -1,4 +1,0 @@
-CREATE VIEW mostrar_covid_resultados 
-AS SELECT cr.id, cr.cod_laboratorio, cr.cod_asegurado, cr.cod_afiliado, concat_ws(' ', cr.paterno, cr.materno, cr.nombre) AS nombre_completo, cr.documento_ci, cr.fecha_muestra, cr.fecha_recepcion, cr.tipo_muestra, cr.muestra_control, d.nombre_depto, e.nombre_establecimiento, cr.sexo, cr.fecha_nacimiento, cr.telefono, cr.email, l.nombre_localidad, cr.zona, concat_ws(' ', cr.calle, cr.nro_calle) AS direccion ,cr.fecha_resultado, cr.resultado, cr.observaciones, cr.estado AS estado 
-FROM covid_resultados cr, departamentos d, establecimientos e, localidades l 
-WHERE cr.id_departamento = d.id AND cr.id_establecimiento = e.id AND cr.id_localidad = l.id

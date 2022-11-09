@@ -42,15 +42,11 @@
 
         <div class="col-md-12">
 
-          <div class="card">
+          <div class="card card-outline card-info">
 
             <div class="card-header">
 
-            <?php 
-
-              if ($_SESSION['perfilUsuarioCOVID'] == "MEDICO" OR $_SESSION['perfilUsuarioCOVID'] == "ADMIN_SYSTEM") {
-
-            ?>
+            <?php if ($_SESSION['perfilUsuarioCOVID'] == "MEDICO" OR $_SESSION['perfilUsuarioCOVID'] == "ADMIN_SYSTEM") { ?>
 
               <div class="form-row mb-3">
 
@@ -70,36 +66,34 @@
 
               </div>
 
-            <?php 
+              <?php } ?> 
 
-              }
+              <div class="row right_col alert alert-info">
 
-            ?> 
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 
-              <div class="form-row">
-                
-                <div class="input-group col-md-4">
+                  <label>Fecha de Toma de Muestra</label>
 
-                  <label class="px-2 mt-1 font-weight-normal">Fecha de Toma de Muestra: </label>
+                  <div class="input-group">
                   
-                  <input type="date" class="form-control" id="fechaMuestra" min="2020-01-01" max="<?= date("Y-m-d") ?>">
+                    <input type="date" class="form-control" id="fechaMuestra" min="2020-01-01" max="<?= date("Y-m-d") ?>">
+
+                    <span class="input-group-btn ml-2">
+                      <button type="button" class="btn btn-primary px-2 btnBuscarFichaFecha" perfilOculto="<?= $_SESSION['perfilUsuarioCOVID']; ?>" actionBuscarFichaFecha="fecha_muestra">
+                  
+                        <i class="fas fa-search"></i> Buscar
+                      
+                      </button> 
+                    </span>
+
+                    <input type="hidden" value="<?= $_SESSION['paternoUsuarioCOVID']?>" id="paternoNotificador">
+                    <input type="hidden" value="<?= $_SESSION['maternoUsuarioCOVID']?>" id="maternoNotificador">
+                    <input type="hidden" value="<?= $_SESSION['nombreUsuarioCOVID']?>" id="nombreNotificador">
+                    <input type="hidden" value="<?= $_SESSION['cargoUsuarioCOVID']?>" id="cargoNotificador"> 
+
+                  </div>
 
                 </div>
-
-                <div class="form-group col-md-2">
-                  
-                  <button type="button" class="btn btn-primary px-2 btnBuscarFichaFecha" perfilOculto="<?= $_SESSION['perfilUsuarioCOVID']; ?>" actionBuscarFichaFecha="fecha_muestra">
-                
-                    <i class="fas fa-search"></i> Buscar
-                  
-                  </button>  
-                  
-                  <input type="hidden" value="<?= $_SESSION['paternoUsuarioCOVID']?>" id="paternoNotificador">
-                  <input type="hidden" value="<?= $_SESSION['maternoUsuarioCOVID']?>" id="maternoNotificador">
-                  <input type="hidden" value="<?= $_SESSION['nombreUsuarioCOVID']?>" id="nombreNotificador">
-                  <input type="hidden" value="<?= $_SESSION['cargoUsuarioCOVID']?>" id="cargoNotificador">
-
-                </div>       
 
               </div>
                      
@@ -135,7 +129,7 @@
 
               <input type="hidden" value="<?= $_SESSION['perfilUsuarioCOVID']; ?>" id="perfilOculto">
 
-              <input type="hidden" value="centro" id="actionBuscarFichaFecha">
+              <input type="hidden" value="centro" id="actionFichas">
                       
             </div>
 
@@ -157,7 +151,7 @@ VENTANA MODAL PARA MOSTRAR REPORTE PDF
 
 <div id="ver-pdf" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="fichaPDF" aria-hidden="true">
   
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
 
     <div class="modal-content">
 

@@ -80,14 +80,14 @@ $(document).on("click", ".btnBuscarAfiliado", function() {
 
 		//Para mostrar alerta personalizada de loading
 		swal.fire({
-	        text: 'Procesando...',
-	        allowOutsideClick: false,
-	        allowEscapeKey: false,
-	        allowEnterKey: false,
-	        onOpen: () => {
-	            swal.showLoading()
-	        }
-	    });
+      text: 'Procesando...',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      onOpen: () => {
+          swal.showLoading()
+      }
+    });
 
 		$.ajax({
 

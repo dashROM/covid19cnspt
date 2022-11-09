@@ -1,0 +1,8 @@
+----------------
+CONSULTA SQL FILTRADO POR FECHAS
+----------------
+SELECT cr.id, cr.cod_asegurado, concat_ws(' ', cr.paterno, cr.materno, cr.nombre) as nombre_completo, cr.documento_ci, cr.fecha_muestra, cr.fecha_recepcion, cr.muestra_control, d.nombre_depto, e.nombre_establecimiento, cr.sexo, YEAR(CURDATE())-YEAR(cr.fecha_nacimiento) + IF(DATE_FORMAT(CURDATE(),'%m-%d') > DATE_FORMAT(cr.fecha_nacimiento,'%m-%d'), 0 , -1 ) AS edad, cr.metodo_diagnostico, cr.fecha_resultado, cr.resultado, cr.cod_empleador, cr.nombre_empleador FROM covid_resultados cr, departamentos d, establecimientos e WHERE cr.id_departamento = d.id AND cr.id_establecimiento = e.id AND fecha_resultado BETWEEN '2020-08-01' and '2020-08-17' ORDER BY fecha_resultado DESC
+----------------
+CONSULTA SQL FILTRADO POR FECHAS Y RESULTADO
+----------------
+SELECT cr.id, cr.cod_asegurado, concat_ws(' ', cr.paterno, cr.materno, cr.nombre) as nombre_completo, cr.documento_ci, cr.fecha_muestra, cr.fecha_recepcion, cr.muestra_control, d.nombre_depto, e.nombre_establecimiento, cr.sexo, YEAR(CURDATE())-YEAR(cr.fecha_nacimiento) + IF(DATE_FORMAT(CURDATE(),'%m-%d') > DATE_FORMAT(cr.fecha_nacimiento,'%m-%d'), 0 , -1 ) AS edad, cr.metodo_diagnostico, cr.fecha_resultado, cr.resultado, cr.cod_empleador, cr.nombre_empleador FROM covid_resultados cr, departamentos d, establecimientos e WHERE cr.id_departamento = d.id AND cr.id_establecimiento = e.id AND cr.resultado = 'NEGATIVO' AND cr.fecha_resultado BETWEEN '2020-08-01' AND '2020-08-17' ORDER BY cr.fecha_resultado DESC

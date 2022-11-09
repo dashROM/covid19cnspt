@@ -1,0 +1,5 @@
+CREATE VIEW vista_fichas 
+AS SELECT f.id_ficha, f.tipo_ficha, l.fecha_muestra, f.busqueda_activa, pa.cod_asegurado, concat_ws(' ', pa.paterno, pa.materno, pa.nombre) AS nombre_completo, pa.nro_documento, pa.sexo, pa.fecha_nacimiento, l.resultado_laboratorio, l.fecha_resultado, f.estado_ficha 
+FROM fichas f, pacientes_asegurados pa, laboratorios l 
+WHERE f.id_ficha = pa.id_ficha AND f.id_ficha = l.id_ficha 
+ORDER BY id_ficha DESC

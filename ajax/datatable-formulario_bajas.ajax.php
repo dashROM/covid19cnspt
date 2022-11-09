@@ -65,6 +65,7 @@ class TablaFormularioBajas {
 					"'.$formularioBajas[$i]["dias_incapacidad"].'",
 					"'.$formularioBajas[$i]["lugar"].' '.date("d-m-Y", strtotime($formularioBajas[$i]["fecha"])).'",
 					"'.$formularioBajas[$i]["clave"].'",
+					"'.$formularioBajas[$i]["codigo"].'",
 					"'.$botones.'"
 				],';
 			}

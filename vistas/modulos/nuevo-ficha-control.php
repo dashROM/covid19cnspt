@@ -42,7 +42,7 @@
 
         <div class="form-inline col-md-10">
 
-          Todos los campos con <span class="text-danger mx-2 font-weight-bold"> * </span> son obligatorios
+          Todos los campos con<i class="fas fa-asterisk asterisk mr-1"></i>son obligatorios
 
         </div>
 

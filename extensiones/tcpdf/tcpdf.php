@@ -11138,7 +11138,7 @@ class TCPDF {
 			$cid -= $cidoffset;
 			if ($font['subset'] AND ($cid > 255) AND (!isset($font['subsetchars'][$cid]))) {
 				// ignore the unused characters (font subsetting)
-				continue;
+				break;
 			}
 			if ($width != $font['dw']) {
 				if ($cid == ($prevcid + 1)) {
@@ -18945,7 +18945,7 @@ class TCPDF {
 		for ($i=0; $i < $cnt; ++$i) {
 			$line = $lines[$i];
 			if (($line == '') OR ($line{0} == '%')) {
-				continue;
+				break;
 			}
 			$len = strlen($line);
 			// check for spot color names
@@ -18968,7 +18968,7 @@ class TCPDF {
 				$g = array_pop($chunks);
 				$r = array_pop($chunks);
 				$this->_out(''.$r.' '.$g.' '.$b.' '.($cmd=='Xa'?'rg':'RG')); //substr($line, 0, -2).'rg' -> in EPS (AI8): c m y k r g b rg!
-				continue;
+				break;
 			}
 			$skip = false;
 			if ($fixoutvals) {
@@ -20790,7 +20790,7 @@ class TCPDF {
 						$thead = true;
 					}
 					++$elkey;
-					continue;
+					break;
 				}
 				$dom[$key]['tag'] = true;
 				$dom[$key]['value'] = $tagname;
@@ -21539,7 +21539,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					// reset hidden mode
 					$hidden_node_key = -1;
 				}
-				continue;
+				break;
 			}
 			if ($dom[$key]['tag'] AND isset($dom[$key]['attribute']['pagebreak'])) {
 				// check for pagebreak
@@ -22035,7 +22035,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 										if ($offset === false) {
 											$this->Error('HTML Justification: malformed PDF code.');
 										}
-										continue;
+										break;
 									}
 									if ($this->isRTLTextDir()) {
 										$spacew = ($spacewidth * ($nsmax - $ns));
@@ -22055,7 +22055,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 										$pmid_e = substr($pmid, $epsposend);
 										$pmid = $pmid_b."\nq\n".$trx."\n".$pmid_m."\nQ\n".$pmid_e;
 										$offset = $epsposend;
-										continue;
+										break;
 
 									}
 									$prev_epsposbeg = $epsposbeg;
@@ -22088,7 +22088,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 											// justify block
 											if (!$this->empty_string($this->lispacer)) {
 												$this->lispacer = '';
-												continue;
+												break;
 											}
 											preg_match('/([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]([0-9\.\+\-]*)[\s]('.$strpiece[1][0].')[\s](re)([\s]*)/x', $pmid, $xmatches);
 											$currentxpos = $xmatches[1];

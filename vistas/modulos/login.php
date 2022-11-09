@@ -1,4 +1,4 @@
-<div id="back"></div>
+<!-- <div id="back"></div>
 
 <div class="login-box">
 
@@ -12,7 +12,7 @@
   
     <div class="card-body login-card-body">
       
-      <p class="login-box-msg">INTRANET CNS Regional Potosí</p>
+      <p class="login-box-msg">CNS Regional Potosí | COVID-19</p>
 
       <form method="post">
         
@@ -76,8 +76,8 @@
 
         <?php 
 
-          $login = new ControladorUsuarios();
-          $login -> ctrIngresoUsuario();
+          // $login = new ControladorUsuarios();
+          // $login -> ctrIngresoUsuario();
 
         ?>
       
@@ -87,4 +87,64 @@
 
   </div>
 
+</div> -->
+
+<div class="limiter">
+
+  <div class="container-login100" style="background-image: url('vistas/img/template/1.jpg');">
+
+    <div class="wrap-login100">
+
+      <form method="post" class="login100-form validate-form">
+
+        <span class="login100-form-logo">
+          <img src="vistas/img/cns/cns-logo.png">
+        </span>
+
+        <span class="login100-form-title p-b-34 p-t-27">
+          CNS POTOSÍ | COVID-19
+        </span>
+
+        <div class="wrap-input100 validate-input" data-validate = "Ingrese nombre o nick de Usuario">
+          <input class="input100" type="text" id="matricula" name="loginMatricula" placeholder="Ingrese Matrícula o Nick de Usuario">
+          <span class="focus-input100" data-placeholder="&#xf207;"></span>
+        </div>
+
+        <div class="wrap-input100 validate-input" data-validate = "Ingrese numero de CI">
+          <input class="input100" type="text" id="ci" name="loginCI" placeholder="Ingrese Nro. CI">
+          <span class="focus-input100" data-placeholder="&#xf20a;"></span>
+        </div>
+
+        <div class="wrap-input100 validate-input" data-validate="Ingrese password">
+          <input class="input100" type="password" id="password" name="loginPassword" placeholder="Ingrese Contraseña">
+          <span class="focus-input100" data-placeholder="&#xf191;"></span>
+        </div>
+
+        <div class="container-login100-form-btn">
+          <button type="submit" class="login100-form-btn">
+            Ingresar
+          </button>
+        </div>
+
+        <?php 
+
+          $login = new ControladorUsuarios();
+          $login -> ctrIngresoUsuario();
+
+        ?>
+
+        <div class="text-center p-t-90">
+          <a class="txt1" href="../">
+            <- Volver a la pagina Principal
+          </a>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+  
 </div>
+
+<div id="dropDownSelect1"></div>

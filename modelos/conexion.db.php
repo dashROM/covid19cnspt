@@ -4,7 +4,7 @@ class Conexion {
 	
 	static public function conectar() {
 		
-		$link = new PDO("mysql:host=localhost;dbname=bdcovid19cnspt","root","3000REIVAJinf1976");
+		$link = new PDO("mysql:host=172.16.0.54;dbname=bdcovid19cnspt","root","3000REIVAJinf1976");
 
 		$link->exec("set names utf8");
 
@@ -14,7 +14,7 @@ class Conexion {
 
 	static public function conectarBDFicha() {
 		
-		$link = new PDO("mysql:host=localhost;dbname=bdfichaepidemiologicacnspt","root","3000REIVAJinf1976");
+		$link = new PDO("mysql:host=172.16.0.54;dbname=bdfichaepidemiologicacnspt","root","3000REIVAJinf1976");
 
 		$link->exec("set names utf8");
 

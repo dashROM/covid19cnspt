@@ -40,33 +40,35 @@
 
       <div class="row">
 
-        <div class="col-md-12">
+        <div class="col-12">
 
-          <div class="card">
+          <div class="card card-outline card-info">
 
             <div class="card-header"> 
 
-              <div class="form-row">
+              <div class="row right_col alert alert-info">
                 
-                <div class="input-group col-md-4">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 
-                  <label class="px-2 mt-1 font-weight-normal">Fecha de Toma de Muestra: </label>
-                  
-                  <input type="date" class="form-control" id="fechaCovidResultados" min="2020-01-01" max="<?= date("Y-m-d") ?>">
+                  <label>Fecha de Toma de Muestra</label>
 
-                </div>
+                  <div class="input-group">
+                  
+                    <input type="date" class="form-control" id="fechaCovidResultados" min="2020-01-01" max="<?= date("Y-m-d") ?>">
 
-                <div class="form-group col-md-2">
-                  
-                  <button type="button" class="btn btn-primary px-2 btnCovidResultados" perfilOculto="<?= $_SESSION['perfilUsuarioCOVID']; ?>" actionCovidResultados="fecha_muestra">
-                
-                    <i class="fas fa-search"></i> Buscar
-                  
-                  </button>  
-                  
-                  <input type="hidden" value="<?= $_SESSION['paternoUsuarioCOVID'].' '.$_SESSION['maternoUsuarioCOVID'].' '.$_SESSION['nombreUsuarioCOVID']; ?>" id="nombreUsuarioOculto">
+                    <span class="input-group-btn ml-2">
 
-                </div>       
+                      <button type="button" class="btn btn-primary px-2 btnCovidResultados" perfilOculto="<?= $_SESSION['perfilUsuarioCOVID']; ?>" actionCovidResultados="fecha_muestra">
+                        <i class="fas fa-search"></i> Buscar
+                      </button> 
+
+                    </span>
+
+                    <input type="hidden" value="<?= $_SESSION['paternoUsuarioCOVID'].' '.$_SESSION['maternoUsuarioCOVID'].' '.$_SESSION['nombreUsuarioCOVID']; ?>" id="nombreUsuarioOculto">
+
+                  </div>
+
+                </div>    
 
               </div>
                      
@@ -76,44 +78,49 @@
             SE MUESTRA LAS TABLAS GENERADAS
             ======================================-->            
 
-            <div class="card-body" id="resultadosCovid">  
+            <div class="card-body" id="resultadosCovid">
 
-              <table class="table table-bordered table-striped dt-responsive table-hover" id="tablaCovidResultados" width="100%">
-                
-                <thead>
+              <div class="table-responsive"> 
+
+                <table class="table table-bordered table-striped dt-responsive table-hover" id="tablaCovidResultados" width="100%">
                   
-                  <tr>
-                    <th>COD. LAB.</th>
-                    <th>COD. ASEGURADO</th>
-                    <th>COD. AFILIADO</th>
-                    <th>APELLIDOS Y NOMBRES</th>
-                    <th>CI</th>
-                    <th>FECHA RECEPCIÓN</th>
-                    <th>FECHA MUESTRA</th>
-                    <th>TIPO DE MUESTRA</th>
-                    <th>MUESTRA CONTROL</th>
-                    <th>DEPARTAMENTO</th>
-                    <th>ESTABLECIMIENTO</th>
-                    <th>SEXO</th>
-                    <th>FECHA NACIMIENTO</th>
-                    <th>TELÉFONO</th>
-                    <th>EMAIL</th>
-                    <th>LOCALIDAD</th>
-                    <th>ZONA</th>
-                    <th>DIRECCION</th>
-                    <th>RESULTADO</th>
-                    <th>FECHA RESULTADO</th>
-                    <th>OBSERVACIONES</th>
-                    <th>ACCIONES</th>
-                  </tr>
+                  <thead>
+                    
+                    <tr>
+                      <th>COD. LAB.</th>
+                      <th>COD. ASEGURADO</th>
+                      <th>COD. AFILIADO</th>
+                      <th>APELLIDOS Y NOMBRES</th>
+                      <th>CI</th>
+                      <th>FECHA RECEPCIÓN</th>
+                      <th>FECHA MUESTRA</th>
+                      <th>TIPO DE MUESTRA</th>
+                      <th>MUESTRA CONTROL</th>
+                      <th>DEPARTAMENTO</th>
+                      <th>ESTABLECIMIENTO</th>
+                      <th>SEXO</th>
+                      <th>FECHA NACIMIENTO</th>
+                      <th>TELÉFONO</th>
+                      <th>EMAIL</th>
+                      <th>LOCALIDAD</th>
+                      <th>ZONA</th>
+                      <th>DIRECCION</th>
+                      <th>MÉTODO DE DIAGNÓSTICO</th>
+                      <th>RESULTADO</th>
+                      <th>FECHA RESULTADO</th>
+                      <th>OBSERVACIONES</th>
+                      <th>ACCIONES</th>
+                    </tr>
 
-                </thead>
-                
-              </table> 
+                  </thead>
+                  
+                </table> 
 
-              <input type="hidden" value="<?= $_SESSION['perfilUsuarioCOVID']; ?>" id="perfilOculto">
+                <input type="hidden" value="<?= $_SESSION['perfilUsuarioCOVID']; ?>" id="perfilOculto">
 
-              <input type="hidden" value="centro" id="actionCovidResultados">
+                <input type="hidden" value="centro" id="actionCovidResultados">
+
+              </div>
                       
             </div>
 
@@ -168,7 +175,7 @@ VENTANA MODAL PARA MOSTRAR EL FORMULARIO DE BAJA
 
                   <div class="row">
                     <div class="col-2 text-center">
-                      <img src="vistas/img/cns/cns-logo.png" alt="" width="50%">
+                      <img src="vistas/img/cns/cns-logo-simple.png" alt="" width="80%">
                     </div>
                     <div class="col-6 text-center">
                       <p class="mb-1">CAJA NACIONAL DE SALUD</p>
@@ -176,7 +183,7 @@ VENTANA MODAL PARA MOSTRAR EL FORMULARIO DE BAJA
                       <p class="mb-1">CERTIFICADO DE INCAPACIDAD TEMPORAL</p>
                     </div>
                     <div class="col-4 text-right text-uppercase">
-                      <p>Form AVC-00</p>
+                      <p>Form AVC-09</p>
                     </div>
                   </div>
 
@@ -203,6 +210,7 @@ VENTANA MODAL PARA MOSTRAR EL FORMULARIO DE BAJA
                 </td>
                 <td>
                   <span id="codAseguradoFormBaja"></span>
+                  <input type="hidden" id="codAsegurado" value="">
                 </td>
               </tr>
 
@@ -260,21 +268,21 @@ VENTANA MODAL PARA MOSTRAR EL FORMULARIO DE BAJA
                       <div class="form-group row m-1">
                         <label class="col-form-label col-form-label-sm">DESDE</label>
                         <div class="col-md-5">
-                          <input type="text" class="form-control form-control-sm calendarioFormBaja" id="fechaIniFormBaja">
+                          <input type="date" class="form-control form-control-sm" id="fechaIniFormBaja">
+                        </div>
+                      </div>
+
+                       <div class="form-group row m-1">
+                        <label class="col-form-label col-form-label-sm">DÍAS DE INCAPACIDAD</label>
+                        <div class="col-md-5">
+                          <input type="text" class="form-control form-control-sm" id="diasIncapacidadFormBaja">
                         </div>
                       </div>
 
                       <div class="form-group row m-1">
                         <label class="col-form-label col-form-label-sm">HASTA</label>
                         <div class="col-md-5">
-                          <input type="text" class="form-control form-control-sm calendarioFormBaja" id="fechaFinFormBaja">
-                        </div>
-                      </div>
-
-                      <div class="form-group row m-1">
-                        <label class="col-form-label col-form-label-sm">DÍAS DE INCAPACIDAD</label>
-                        <div class="col-md-5">
-                          <input type="text" class="form-control form-control-sm" id="diasIncapacidadFormBaja" readonly>
+                          <input type="date" class="form-control form-control-sm" id="fechaFinFormBaja">
                         </div>
                       </div>
 
@@ -286,8 +294,8 @@ VENTANA MODAL PARA MOSTRAR EL FORMULARIO DE BAJA
                             <option value="POTOSÍ">POTOSÍ</option>
                           </select>
                         </div>
-                        <div class="col-md-4">
-                          <input type="text" class="form-control form-control-sm calendarioFormBaja" id="fechaFormBaja">
+                        <div class="col-md-5">
+                          <input type="date" class="form-control form-control-sm" id="fechaFormBaja" name="fechaFormBaja">
                         </div>
                       </div>
 

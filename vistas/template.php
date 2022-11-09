@@ -11,7 +11,7 @@ session_start();
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>CNS Potosi | COVID-19</title>
+  <title>CNS Potosí | COVID-19</title>
 
   <!-- Icono -->
   <link rel="icon" href="vistas/img/cns/cns-logo.png">
@@ -23,8 +23,18 @@ session_start();
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="vistas/plugins/fontawesome-free/css/all.min.css">
 
+  <!-- Iconic Icons -->
+  <link rel="stylesheet" href="vistas/plugins/iconic/css/material-design-iconic-font.min.css">
+
+  <!-- Animate CSS -->
+  <link rel="stylesheet" href="vistas/plugins/animate/animate.css">
+
   <!-- Mis style -->
   <link rel="stylesheet" href="vistas/css/style.css">
+
+  <!-- Login style -->
+  <link rel="stylesheet" href="vistas/css/util.css">
+  <link rel="stylesheet" href="vistas/css/main.css">
 
   <!-- Theme style -->
   <link rel="stylesheet" href="vistas/dist/css/adminlte.css">
@@ -49,6 +59,10 @@ session_start();
   <!-- Daterange picker --> 
   <link rel="stylesheet" href="vistas/plugins/daterangepicker/daterangepicker.css">
 
+  <!-- Select2 -->
+  <link rel="stylesheet" href="vistas/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="vistas/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
   <!--=====================================
   PLUGINS JAVASCRIPT
   ======================================-->
@@ -58,7 +72,7 @@ session_start();
 
   <!-- jQuery Validation -->
   <script src="vistas/plugins/jquery-validation/jquery.validate.min.js"></script>
-  
+
   <!-- Bootstrap 4 -->
   <script src="vistas/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -100,6 +114,9 @@ session_start();
   <!-- Daterange picker --> 
   <script src="vistas/plugins/daterangepicker/moment.min.js"></script>
   <script src="vistas/plugins/daterangepicker/daterangepicker.js"></script>
+
+  <!-- Select2 -->
+  <script src="vistas/plugins/select2/js/select2.full.min.js"></script>
 
   <!-- MomentJS --> 
   <script src="vistas/plugins/moment/moment.min.js"></script>
@@ -157,12 +174,13 @@ if (isset($_SESSION["iniciarSesionCOVID"]) && $_SESSION["iniciarSesionCOVID"] ==
           $_GET["ruta"] == "covid-resultados" ||
           $_GET["ruta"] == "covid-resultados-lab" ||
           $_GET["ruta"] == "nuevo-covid-resultado" ||
-          $_GET["ruta"] == "nuevo-covid-resultado-no-afiliado" ||
+          $_GET["ruta"] == "nuevo-covid-resultado-erp" ||
           $_GET["ruta"] == "editar-covid-resultado" ||
           $_GET["ruta"] == "formulario-bajas" ||
           $_GET["ruta"] == "editar-formulario-bajas" ||
           $_GET["ruta"] == "reportes-covid" ||
           $_GET["ruta"] == "ficha-epidemiologica" ||
+          $_GET["ruta"] == "ficha-epidemiologica-lab" ||
           $_GET["ruta"] == "nuevo-ficha-epidemiologica" ||
           $_GET["ruta"] == "nuevo-ficha-control" ||
           $_GET["ruta"] == "editar-ficha-epidemiologica" ||
@@ -172,6 +190,7 @@ if (isset($_SESSION["iniciarSesionCOVID"]) && $_SESSION["iniciarSesionCOVID"] ==
           $_GET["ruta"] == "imprimir-ficha-epidemiologica" ||
           $_GET["ruta"] == "ficha-seguimiento" ||
           $_GET["ruta"] == "reportes-ficha" ||
+          $_GET["ruta"] == "reportes-ficha-sive" ||
           $_GET["ruta"] == "salir") {
 
         include "modulos/".$_GET["ruta"].".php";
@@ -208,6 +227,7 @@ if (isset($_SESSION["iniciarSesionCOVID"]) && $_SESSION["iniciarSesionCOVID"] ==
 ?>
 
 <script src="vistas/js/template.js"></script>
+<script src="vistas/js/main.js"></script>
 <script src="vistas/js/usuarios.js"></script>
 <script src="vistas/js/empleadores.js"></script>
 <script src="vistas/js/asegurados.js"></script>

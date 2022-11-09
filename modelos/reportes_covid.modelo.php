@@ -14,7 +14,7 @@ class ModeloReportesCovid {
 
 			// devuelve los campos que coincidan con el rango de fechas
 
-			$sql = "SELECT cr.id, cr.cod_laboratorio, cr.cod_asegurado, concat_ws(' ', cr.paterno, cr.materno, cr.nombre) as nombre_completo, cr.documento_ci, cr.fecha_muestra, cr.fecha_recepcion, cr.muestra_control, d.nombre_depto, e.abreviatura_establecimiento, cr.sexo, cr.telefono, YEAR(CURDATE())-YEAR(cr.fecha_nacimiento) + IF(DATE_FORMAT(CURDATE(),'%m-%d') > DATE_FORMAT(cr.fecha_nacimiento,'%m-%d'), 0 , -1 ) AS edad, cr.fecha_resultado, cr.resultado, cr.cod_empleador, cr.nombre_empleador, cr.observaciones FROM covid_resultados cr, departamentos d, establecimientos e WHERE cr.id_departamento = d.id AND cr.id_establecimiento = e.id AND cr.estado = 1 AND cr.fecha_resultado BETWEEN :fechaInicio AND :fechaFin ORDER BY cod_laboratorio";
+			$sql = "SELECT cr.id, cr.cod_laboratorio, cr.cod_asegurado, concat_ws(' ', cr.paterno, cr.materno, cr.nombre) as nombre_completo, cr.documento_ci, cr.fecha_muestra, cr.fecha_recepcion, cr.muestra_control, d.nombre_depto, e.abreviatura_establecimiento, cr.sexo, cr.telefono, YEAR(CURDATE())-YEAR(cr.fecha_nacimiento) + IF(DATE_FORMAT(CURDATE(),'%m-%d') > DATE_FORMAT(cr.fecha_nacimiento,'%m-%d'), 0 , -1 ) AS edad, cr.metodo_diagnostico, cr.fecha_resultado, cr.resultado, cr.cod_empleador, cr.nombre_empleador, cr.observaciones FROM covid_resultados cr, departamentos d, establecimientos e WHERE cr.id_departamento = d.id AND cr.id_establecimiento = e.id AND cr.estado = 1 AND cr.fecha_resultado BETWEEN :fechaInicio AND :fechaFin ORDER BY cod_laboratorio";
 
 			$stmt = Conexion::conectar()->prepare($sql);
 
@@ -29,7 +29,7 @@ class ModeloReportesCovid {
 
 			// devuelve todos los datos campos que coincidan con el rango de fechas y resultado de laboratorio
 
-			$sql = "SELECT cr.id, cr.cod_laboratorio, cr.cod_asegurado, concat_ws(' ', cr.paterno, cr.materno, cr.nombre) as nombre_completo, cr.documento_ci, cr.fecha_muestra, cr.fecha_recepcion, cr.muestra_control, d.nombre_depto, e.abreviatura_establecimiento, cr.sexo, cr.telefono, YEAR(CURDATE())-YEAR(cr.fecha_nacimiento) + IF(DATE_FORMAT(CURDATE(),'%m-%d') > DATE_FORMAT(cr.fecha_nacimiento,'%m-%d'), 0 , -1 ) AS edad, cr.fecha_resultado, cr.resultado, cr.cod_empleador, cr.nombre_empleador, cr.observaciones FROM covid_resultados cr, departamentos d, establecimientos e WHERE cr.id_departamento = d.id AND cr.id_establecimiento = e.id AND cr.resultado = :resultado AND cr.estado = 1 AND cr.fecha_resultado BETWEEN :fechaInicio AND :fechaFin ORDER BY cod_laboratorio";
+			$sql = "SELECT cr.id, cr.cod_laboratorio, cr.cod_asegurado, concat_ws(' ', cr.paterno, cr.materno, cr.nombre) as nombre_completo, cr.documento_ci, cr.fecha_muestra, cr.fecha_recepcion, cr.muestra_control, d.nombre_depto, e.abreviatura_establecimiento, cr.sexo, cr.telefono, YEAR(CURDATE())-YEAR(cr.fecha_nacimiento) + IF(DATE_FORMAT(CURDATE(),'%m-%d') > DATE_FORMAT(cr.fecha_nacimiento,'%m-%d'), 0 , -1 ) AS edad, cr.metodo_diagnostico, cr.fecha_resultado, cr.resultado, cr.cod_empleador, cr.nombre_empleador, cr.observaciones FROM covid_resultados cr, departamentos d, establecimientos e WHERE cr.id_departamento = d.id AND cr.id_establecimiento = e.id AND cr.resultado = :resultado AND cr.estado = 1 AND cr.fecha_resultado BETWEEN :fechaInicio AND :fechaFin ORDER BY cod_laboratorio";
 
 			$stmt = Conexion::conectar()->prepare($sql);
 

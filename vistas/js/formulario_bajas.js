@@ -77,6 +77,7 @@ $(document).on("click", ".btnMostrarFormBaja", function() {
 			$("#maternoFormBaja").html(respuesta["materno"]);
 			$("#nombreFormBaja").html(respuesta["nombre"]);
 			$("#codAseguradoFormBaja").html(respuesta["cod_asegurado"]);
+			$("#codAsegurado").val(respuesta["cod_asegurado"]);
 			$("#nombreEmpleadorFormBaja").html(respuesta["nombre_empleador"]);
 			$("#codEmpleadorFormBaja").html(respuesta["cod_empleador"]);
 
@@ -120,6 +121,7 @@ $(document).on("click", ".btnAgregarFormBaja", function() {
 	var lugar = $("#lugarFormBaja").val();
 	var fecha = $("#fechaFormBaja").val();
 	var clave = $("#claveFormBaja").val();
+	var codAsegurado = $("#codAsegurado").val();
 
 	var datos = new FormData();
 	datos.append("agregarFormBaja", 'agregarFormBaja');
@@ -131,6 +133,7 @@ $(document).on("click", ".btnAgregarFormBaja", function() {
 	datos.append("lugar", lugar);
 	datos.append("fecha", fecha);
 	datos.append("clave", clave);
+	datos.append("codAsegurado", codAsegurado);
 
 	$.ajax({
 		url: "ajax/formulario_bajas.ajax.php",
@@ -194,21 +197,42 @@ $(document).on("click", ".btnAgregarFormBaja", function() {
 OBTENER LOS DIAS DE INCAPACIDAD
 =============================================*/
 
-$("#fechaFinFormBaja").change(function() {
+$(document).on("change", "#fechaFinFormBaja", function() {
+	
+	
+	var fechaFin = new Date($(this).val());
 
-	var fecha1 = $("#fechaIniFormBaja").val();
-	var fecha2 = $(this).val();
+	var fechaInicio = new Date($("#fechaIniFormBaja").val());
 
-	$("#diasIncapacidadFormBaja").val(restaFechas(fecha1,fecha2)+" Días");
+	var difference = Math.abs(fechaFin-fechaInicio);
+
+	days = difference/(1000 * 3600 * 24)
+
+	$("#diasIncapacidadFormBaja").val(days+1);
 
 });
 
-$("#fechaIniFormBaja").change(function() {
+$(document).on("change", "#fechaIniFormBaja", function() {
+	
+	var fechaInicio = new Date($(this).val());
+	
+	var diasIncapacidad = $("#diasIncapacidadFormBaja").val()
 
-	var fecha1 = $(this).val();
-	var fecha2 = $("#fechaFinFormBaja").val();
+	var fechaFin = sumarDiasFecha(fechaInicio, diasIncapacidad);
 
-	$("#diasIncapacidadFormBaja").val(restaFechas(fecha1,fecha2)+" DÍAS");
+	$("#fechaFinFormBaja").val(fechaFin);
+
+});
+
+$(document).on("change", "#diasIncapacidadFormBaja", function() {
+	
+	var fechaInicio = new Date($("#fechaIniFormBaja").val());
+	
+	var diasIncapacidad = $(this).val();
+
+	var fechaFin = sumarDiasFecha(fechaInicio, diasIncapacidad);
+
+	$("#fechaFinFormBaja").val(fechaFin);
 
 });
 
@@ -218,13 +242,39 @@ restaFechas = function(f1, f2) {
 
  var aFecha1 = f1.split('-');
  var aFecha2 = f2.split('-');
- var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]);
- var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]);
+ var fFecha1 = Date.UTC(aFecha1[0],aFecha1[1]-1,aFecha1[2]);
+ var fFecha2 = Date.UTC(aFecha2[0],aFecha2[1]-1,aFecha2[2]);
  var dif = fFecha2 - fFecha1;
  var dias = Math.floor(dif / (1000 * 60 * 60 * 24));
 
  return dias;
 
+}
+
+/*=============================================
+FUNCION PARA SUMAR DIAS A UNA DETERMINADA FECHA
+=============================================*/
+
+function sumarDiasFecha(miFecha, days){
+
+	// fecha = new Date();
+	day = miFecha.getDate();
+	month = miFecha.getMonth() + 1;
+	year = miFecha.getFullYear();
+
+	tiempo = miFecha.getTime();
+	milisegundos = parseInt(days * 24 * 60 * 60 * 1000);
+	total = miFecha.setTime(tiempo + milisegundos);
+	day = miFecha.getDate();
+	month = miFecha.getMonth() + 1;
+	year = miFecha.getFullYear();
+
+	if (day < 10) day = '0'+ day;
+
+	if (month < 10) month = '0'+ month;
+
+	return(year+"-"+month+"-"+day);
+	
 }
 
 /*=============================================
@@ -296,7 +346,7 @@ $(".imagenFormBaja").change(function() {
 });
 
 /*=============================================
-IMPRIMIR FORMULARIO BAJA
+IMPRIMIR FORMULARIO BAJA PDF
 =============================================*/
 
 $("#tablaFormularioBajas").on("click", ".btnImprimirFormularioBaja", function() {
@@ -328,7 +378,7 @@ $("#tablaFormularioBajas").on("click", ".btnImprimirFormularioBaja", function() 
 
 			});	
 
-			PDFObject.embed("temp/formularioIncapacidad-"+idFormularioBaja+".pdf", "#view_pdf");
+			PDFObject.embed("ajax/temp/formularioIncapacidad-"+idFormularioBaja+".pdf", "#view_pdf");
 
 		}
 

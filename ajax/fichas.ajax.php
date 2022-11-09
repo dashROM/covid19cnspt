@@ -47,9 +47,12 @@ require_once "../modelos/paises.modelo.php";
 
 // require_once('../extensiones/dompdf/autoload.inc.php');
 
-require_once('../extensiones/tcpdf/tcpdf.php');
+require_once('../extensiones/TCPDF-main/tcpdf.php');
+
+// require_once('../extensiones/tcpdf/tcpdf.php');
 
 class MYPDF extends TCPDF {
+
 
     //Page header
     public function Header() {
@@ -178,26 +181,41 @@ class AjaxFichas {
 	public $zona; 
 	public $calle; 
 	public $nro_calle; 
-	public $telefono; 
+	public $telefono;
+	public $email; 
 	public $nombre_apoderado; 
 	public $telefono_apoderado; 
 
 	// 3. ANTECEDENTES EPIDEMIOLOGICOS
 	public $ocupacion; 
-	public $ant_vacuna_influenza; 
-	public $fecha_vacuna_influenza; 
-	public $viaje_riesgo; 
-	public $pais_ciudad_riesgo; 
-	public $fecha_retorno; 
-	public $nro_vuelo; 
-	public $nro_asiento; 
+	// public $ant_vacuna_influenza; 
+	// public $fecha_vacuna_influenza; 
+	// public $viaje_riesgo; 
+	// public $pais_ciudad_riesgo; 
+	// public $fecha_retorno; 
+	// public $nro_vuelo; 
+	// public $nro_asiento; 
+
 	public $contacto_covid; 
-	public $fecha_contacto_covid; 
-	public $nombre_contacto_covid; 
-	public $telefono_contacto_covid; 
-	public $pais_contacto_covid; 
-	public $departamento_contacto_covid; 
-	public $localidad_contacto_covid; 
+	public $fecha_contacto_covid;
+
+	public $ant_vacuna;
+	public $fecha_dosis_vacuna;
+	public $dosis_vacuna;
+	public $proveedor_vacuna;	
+
+	public $diagnosticado_covid; 
+	public $fecha_diagnosticado_covid;
+
+	// public $nombre_contacto_covid; 
+	// public $telefono_contacto_covid; 
+	// public $pais_contacto_covid; 
+	// public $departamento_contacto_covid; 
+	// public $localidad_contacto_covid; 
+	public $pais_infeccion; 
+	public $departamento_infeccion;
+	public $municipio_infeccion; 
+	public $localidad_infeccion; 
 
 	// 4. DATOS CLÍNICOS
 	public $fecha_inicio_sintomas;  
@@ -208,6 +226,8 @@ class AjaxFichas {
 	public $diagnostico_clinico; 
 
 	// 5. DATOS HOSPITALIZACIÓN AISLAMIENTO
+
+	public $tipo_aislamiento;
 	public $dias_notificacion; 
 	public $dias_sin_sintomas;
 	public $fecha_aislamiento; 
@@ -228,17 +248,20 @@ class AjaxFichas {
 
 	// 8. LABORATORIOS
 	public $estado_muestra;
+	public $no_toma_muestra;
 	public $id_establecimiento_lab;
 	public $tipo_muestra;
+	public $nombre_laboratorio;
 	public $fecha_muestra;
 	public $fecha_envio;
 	public $responsable_muestra;
+	public $observaciones_muestra;
 
 	/*=============================================
 	GUARDANDO DATOS EN LA FICHA EPIDEMIOLÓGICA
 	=============================================*/
 
-	public function ajaxGuardarFichaEpidemiologica()	{
+	public function ajaxGuardarFichaEpidemiologica() {
 
 		/*=============================================
 		ALMACENANDO LOS DATOS EN LA BD
@@ -275,24 +298,23 @@ class AjaxFichas {
 						"calle"   	          	           => mb_strtoupper($this->calle,'utf-8'),
 						"nro_calle"   	      	           => $this->nro_calle,
 						"telefono"   	      	           => $this->telefono,
+						"email"   	      	           	   => $this->email,
 						"nombre_apoderado"  	           => mb_strtoupper($this->nombre_apoderado,'utf-8'),
 						"telefono_apoderado"  	           => $this->telefono_apoderado,
 
 						"ocupacion"		  			       => mb_strtoupper($this->ocupacion,'utf-8'), 
-						"ant_vacuna_influenza"	      	   => $this->ant_vacuna_influenza, 
-						"fecha_vacuna_influenza"    	   => $this->fecha_vacuna_influenza,
-						"viaje_riesgo"    	               => $this->viaje_riesgo,
-						"pais_ciudad_riesgo"     	       => $this->pais_ciudad_riesgo,
-						"fecha_retorno"     	      	   => $this->fecha_retorno,
-						"nro_vuelo"     	      	       => $this->nro_vuelo,
-						"nro_asiento"     	          	   => $this->nro_asiento,
 						"contacto_covid"    		       => $this->contacto_covid,
 						"fecha_contacto_covid"    	       => $this->fecha_contacto_covid,
-						"nombre_contacto_covid"     	   => mb_strtoupper($this->nombre_contacto_covid,'utf-8'),
-						"telefono_contacto_covid"    	   => $this->telefono_contacto_covid,
-						"pais_contacto_covid"     	       => mb_strtoupper($this->pais_contacto_covid,'utf-8'),
-						"departamento_contacto_covid"      => mb_strtoupper($this->departamento_contacto_covid,'utf-8'),
-						"localidad_contacto_covid"   	   => mb_strtoupper($this->localidad_contacto_covid,'utf-8'),
+						"ant_vacuna"    	       		   => $this->ant_vacuna,
+						"fecha_dosis_vacuna"    	       => $this->fecha_dosis_vacuna,
+						"dosis_vacuna"    	               => $this->dosis_vacuna,
+						"proveedor_vacuna"    	           => $this->proveedor_vacuna,
+						"diagnosticado_covid" 	           => $this->diagnosticado_covid,
+						"fecha_diagnosticado_covid"        => $this->fecha_diagnosticado_covid,
+						"pais_infeccion"     	           => mb_strtoupper($this->pais_infeccion,'utf-8'),
+						"departamento_infeccion"           => mb_strtoupper($this->departamento_infeccion,'utf-8'),
+						"municipio_infeccion"              => mb_strtoupper($this->municipio_infeccion,'utf-8'),
+						"localidad_infeccion"   	       => mb_strtoupper($this->localidad_infeccion,'utf-8'),
 
 						"fecha_inicio_sintomas"	           => $this->fecha_inicio_sintomas, 
 						"malestares"                       => $this->malestares,
@@ -301,6 +323,7 @@ class AjaxFichas {
 						"fecha_defuncion"                  => $this->fecha_defuncion,
 						"diagnostico_clinico"              => mb_strtoupper($this->diagnostico_clinico,'utf-8'),
 
+						"tipo_aislamiento"	               => $this->tipo_aislamiento, 
 						"fecha_aislamiento"	               => $this->fecha_aislamiento, 
 						"lugar_aislamiento"     	       => mb_strtoupper($this->lugar_aislamiento,'utf-8'),
 						"fecha_internacion"    	           => $this->fecha_internacion,
@@ -314,11 +337,14 @@ class AjaxFichas {
 						"enf_riesgo_otros"                 => mb_strtoupper($this->enf_riesgo_otros,'utf-8'),
 
 						"estado_muestra"		           => $this->estado_muestra, 
+						"no_toma_muestra"     	           => mb_strtoupper($this->no_toma_muestra,'utf-8'),
 						"id_establecimiento_lab"	       => $this->id_establecimiento_lab, 
 						"tipo_muestra"     	               => mb_strtoupper($this->tipo_muestra,'utf-8'),
+						"nombre_laboratorio"     	       => mb_strtoupper($this->nombre_laboratorio,'utf-8'),
 						"fecha_muestra"  		           => $this->fecha_muestra,
 						"fecha_envio"     	               => $this->fecha_envio,
 						"responsable_muestra" 	           => mb_strtoupper($this->responsable_muestra),
+						"observaciones_muestra" 	       => mb_strtoupper($this->observaciones_muestra),
 
 						"paterno_notificador"	           => mb_strtoupper($this->paterno_notificador,'utf-8'), 
 						"materno_notificador"              => mb_strtoupper($this->materno_notificador,'utf-8'),
@@ -327,8 +353,6 @@ class AjaxFichas {
 						"cargo_notificador"                => mb_strtoupper($this->cargo_notificador,'utf-8'),
 
 						);	
-
-		// var_dump($datos);
 
 		$respuesta = ControladorFichas::ctrGuardarFichaEpidemiologica($datos);
 
@@ -368,6 +392,7 @@ class AjaxFichas {
 						"fecha_nacimiento"    	           => $this->fecha_nacimiento,
 						"edad"     	          	           => $this->edad,
 						"telefono"     	          	       => $this->telefono,
+						"email"     	          	       => $this->email,
 					
 						"dias_notificacion"	               => $this->dias_notificacion, 
 						"dias_sin_sintomas"	               => $this->dias_sin_sintomas, 
@@ -381,6 +406,8 @@ class AjaxFichas {
 						"tratamiento"       		       => $this->tratamiento,
 						"tratamiento_otros"         	   => mb_strtoupper($this->tratamiento_otros,'utf-8'),
 
+						"estado_muestra"     	           => $this->estado_muestra,
+						"no_toma_muestra"     	           => mb_strtoupper($this->no_toma_muestra,'utf-8'),
 						"tipo_muestra"     	               => mb_strtoupper($this->tipo_muestra,'utf-8'),
 						"fecha_muestra"  		           => $this->fecha_muestra,
 						"fecha_envio"     	               => $this->fecha_envio,
@@ -416,6 +443,37 @@ class AjaxFichas {
 		$tabla = $this->tabla; 	
 
 		$respuesta = ControladorFichas::ctrGuardarCampoFichaEpidemiologica($id_ficha, $item, $valor, $tabla);
+
+		echo $respuesta;
+
+	}
+
+	public function ajaxGuardarCampoEmailFicha()	{
+
+		/*=============================================
+		ALMACENANDO LOS DATOS EN LA BD
+		=============================================*/
+
+		$id_ficha = $this->id_ficha;
+		$item = $this->item;
+		$valor = $this->valor;
+		$tabla = $this->tabla; 	
+
+		$respuesta = ControladorFichas::ctrGuardarCampoFichaEpidemiologica($id_ficha, $item, $valor, $tabla);
+
+		echo $respuesta;
+
+	}
+
+		public function ajaxEliminarFicha()	{
+
+		/*=============================================
+		ELIMINANDO DATOS EN LA BD
+		=============================================*/
+
+		$id_ficha = $this->id_ficha;	
+
+		$respuesta = ControladorFichas::ctrEliminarFicha($id_ficha);
 
 		echo $respuesta;
 
@@ -586,20 +644,20 @@ class AjaxFichas {
 
 		$content = '';
 
-		  $content .= '
+			$content .= '
 
-		  <html lang="es">
+			<html lang="es">
 				<head>
 
 					<style>
 						
 						body {
-							font-size: 21px;
-							margin: 0;
-							padding: 0;
+							font-size: 8px;
+							margin: 20px;
+							padding: 20px;
 						}
 
-						.content div{
+						.content div {
 
 							line-height: 0px;
 
@@ -607,7 +665,7 @@ class AjaxFichas {
 
 						.bg-dark {
 
-							background-color: #444;
+							background-color: #000;
 							color: #fff;
 							text-align: center;
 							line-height: 0px;
@@ -616,7 +674,23 @@ class AjaxFichas {
 
 						.bg-dark span {
 
-							line-height: 7px;
+							line-height: 16px;
+							font-weight: bold;
+
+						}
+
+						.bg-secondary {
+
+							background-color: #555;
+							color: #fff;
+							text-align: center;
+							line-height: 0px;
+
+						}
+
+						.bg-secondary span {
+
+							line-height: 16px;
 							font-weight: bold;
 
 						}
@@ -630,7 +704,7 @@ class AjaxFichas {
 						.titulo {
 
 							text-align: center;
-							line-height: 4px;
+							line-height: 12px;
 
 						}
 
@@ -643,12 +717,12 @@ class AjaxFichas {
 
 						table {
 
-						  line-height: 6px;
+						  line-height: 13px;
 
 						}
 
 						.personas_contactos {
-
+-
 							line-height: 0px;
 
 						}
@@ -668,7 +742,7 @@ class AjaxFichas {
 						.mensaje {
 
 							text-align: center;
-							line-height: 7px;
+							line-height: 16px;
 
 						}
 
@@ -710,13 +784,25 @@ class AjaxFichas {
 					    		<td width="300px">
 					    			<label class="font-weight-bold">Establecimiento de Salud: </label> '.$establecimiento["nombre_establecimiento"].'
 					    		</td>
-					    		<td width="150px">
+					    		<td width="120px">
 					    			<label class="font-weight-bold">Cod. Estab: </label> '.$ficha["cod_establecimiento"].'
 					    		</td>
-					    		<td width="150px">
-					    			<label class="font-weight-bold">Consultorio: </label> '.$consultorio["nombre_consultorio"].'
-					    		</td>
-					    		<td width="150px">
+					    		<td width="150px">';
+
+					    		if ($consultorio == false) {
+					    			
+					    			$content .= 
+					    			'<label class="font-weight-bold">Consultorio: </label>';
+
+					    		} else {
+
+					    			$content .= 
+					    			'<label class="font-weight-bold">Consultorio: </label> '.$consultorio["nombre_consultorio"];
+
+					    		}
+					    			
+					    		$content .= '</td>
+					    		<td width="180px">
 					    			<label class="font-weight-bold">Red de Salud:</label> '.$ficha["red_salud"].'
 					    		</td>
 					    	</tr>
@@ -729,7 +815,7 @@ class AjaxFichas {
 					    		<td width="200px">
 					    			<label class="font-weight-bold">Departamento:</label> '.$departamento["nombre_depto"].'
 					    		</td>
-					    		<td width="200px">
+					    		<td width="160px">
 					    			<label class="font-weight-bold">Localidad:</label> '.$localidad["nombre_localidad"].'
 					    		</td>
 					    		<td width="200px">';
@@ -748,7 +834,7 @@ class AjaxFichas {
 
 					    		$content .=
 					    		'</td>
-					    		<td width="150px">';
+					    		<td width="180px">';
 
 					    		if ($ficha["semana_epidemiologica"] == "0") {
 					    			
@@ -925,89 +1011,17 @@ class AjaxFichas {
 					    			<label class="font-weight-bold">Ocupación: </label> '.$ant_epidemiologicos['ocupacion'].'
 					    		</td>
 					    	</tr>
-					    	<tr>
-					    		<td width="400px">
-					    			<label class="font-weight-bold">Antecedentes de vacunación para influenza: </label> '.$ant_epidemiologicos['ant_vacuna_influenza'].'
-					    		</td>
-					    		<td width="200px">';
-					    		if ($ant_epidemiologicos['fecha_vacuna_influenza'] == "0000-00-00") {
-					    			
-					    			$content .= 
-					    			'<label class="font-weight-bold">Fecha de Vacunación:</label>';
-
-					    		} else {
-
-					    			$content .= 
-					    			'<label class="font-weight-bold">Fecha de Vacunación:</label> '.date("d/m/Y", strtotime($ant_epidemiologicos['fecha_vacuna_influenza']));
-
-					    		}
-
-					    		$content .=
-					    		'</td>
-					    	</tr>
 
 					    </table>
 
 					    <table>
 
 					    	<tr>
-					    		<td width="700px">
-					    			<label class="font-weight-bold">¿Tuvo un viaje a un lugar de riesgo dentro o fuera del pais?</label> '.$ant_epidemiologicos['viaje_riesgo'].'
+					    		<td width="300px">
+					    			<label class="font-weight-bold">Tuvo contacto con un caso confirmado de COVID-19: </label> '.$ant_epidemiologicos['contacto_covid'].'
 					    		</td>
-					    	</tr>
 
-					    </table>
-
-					    <table>
-
-					    	<tr>
-					    		<td width="500px">
-					    			<label class="font-weight-bold">¿Dondé (país y ciudad)?:</label> '.$ant_epidemiologicos['pais_ciudad_riesgo'].'
-					    		</td>
-					    	</tr>
-
-					    </table>
-
-					    <table>
-
-					    	<tr>
-					    		<td width="200px">';
-
-					    		if ($ant_epidemiologicos['fecha_retorno'] == "0000-00-00") {
-					    			
-					    			$content .= 
-					    			'<label class="font-weight-bold">Fecha retorno de Viaje:</label>';
-
-					    		} else {
-
-					    			$content .= 
-					    			'<label class="font-weight-bold">Fecha retorno de Viaje:</label> '.date("d/m/Y", strtotime($ant_epidemiologicos['fecha_retorno']));
-
-					    		}
-
-					    		$content .=
-					    		'</td>
-
-					    		<td width="200px">
-					    			<label class="font-weight-bold">Empresa:</label> '.$ant_epidemiologicos['empresa_vuelo'].'	    			
-					    		</td>	    	
-					    		<td width="100px">
-					    			<label class="font-weight-bold">N° Vuelo:</label> '.$ant_epidemiologicos['nro_vuelo'].'
-					    		</td>
-					    		<td width="100px">
-					    			<label class="font-weight-bold">N° Asiento:</label> '.$ant_epidemiologicos['nro_asiento'].'	    			
-					    		</td>
-					    	</tr>
-
-					    </table>
-
-					    <table>
-
-					    	<tr>
-					    		<td width="550px">
-					    			<label class="font-weight-bold">¿Tuvo contacto con un caso confirmado de COVID-19 en los 14 días previos al inicio de sintomas, en domicilio o establecimiento de salud?:</label> '.$ant_epidemiologicos['contacto_covid'].'
-					    		</td>
-					    		<td width="150px">';
+					    		<td width="200px">  ';
 
 					    		if ($ant_epidemiologicos['fecha_contacto_covid'] == "0000-00-00") {
 					    			$content .= 
@@ -1017,11 +1031,90 @@ class AjaxFichas {
 
 										$content .= 
 					    			'<label class="font-weight-bold">Fecha de Contacto:</label> '.date("d/m/Y", strtotime($ant_epidemiologicos['fecha_contacto_covid']));					    			
+					    		}
+
+									$content .=
+					    		'</td>
+					    		
+					    	</tr>
+
+					    </table>
+
+					    <table>
+
+					    	<tr>
+					    		<td width="300px">
+					    			<label class="font-weight-bold">¿Fue vacunado contra COVID-19? </label> '.$ant_epidemiologicos['ant_vacuna'].'
+					    		</td>
+
+					    		<td width="200px">  ';
+
+					    		if ($ant_epidemiologicos['fecha_dosis_vacuna'] == "0000-00-00") {
+					    			$content .= 
+					    			'<label class="font-weight-bold">Fecha última dosis recibida:</label>';
+
+					    		} else {
+
+										$content .= 
+					    			'<label class="font-weight-bold">Fecha última dosis recibida:</label> '.date("d/m/Y", strtotime($ant_epidemiologicos['fecha_dosis_vacuna']));					    			
+					    		}
+
+									$content .=
+					    		'</td>
+
+					    	</tr>
+
+					    </table>
+
+					    <table>
+
+					    	<tr>
+
+					    		<td width="300px">
+					    			<label class="font-weight-bold">Última Dosis Vacuna </label> '.$ant_epidemiologicos['dosis_vacuna'].'
+					    		</td>
+
+					    		<td width="200px">
+					    			<label class="font-weight-bold">Proveedor Vacuna </label> '.$ant_epidemiologicos['proveedor_vacuna'].'
+					    		</td>
+					    		
+					    	</tr>
+
+					    </table>
+
+					    <table>
+
+					    	<tr>
+					    		<td width="300px">
+					    			<label class="font-weight-bold">Fue diagnosticado por COVID-19 anteriormente: </label> '.$ant_epidemiologicos['diagnosticado_covid'].'
+					    		</td>
+
+					    		<td width="200px">  ';
+
+					    		if ($ant_epidemiologicos['fecha_diagnosticado_covid'] == "0000-00-00") {
+					    			$content .= 
+					    			'<label class="font-weight-bold">Fecha:</label>';
+
+					    		} else {
+
+										$content .= 
+					    			'<label class="font-weight-bold">Fecha:</label> '.date("d/m/Y", strtotime($ant_epidemiologicos['fecha_diagnosticado_covid']));					    			
 
 					    		}
 
 									$content .=
 					    		'</td>
+					    		
+					    	</tr>
+
+					    </table>
+
+					    <table>
+					    	
+					    	<tr>
+					    		<td width="200px">
+					    			<label class="font-weight-bold">Lugar probable de infección: </label> 
+					    		</td>
 					    	</tr>
 
 					    </table>
@@ -1029,32 +1122,17 @@ class AjaxFichas {
 					    <table>
 
 					    	<tr>
-					    		<td width="400px">
-					    			<label class="font-weight-bold">Apellido(s) y Nombre(s) (del caso positivo):</label> '.$ant_epidemiologicos['nombre_contacto_covid'].'
-					    		</td>
-					    		<td width="200px">
-					    			<label class="font-weight-bold">Teléfono (del caso positivo):</label> '.$ant_epidemiologicos['telefono_contacto_covid'].'
-					    		</td>
-					    	</tr>
-
-					    </table>
-
-					    <table>
-
-					    	<tr>
-					    		<td colspan="3" width="300px">
-					    			<label class="font-weight-bold">Lugar de contacto con el caso positivo:</label>
-					    		</td>
-					    	</tr>
-					    	<tr>
-					    		<td width="200px">
-					    			<label class="font-weight-bold">País:</label> '.$ant_epidemiologicos['pais_contacto_covid'].'   			
+					    		<td width="150px">
+					    			<label class="font-weight-bold">País:</label> '.$ant_epidemiologicos['pais_infeccion'].'   			
 					    		</td>	    	
-					    		<td width="300px">
-					    			<label class="font-weight-bold">Departamento/Estado:</label> '.$ant_epidemiologicos['departamento_contacto_covid'].'
-					    		</td>
 					    		<td width="200px">
-					    			<label class="font-weight-bold">Localidad:</label> '.$ant_epidemiologicos['localidad_contacto_covid'].'
+					    			<label class="font-weight-bold">Departamento:</label> '.$ant_epidemiologicos['departamento_infeccion'].'
+					    		</td>
+					    		<td width="180px">
+					    			<label class="font-weight-bold">Municipio:</label> '.$ant_epidemiologicos['municipio_infeccion'].'
+					    		</td>
+					    		<td width="180px">
+					    			<label class="font-weight-bold">Localidad:</label> '.$ant_epidemiologicos['localidad_infeccion'].'
 					    		</td>
 					    	</tr>
 
@@ -1073,7 +1151,10 @@ class AjaxFichas {
 					    <table>
 					    	
 					    	<tr>
-					    		<td width="200px">';
+					    		<td width="200px">
+					    			<label class="font-weight-bold">'.$datos_clinicos['tipo_paciente'].' </label> 
+					    		</td>
+					    		<td width="200px">  ';
 
 					    		if ($datos_clinicos['fecha_inicio_sintomas'] == "0000-00-00") {
 					    			$content .= 
@@ -1089,9 +1170,14 @@ class AjaxFichas {
 									$content .=
 					    		'</td>
 					    	</tr>
+
+					    </table>
+
+					    <table>
+					    	
 					    	<tr>
 					    		<td width="650px">
-					    			'.$datos_clinicos['malestares'].','.$datos_clinicos['malestares_otros'].'
+					    			<label class="font-weight-bold">Malestares:</label>'.$datos_clinicos['malestares'].','.$datos_clinicos['malestares_otros'].'
 					    		</td>
 					    	</tr>
 
@@ -1139,7 +1225,12 @@ class AjaxFichas {
 					    <table>
 					    	
 					    	<tr>
-					    		<td width="200px">';
+
+					    		<td width="200px">
+					    			<label class="font-weight-bold">'.$hospitalizaciones_aislamientos['tipo_aislamiento'].' </label> 
+					    		</td>
+					    		
+					    		<td width="200px">  ';
 
 					    		if ($hospitalizaciones_aislamientos['fecha_aislamiento'] == "0000-00-00") {
 					    			$content .= 
@@ -1163,7 +1254,7 @@ class AjaxFichas {
 					    <table>
 
 					    	<tr>
-					    		<td width="200px">';
+					    		<td width="200px">  ';
 
 					    		if ($hospitalizaciones_aislamientos['fecha_internacion'] == "0000-00-00") {
 					    			$content .= 
@@ -1235,7 +1326,7 @@ class AjaxFichas {
 
 					    		if ($enfermedades_bases['enf_estado'] == "PRESENTA") {
 
-					    				$content .= $enfermedades_bases['enf_riesgo'];
+					    				$content .= $enfermedades_bases['enf_riesgo'].','.$enfermedades_bases['enf_riesgo_otros'];
 
 					    		}
 					    		$content .=  
@@ -1258,45 +1349,45 @@ class AjaxFichas {
 					    	
 					    	<thead>
 
-				          <tr>
-				            <th width="180px">APELLIDO(S) Y NOMBRE(S)</th>
-				            <th width="70px">RELACIÓN</th>
-				            <th width="40px">EDAD</th>
-				            <th width="60px">TELEFÓNO</th>
-				            <th width="150px">DIRECCIÓN</th>
-				            <th width="100px">FECHA CONTACTO</th>
-				            <th width="123px">LUGAR DE CONTACTO</th>
-				          </tr>
-				          
-				        </thead>
+					          <tr>
+					            <th width="180px">APELLIDO(S) Y NOMBRE(S)</th>
+					            <th width="70px">RELACIÓN</th>
+					            <th width="40px">EDAD</th>
+					            <th width="60px">TELEFÓNO</th>
+					            <th width="130px">DIRECCIÓN</th>
+					            <th width="100px">FECHA CONTACTO</th>
+					            <th width="122px">LUGAR DE CONTACTO</th>
+					          </tr>
+					          
+					        </thead>
 
-				        <tbody>';
+				        	<tbody>';
 
-				        /*=============================================
+				        	/*=============================================
 						    DATOS SECCION 7. DATOS DE PERSONAS CON LAS QUE EL CASO SOSPECHOSO ESTUVO EN CONTACTO
 						    =============================================*/
 
-				        $item = "id_ficha";
-	              $valor = $this->idFicha;
+						        $item = "id_ficha";
+			              		$valor = $this->idFicha;
 
-	              $personas_contactos = ControladorPersonasContactos::ctrMostrarPersonasContactos($item, $valor);
+		              			$personas_contactos = ControladorPersonasContactos::ctrMostrarPersonasContactos($item, $valor);
 
-	              foreach ($personas_contactos as $value) {
+		              			foreach ($personas_contactos as $value) {
 
-	                $content .=  
-	                '<tr>
-	                  <td width="180px">'.$value["paterno_contacto"].' '.$value["materno_contacto"].'  '.$value["nombre_contacto"].'</td>
-	                  <td width="70px">'.$value["relacion_contacto"].'</td>
-	                  <td width="40px">'.$value["edad_contacto"].'</td>
-	                  <td width="60px">'.$value["telefono_contacto"].'</td>
-	                  <td width="150px">'.$value["direccion_contacto"].'</td>
-	                  <td width="100px">'.date("d/m/Y", strtotime($value["fecha_contacto"])).'</td>
-	                  <td width="123px">'.$value["lugar_contacto"].'</td>
-	                </tr>';
-                }
+				                $content .=  
+				                '<tr>
+				                  <td width="180px">'.$value["paterno_contacto"].' '.$value["materno_contacto"].'  '.$value["nombre_contacto"].'</td>
+				                  <td width="70px">'.$value["relacion_contacto"].'</td>
+				                  <td width="40px">'.$value["edad_contacto"].'</td>
+				                  <td width="60px">'.$value["telefono_contacto"].'</td>
+				                  <td width="130px">'.$value["direccion_contacto"].'</td>
+				                  <td width="100px">'.date("d/m/Y", strtotime($value["fecha_contacto"])).'</td>
+				                  <td width="122px">'.$value["lugar_contacto"].'</td>
+				                </tr>';
+			                }
 
-				        $content .= 
-				        '</tbody>
+					        $content .= 
+					        '</tbody>
 
 					    </table>
 
@@ -1313,14 +1404,28 @@ class AjaxFichas {
 					    <table>
 					    	
 					    	<tr>
-					    		<td width="200px">
+					    		<td width="180px">
 					    			<label class="font-weight-bold">Se tomó muestra para Laboratorio: </label> '.$laboratorios['estado_muestra'].'
 					    		</td>
-					    		<td width="300px">
-					    			<label class="font-weight-bold">Lugar de toma de muestra: </label> '.$establecimiento_lab['nombre_establecimiento'].'
+					    		<td width="280px">
+					    			<label class="font-weight-bold">¿Por qué NO se tomo la muestra?: </label> '.$laboratorios['no_toma_muestra'].'
 					    		</td>
 					    		<td width="250px">
+					    			<label class="font-weight-bold">Lugar de toma de muestra: </label> '.$establecimiento_lab['nombre_establecimiento'].'
+					    		</td>
+					    		
+					    	</tr>
+
+					    </table>
+
+					    <table>
+
+					    	<tr>
+					    		<td width="250px">
 					    			<label class="font-weight-bold">Tipo de muestra tomada:</label> '.$laboratorios['tipo_muestra'].'
+					    		</td>
+					    		<td width="400px">
+					    			<label class="font-weight-bold">Nombre de Lab. que procesara la muestra:</label> '.$laboratorios['nombre_laboratorio'].'
 					    		</td>
 					    	</tr>
 
@@ -1329,10 +1434,7 @@ class AjaxFichas {
 					    <table>
 
 					    	<tr>
-					    		<td width="450px">
-					    			<label class="font-weight-bold">Nombre de Lab. que procesara la muestra:</label> '.$laboratorios['nombre_laboratorio'].'
-					    		</td>
-					    		<td width="150px">';
+					    		<td width="180px">  ';
 
 					    		if ($laboratorios['fecha_muestra'] == "0000-00-00") {
 					    			$content .= 
@@ -1347,7 +1449,7 @@ class AjaxFichas {
 
 									$content .=  
 					    		'</td>
-					    		<td width="150px">';
+					    		<td width="180px">';
 
 					    		if ($laboratorios['fecha_envio'] == "0000-00-00") {
 					    			$content .= 
@@ -1362,18 +1464,8 @@ class AjaxFichas {
 
 									$content .=  
 					    		'</td>
-					    	</tr>
-
-					    </table>
-
-					    <table>
-
-					    	<tr>
 					    		<td width="300px">
 					    			<label class="font-weight-bold" style="line-height: 18px; margin-bottom: 0px;">Responsable de Toma de Muestra:</label> '.$laboratorios['responsable_muestra'].'
-					    		</td>
-					    		<td width="350px">
-					    			<label class="font-weight-bold" style="line-height: 18px; margin-bottom: 0px;">Firma y Sello</label>
 					    		</td>
 					    	</tr>
 
@@ -1386,9 +1478,34 @@ class AjaxFichas {
 					    			<label class="my-0 font-weight-bold">Observaciones:</label> '.$laboratorios['observaciones_muestra'].'
 					    		</td>
 					    	</tr>
+					    	
+					    </table>
+
+					  </div>
+
+					  <div class="resultado_laboratorio">
+					      
+					    <div class="bg-secondary py-1 text-center text-white">
+
+					      <span>RESULTADO</span>
+					      
+					    </div>
+
+					    <table>
+
+					    	<tr>
+					    		<td colspan="2" width="700px">
+					    			<label class="my-0 font-weight-bold">Método de Diagnostico:</label> '.$laboratorios['metodo_diagnostico'].'
+					    		</td>
+					    	</tr>
+					    	
+					    </table>
+
+					    <table>
+
 					    	<tr>
 					    		<td width="300px">
-					    			<label class="my-0 font-weight-bold">Resultado:</label> '.$laboratorios['resultado_laboratorio'].'
+					    			<label class="my-0 font-weight-bold">Resultado de Laboratorio:</label> '.$laboratorios['resultado_laboratorio'].'
 					    		</td>
 					    		<td width="250px">';
 					    		if ($laboratorios['fecha_resultado'] == "0000-00-00") {
@@ -1408,23 +1525,27 @@ class AjaxFichas {
 					    			<h2 style="line-height: 0px;">Cod Laboratorio '.$laboratorios['cod_laboratorio'].'</h2>
 					    		</td>
 					    	</tr>
+
 					    </table>
 
-					    <hr>
+					  </div>
+
+					  <div class="persona_notificador">
+					      
+					    <div class="bg-dark py-1 text-center text-white">
+
+					      <span>9. DATOS DEL PERSONAL QUE NOTIFICA</span>
+					      
+					    </div>
 
 					    <table>
 
-					    	<tr>
-					    		<td colspan="2" width="700px">
-					    			<label class="font-weight-bold">DATOS DEL PERSONAL QUE NOTIFICA</label>
-					    		</td>
-					    	</tr>
 					    	<tr>
 					    		<td width="350px">
 					    			<label class="font-weight-bold">APELLIDO(S) Y NOMBRE(S):</label> '.$persona_notificador['paterno_notificador'].' '.$persona_notificador['materno_notificador'].' '.$persona_notificador['nombre_notificador'].'
 					    		</td>
 					    		<td width="350px">
-					    			<label class="font-weight-bold">Teléfono:</label> '.$persona_notificador['telefono_notificador'].'
+					    			<label class="font-weight-bold">Tel. cel:</label> '.$persona_notificador['telefono_notificador'].'
 					    		</td>
 					    	</tr>
 
@@ -1433,21 +1554,35 @@ class AjaxFichas {
 					    <table>
 					    	
 					    	<tr>
-					    		<td width="350px">
+					    		<td width="222px" height="50px" align="center">
+
+					    		 	<br>
+					    		 	<br>
+					    		 	<br>
+					    		 	<br>
+					    		 	<br>
+					    		 	<br>
+
+
+
 					    			<label class="font-weight-bold" style="line-height: 18px;">Firma y Sello</label>
 					    		</td>
-					    		<td width="350px">
+					    		<td width="222px" align="center">
+
+					    			<br>
+					    		 	<br>
+					    		 	<br>
+					    		 	<br>
+					    		 	<br>
+					    		 	<br>
+
 					    			<label class="font-weight-bold" style="line-height: 18px;">Sello del EESS</label>
 					    		</td>
-					    	</tr>
 
-					    </table>
+					    		<td width="250px">
 
-					    <table border="1">
-
-					    	<tr>
-					    		<td width="714px">
-					    			<span class="mensaje font-weight-bold">Este formulario tiene el carácter de declaración jurada que realiza el equipo de salud, contiene información sujeta a vigilancia epidemiológica, por esta razón debe ser llenada correctamente en las secciones necesarias y enviadas oprotunamente</span>
+					    			<span class="mensaje font-weight-bold" style="line-height: 12px; text-align: justify"><br>
+					    				Este formulario tiene el carácter de declaración jurada que realiza el equipo de salud, contiene información sujeta a vigilancia epidemiológica, por esta razón debe ser llenada correctamente en las secciones necesarias y enviadas oprotunamente</span>
 					    		</td>
 					    	</tr>
 
@@ -1467,7 +1602,7 @@ class AjaxFichas {
 		// Insertando el Logo
 		$image_file = K_PATH_IMAGES.'cns-logo-simple.png';
 
-		$pdf->Image($image_file, 13, 9, 12, '', 'PNG', '', 'T', false, 100, '', false, false, 0, false, false, false);
+		$pdf->Image($image_file, 8, 10, 13, '', 'PNG', '', 'T', false, 100, '', false, false, 0, false, false, false);
 
 		// Estilos necesarios para el Codigo QR
 		$style = array(
@@ -1484,11 +1619,14 @@ class AjaxFichas {
 		$codeContents = 'COD. FICHA: '.$this->idFicha."\n";
 
 		// insertando el código QR
-		$pdf->write2DBarcode($codeContents, 'QRCODE,L', 190, 8 + $n, 15, 15, $style, 'N');	
+		$pdf->write2DBarcode($codeContents, 'QRCODE,L', 188, 7, 17, 17, $style, 'N');	
 
 		$pdf->lastPage();
 
-		$pdf->output('../temp/ficha-'.$valor.'.pdf', 'F');
+		// $pdf->output('../temp/ficha-'.$valor.'.pdf', 'F');
+
+		$pdf->Output(__DIR__ . '/temp/ficha-'.$valor.'.pdf', 'F');
+
 
 	}
 
@@ -1630,20 +1768,20 @@ class AjaxFichas {
 
 		$content = '';
 
-		  $content .= '
+			$content .= '
 
-		  <html lang="es">
+			<html lang="es">
 				<head>
 
 					<style>
 						
 						body {
-							font-size: 21px;
-							margin: 0;
-							padding: 0;
+							font-size: 8px;
+							margin: 20px;
+							padding: 20px;
 						}
 
-						.content div{
+						.content div {
 
 							line-height: 0px;
 
@@ -1651,7 +1789,7 @@ class AjaxFichas {
 
 						.bg-dark {
 
-							background-color: #444;
+							background-color: #000;
 							color: #fff;
 							text-align: center;
 							line-height: 0px;
@@ -1660,7 +1798,23 @@ class AjaxFichas {
 
 						.bg-dark span {
 
-							line-height: 7px;
+							line-height: 16px;
+							font-weight: bold;
+
+						}
+
+						.bg-secondary {
+
+							background-color: #555;
+							color: #fff;
+							text-align: center;
+							line-height: 0px;
+
+						}
+
+						.bg-secondary span {
+
+							line-height: 16px;
 							font-weight: bold;
 
 						}
@@ -1674,7 +1828,7 @@ class AjaxFichas {
 						.titulo {
 
 							text-align: center;
-							line-height: 3px;
+							line-height: 15px;
 
 						}
 
@@ -1687,7 +1841,7 @@ class AjaxFichas {
 
 						table {
 
-						  line-height: 6px;
+						  line-height: 13px;
 
 						}
 
@@ -1712,7 +1866,7 @@ class AjaxFichas {
 						.mensaje {
 
 							text-align: center;
-							line-height: 7px;
+							line-height: 16px;
 
 						}
 
@@ -1734,7 +1888,7 @@ class AjaxFichas {
 
 						<div style="line-height: 0px;">
 						
-							<h3 class="titulo" style="line-height: 4px;">FICHA DE CONTROL Y SEGUIMIENTO<br>SOLICITUD DE ESTUDIOS DE LABORATORIO COVID-19</h3>
+							<h3 class="titulo" style="line-height: 9px;">FICHA DE CONTROL Y SEGUIMIENTO<br>SOLICITUD DE ESTUDIOS DE LABORATORIO COVID-19</h3>
 
 							<h4 class="cod_ficha"></h4>
 
@@ -1964,16 +2118,9 @@ class AjaxFichas {
 
 									$content .=  
 					    		'</td>
-					    		<td width="400px">
+					    		<td width="300px">
 					    			<label class="font-weight-bold">Lugar de UTI:</label> '.$hospitalizaciones_aislamientos['lugar_ingreso_UTI'].'   			
 					    		</td>
-					    	</tr>
-
-					    </table>
-
-					    <table>
-
-					    	<tr>
 					    		<td width="200px">
 					    			<label class="font-weight-bold">Ventilación mecánica</label> '.$hospitalizaciones_aislamientos['ventilacion_mecanica'].'
 					    		</td>
@@ -2004,20 +2151,26 @@ class AjaxFichas {
 					    <table>
 					    	
 					    	<tr>
+					    		<td width="180px">
+					    			<label class="font-weight-bold">Se tomó muestra para Laboratorio: </label> '.$laboratorios['estado_muestra'].'
+					    		</td>
+					    		<td width="280px">
+					    			<label class="font-weight-bold">¿Por qué NO se tomo la muestra?: </label> '.$laboratorios['no_toma_muestra'].'
+					    		</td>
 					    		<td width="250px">
 					    			<label class="font-weight-bold">Tipo de muestra tomada:</label> '.$laboratorios['tipo_muestra'].'
-					    		</td>
+					    		</td>					    		
 					    	</tr>
 
 					    </table>
-
+					 
 					    <table>
 
 					    	<tr>
-					    		<td width="450px">
+					    		<td width="400px">
 					    			<label class="font-weight-bold">Nombre de Lab. que procesara la muestra:</label> '.$laboratorios['nombre_laboratorio'].'
 					    		</td>
-					    		<td width="150px">';
+					    		<td width="180px">';
 
 					    		if ($laboratorios['fecha_muestra'] == "0000-00-00") {
 					    			$content .= 
@@ -2032,7 +2185,7 @@ class AjaxFichas {
 
 									$content .=  
 					    		'</td>
-					    		<td width="150px">';
+					    		<td width="180px">';
 
 					    		if ($laboratorios['fecha_envio'] == "0000-00-00") {
 					    			$content .= 
@@ -2057,9 +2210,6 @@ class AjaxFichas {
 					    		<td width="300px">
 					    			<label class="font-weight-bold" style="line-height: 18px; margin-bottom: 0px;">Responsable de Toma de Muestra:</label> '.$laboratorios['responsable_muestra'].'
 					    		</td>
-					    		<td width="350px">
-					    			<label class="font-weight-bold" style="line-height: 18px; margin-bottom: 0px;">Firma y Sello</label>
-					    		</td>
 					    	</tr>
 
 					    </table>
@@ -2071,78 +2221,118 @@ class AjaxFichas {
 					    			<label class="my-0 font-weight-bold">Observaciones:</label> '.$laboratorios['observaciones_muestra'].'
 					    		</td>
 					    	</tr>
-					    	<tr>
-					    		<td width="300px">
-					    			<label class="my-0 font-weight-bold">Resultado:</label> '.$laboratorios['resultado_laboratorio'].'
-					    		</td>
-					    		<td width="250px">';
-
-					    		if ($laboratorios['fecha_resultado'] == "0000-00-00") {
-					    			$content .= 
-					    			'<label class="font-weight-bold">Fecha de Resultado:</label>';
-
-					    		} else {
-
-										$content .= 
-					    			'<label class="font-weight-bold">Fecha de Resultado:</label> '.date("d/m/Y", strtotime($laboratorios['fecha_resultado']));	
-
-					    		}
-
-									$content .=  
-					    		'</td>
-					    		<td width="150px">
-					    			<h2 style="line-height: 0px;">Cod Laboratorio '.$laboratorios['cod_laboratorio'].'</h2>
-					    		</td>
-					    	</tr>
+					    
 					    </table>
-
-					    <hr>
-
-					    <table>
-
-					    	<tr>
-					    		<td colspan="2" width="700px">
-					    			<label class="font-weight-bold">DATOS DEL PERSONAL QUE NOTIFICA</label>
-					    		</td>
-					    	</tr>
-					    	<tr>
-					    		<td width="350px">
-					    			<label class="font-weight-bold">APELLIDO(S) Y NOMBRE(S):</label> '.$persona_notificador['paterno_notificador'].' '.$persona_notificador['materno_notificador'].' '.$persona_notificador['nombre_notificador'].'
-					    		</td>
-					    		<td width="350px">
-					    			<label class="font-weight-bold">Teléfono:</label> '.$persona_notificador['telefono_notificador'].'
-					    		</td>
-					    	</tr>
-
-					    </table>
-
-					    <table>
-					    	
-					    	<tr>
-					    		<td width="350px">
-					    			<label class="font-weight-bold" style="line-height: 18px;">Firma y Sello</label>
-					    		</td>
-					    		<td width="350px">
-					    			<label class="font-weight-bold" style="line-height: 18px;">Sello del EESS</label>
-					    		</td>
-					    	</tr>
-
-					    </table>
-
-					    <table border="1">
-
-					    	<tr>
-					    		<td width="714px">
-					    			<span class="mensaje font-weight-bold">Este formulario tiene el carácter de declaración jurada que realiza el equipo de salud, contiene información sujeta a vigilancia epidemiológica, por esta razón debe ser llenada correctamente en las secciones necesarias y enviadas oprotunamente</span>
-					    		</td>
-					    	</tr>
-
-					    </table>
-
-					  </div>
 
 					</div>
-					
+
+				  <div class="resultado_laboratorio">
+				      
+				    <div class="bg-secondary py-1 text-center text-white">
+
+				      <span>RESULTADO</span>
+				      
+				    </div>
+
+				    <table>
+
+				    	<tr>
+				    		<td colspan="2" width="700px">
+				    			<label class="my-0 font-weight-bold">Método de Diagnostico:</label> '.$laboratorios['metodo_diagnostico'].'
+				    		</td>
+				    	</tr>
+				    	
+				    </table>
+
+				    <table>
+
+				    	<tr>
+				    		<td width="300px">
+				    			<label class="my-0 font-weight-bold">Resultado de Laboratorio:</label> '.$laboratorios['resultado_laboratorio'].'
+				    		</td>
+				    		<td width="250px">';
+				    		if ($laboratorios['fecha_resultado'] == "0000-00-00") {
+				    			$content .= 
+				    			'<label class="font-weight-bold">Fecha de Resultado:</label>';
+
+				    		} else {
+
+									$content .= 
+				    			'<label class="font-weight-bold">Fecha de Resultado:</label> '.date("d/m/Y", strtotime($laboratorios['fecha_resultado']));	
+
+				    		}
+
+								$content .=  
+				    		'</td>
+				    		<td width="150px">
+				    			<h2 style="line-height: 0px;">Cod Laboratorio '.$laboratorios['cod_laboratorio'].'</h2>
+				    		</td>
+				    	</tr>
+
+				    </table>
+
+				  </div>
+
+				  <div class="persona_notificador">
+				      
+				    <div class="bg-dark py-1 text-center text-white">
+
+				      <span>5. DATOS DEL PERSONAL QUE NOTIFICA</span>
+				      
+				    </div>
+
+				    <table>
+
+				    	<tr>
+				    		<td width="350px">
+				    			<label class="font-weight-bold">APELLIDO(S) Y NOMBRE(S):</label> '.$persona_notificador['paterno_notificador'].' '.$persona_notificador['materno_notificador'].' '.$persona_notificador['nombre_notificador'].'
+				    		</td>
+				    		<td width="350px">
+				    			<label class="font-weight-bold">Teléfono:</label> '.$persona_notificador['telefono_notificador'].'
+				    		</td>
+				    	</tr>
+
+				    </table>
+
+				    <table>
+				    	
+				    	<tr>
+				    		<td width="222px" height="50px" align="center">
+
+				    		 	<br>
+				    		 	<br>
+				    		 	<br>
+				    		 	<br>
+				    		 	<br>
+				    		 	<br>
+
+
+
+				    			<label class="font-weight-bold" style="line-height: 18px;">Firma y Sello</label>
+				    		</td>
+				    		<td width="222px" align="center">
+
+				    			<br>
+				    		 	<br>
+				    		 	<br>
+				    		 	<br>
+				    		 	<br>
+				    		 	<br>
+
+				    			<label class="font-weight-bold" style="line-height: 18px;">Sello del EESS</label>
+				    		</td>
+
+				    		<td width="250px">
+
+				    			<span class="mensaje font-weight-bold" style="line-height: 12px; text-align: justify"><br>
+				    				Este formulario tiene el carácter de declaración jurada que realiza el equipo de salud, contiene información sujeta a vigilancia epidemiológica, por esta razón debe ser llenada correctamente en las secciones necesarias y enviadas oprotunamente</span>
+				    		</td>
+				    	</tr>
+
+				    </table>
+
+				  </div>
+
 				</body>
 
 			</html>';
@@ -2153,7 +2343,7 @@ class AjaxFichas {
 		// Insertando el Logo
 		$image_file = K_PATH_IMAGES.'cns-logo-simple.png';
 
-		$pdf->Image($image_file, 13, 9, 13, '', 'PNG', '', 'T', false, 100, '', false, false, 0, false, false, false);
+		$pdf->Image($image_file, 8, 10, 13, '', 'PNG', '', 'T', false, 100, '', false, false, 0, false, false, false);
 
 		// Estilos necesarios para el Codigo QR
 		$style = array(
@@ -2174,7 +2364,7 @@ class AjaxFichas {
 
 		$pdf->lastPage();
 
-		$pdf->output('../temp/ficha-'.$valor.'.pdf', 'F');
+		$pdf->output(__DIR__ . '/temp/ficha-'.$valor.'.pdf', 'F');
 
 	}
 
@@ -2249,27 +2439,29 @@ if (isset($_POST["guardarFichaEpidemiologica"])) {
 	$guardarFichaEpidemiologica -> calle = $_POST["calle"];
 	$guardarFichaEpidemiologica -> nro_calle = $_POST["nro_calle"];
 	$guardarFichaEpidemiologica -> telefono = $_POST["telefono"];
+	$guardarFichaEpidemiologica -> email = $_POST["email"];
 	$guardarFichaEpidemiologica -> nombre_apoderado = $_POST["nombre_apoderado"];
 	$guardarFichaEpidemiologica -> telefono_apoderado = $_POST["telefono_apoderado"];
 
 	// 3. ANTECEDENTES EPIDEMIOLOGICOS
-	$guardarFichaEpidemiologica -> ocupacion = $_POST["ocupacion"];
-	$guardarFichaEpidemiologica -> ant_vacuna_influenza = $_POST["ant_vacuna_influenza"];
-	$guardarFichaEpidemiologica -> fecha_vacuna_influenza = $_POST["fecha_vacuna_influenza"];
-	$guardarFichaEpidemiologica -> viaje_riesgo = $_POST["viaje_riesgo"];
-	$guardarFichaEpidemiologica -> pais_ciudad_riesgo = $_POST["pais_ciudad_riesgo"];
-	$guardarFichaEpidemiologica -> fecha_retorno = $_POST["fecha_retorno"];
-	$guardarFichaEpidemiologica -> nro_vuelo = $_POST["nro_vuelo"];
-	$guardarFichaEpidemiologica -> nro_asiento = $_POST["nro_asiento"];
+	$guardarFichaEpidemiologica -> ocupacion = $_POST["ocupacion"];	
 	$guardarFichaEpidemiologica -> contacto_covid = $_POST["contacto_covid"];
 	$guardarFichaEpidemiologica -> fecha_contacto_covid = $_POST["fecha_contacto_covid"];
-	$guardarFichaEpidemiologica -> nombre_contacto_covid = $_POST["nombre_contacto_covid"];
-	$guardarFichaEpidemiologica -> telefono_contacto_covid = $_POST["telefono_contacto_covid"];
-	$guardarFichaEpidemiologica -> pais_contacto_covid = $_POST["pais_contacto_covid"];
-	$guardarFichaEpidemiologica -> departamento_contacto_covid = $_POST["departamento_contacto_covid"];
-	$guardarFichaEpidemiologica -> localidad_contacto_covid = $_POST["localidad_contacto_covid"];
+
+	$guardarFichaEpidemiologica -> ant_vacuna = $_POST["ant_vacuna"];
+	$guardarFichaEpidemiologica -> fecha_dosis_vacuna = $_POST["fecha_dosis_vacuna"];
+	$guardarFichaEpidemiologica -> dosis_vacuna = $_POST["dosis_vacuna"];
+	$guardarFichaEpidemiologica -> proveedor_vacuna = $_POST["proveedor_vacuna"];
+
+	$guardarFichaEpidemiologica -> diagnosticado_covid = $_POST["diagnosticado_covid"];
+	$guardarFichaEpidemiologica -> fecha_diagnosticado_covid = $_POST["fecha_diagnosticado_covid"];
+	$guardarFichaEpidemiologica -> pais_infeccion = $_POST["pais_infeccion"];
+	$guardarFichaEpidemiologica -> departamento_infeccion = $_POST["departamento_infeccion"];
+	$guardarFichaEpidemiologica -> municipio_infeccion = $_POST["municipio_infeccion"];
+	$guardarFichaEpidemiologica -> localidad_infeccion = $_POST["localidad_infeccion"];
 
 	// 4. DATOS CLÍNICOS
+	$guardarFichaEpidemiologica -> tipo_paciente = $_POST["tipo_paciente"];
 	$guardarFichaEpidemiologica -> fecha_inicio_sintomas = $_POST["fecha_inicio_sintomas"];
 	$guardarFichaEpidemiologica -> malestares = $_POST["malestares"];
 	$guardarFichaEpidemiologica -> malestares_otros = $_POST["malestares_otros"];
@@ -2278,6 +2470,7 @@ if (isset($_POST["guardarFichaEpidemiologica"])) {
 	$guardarFichaEpidemiologica -> diagnostico_clinico = $_POST["diagnostico_clinico"];
 
 	// 5. DATOS HOSPITALIZACIÓN AISLAMIENTO
+	$guardarFichaEpidemiologica -> tipo_aislamiento = $_POST["tipo_aislamiento"];
 	$guardarFichaEpidemiologica -> fecha_aislamiento = $_POST["fecha_aislamiento"];
 	$guardarFichaEpidemiologica -> lugar_aislamiento = $_POST["lugar_aislamiento"];
 	$guardarFichaEpidemiologica -> fecha_internacion = $_POST["fecha_internacion"];
@@ -2293,11 +2486,14 @@ if (isset($_POST["guardarFichaEpidemiologica"])) {
 
 	// 8. LABORATORIOS
 	$guardarFichaEpidemiologica -> estado_muestra = $_POST["estado_muestra"];
+	$guardarFichaEpidemiologica -> no_toma_muestra = $_POST["no_toma_muestra"];
 	$guardarFichaEpidemiologica -> id_establecimiento_lab = $_POST["id_establecimiento_lab"];
 	$guardarFichaEpidemiologica -> tipo_muestra = $_POST["tipo_muestra"];
+	$guardarFichaEpidemiologica -> nombre_laboratorio = $_POST["nombre_laboratorio"];
 	$guardarFichaEpidemiologica -> fecha_muestra = $_POST["fecha_muestra"];
 	$guardarFichaEpidemiologica -> fecha_envio = $_POST["fecha_envio"];
 	$guardarFichaEpidemiologica -> responsable_muestra = $_POST["responsable_muestra"];
+	$guardarFichaEpidemiologica -> observaciones_muestra = $_POST["observaciones_muestra"];
 
 	// DATOS DEL PERSONAL QUE NOTIFICA
 	$guardarFichaEpidemiologica -> paterno_notificador = $_POST["paterno_notificador"];
@@ -2338,6 +2534,7 @@ if (isset($_POST["guardarFichaControl"])) {
 	$guardarFichaControl -> fecha_nacimiento = $_POST["fecha_nacimiento"];
 	$guardarFichaControl -> edad = $_POST["edad"];
 	$guardarFichaControl -> telefono = $_POST["telefono"];
+	$guardarFichaControl -> email = $_POST["email"];
 
 	// 3. SEGUIMIENTO
 	$guardarFichaControl -> dias_notificacion = $_POST["dias_notificacion"];
@@ -2353,6 +2550,8 @@ if (isset($_POST["guardarFichaControl"])) {
 	$guardarFichaControl -> tratamiento_otros = $_POST["tratamiento_otros"];
 
 	// 4. LABORATORIOS
+	$guardarFichaControl -> estado_muestra = $_POST["estado_muestra"];
+	$guardarFichaControl -> no_toma_muestra = $_POST["no_toma_muestra"];
 	$guardarFichaControl -> tipo_muestra = $_POST["tipo_muestra"];
 	$guardarFichaControl -> fecha_muestra = $_POST["fecha_muestra"];
 	$guardarFichaControl -> fecha_envio = $_POST["fecha_envio"];
@@ -2369,7 +2568,7 @@ if (isset($_POST["guardarFichaControl"])) {
 }
 
 /*=============================================
-GUARDAR NUEVO ESTABLECIMIENTO DINAMICAMENTE
+GUARDAR CAMPO DEL FORMULARIO DINAMICAMENTE
 =============================================*/
 
 if (isset($_POST["guardarCampoFicha"])) {
@@ -2384,6 +2583,41 @@ if (isset($_POST["guardarCampoFicha"])) {
 
 }
 
+if (isset($_POST["guardarCampoEmailFicha"])) {
+
+	$guardarFichaEpidemiologica = new AjaxFichas();
+	// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
+	$guardarFichaEpidemiologica -> id_ficha = $_POST["id_ficha"];
+	$guardarFichaEpidemiologica -> item = $_POST["item"];
+	$guardarFichaEpidemiologica -> valor = $_POST["valor"];
+	$guardarFichaEpidemiologica -> tabla = $_POST["tabla"];	
+	$guardarFichaEpidemiologica -> ajaxGuardarCampoEmailFicha();
+
+}
+
+/*=============================================
+ELIMINAR FICHA EPIDEMIOLOGICA
+=============================================*/
+
+if (isset($_POST["eliminarFicha"])) {
+
+	$eliminarFicha = new AjaxFichas();
+	$eliminarFicha -> id_ficha = $_POST["id_ficha"];
+	$eliminarFicha -> ajaxEliminarFicha();
+
+}
+
+/*=============================================
+ELIMINAR FICHA DE CONTROL Y SEGUIMIENTO
+=============================================*/
+
+if (isset($_POST["eliminarFichaControl"])) {
+
+	$eliminarFicha = new AjaxFichas();
+	$eliminarFicha -> idFicha = $_POST["idFicha"];
+	$eliminarFicha -> ajaxEliminarFichaControl();
+
+}
 
 /*=============================================
 MOSTRAR EN PDF FICHA EPIDEMIOLÓGICA

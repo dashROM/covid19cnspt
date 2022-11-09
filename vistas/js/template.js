@@ -60,9 +60,9 @@ $(document).ready(function() {
 
 });
 
-/*===================================================================================
+/*===========================================================
 TODOS LOS CAMPOS INPUT NECESARIO PARA MOSTRAR EN MAYUSCULAS
-===================================================================================*/
+=============================================================*/
 
 $(document).ready("onkeyup", ".mayuscula", function() {
 
@@ -71,111 +71,58 @@ $(document).ready("onkeyup", ".mayuscula", function() {
 
 	// $(this).toUpperCase();
 
-})
+});
 
+/*======================================
+INICIALIZANDO LOS FORMULARIOS SELECT2
+========================================*/
 
-/*=============================================
-HABILITAR EL CALENDARIO PARA INGRESO DE FECHAS
-=============================================*/
+$(function () {
 
-$(function() {
+	var placeholder = "<i class='fas fa-search'></i> Elegir...";
+   
+  //Initialize Select2 Elements
+  $('.select2').select2({
+  	language: {
 
-  $('.calendarioAsegurado').daterangepicker({
+	    noResults: function() {
 
-    singleDatePicker: true,
-    showDropdowns: true,
-    locale: {
-        "format": "DD-MM-YYYY",
-        "separator": " - ",
-        "applyLabel": "Aplicar",
-        "cancelLabel": "Cancelar",
-        "fromLabel": "Desde",
-        "toLabel": "Hasta",
-        "customRangeLabel": "Personalizado",
-        "weekLabel": "W",
-        "daysOfWeek": [
-            "Do",
-            "Lu",
-            "Ma",
-            "Mi",
-            "Ju",
-            "Vi",
-            "Sa"
-        ],
-        "monthNames": [
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
-            "Diciembre"
-        ],
-        "firstDay": 1
-    },
-    minDate: '01-01-1900',
-    maxDate: moment().format('DD-MM-YYYY')
+	      return "No hay resultado";  
 
+	    },
+	    searching: function() {
+
+	      return "Buscando..";
+	      
+	    }
+		},
+
+		placeholder: placeholder,
+    width: null,
+    escapeMarkup: function(m) { 
+    	return m; 
+    }
+	});
+
+	//Initialize Select2 Dinámico Elements
+  $('.select2_dinamic').select2({
+		tags: true,
+		language: "es"
+	});
+
+  //Initialize Select2 Elements
+  $('.select2bs4').select2({
+		theme: 'bootstrap4',
+		language: "es"
   });
 
 });
 
-/*=============================================
-HABILITAR EL CALENDARIO PARA INGRESO DE FECHAS EN EL FORM BAJA
-=============================================*/
+/*======================================
+CONVIRTIENDO EN MAYUSCULA LO INGRESADO DINAMICAMENTE
+========================================*/
+$(document).on("click", ".select2", function() {
 
-$(function() {
-
-  $('.calendarioFormBaja').daterangepicker({
-
-    singleDatePicker: true,
-    showDropdowns: true,
-    locale: {
-        "format": "DD-MM-YYYY",
-        "separator": " - ",
-        "applyLabel": "Aplicar",
-        "cancelLabel": "Cancelar",
-        "fromLabel": "Desde",
-        "toLabel": "Hasta",
-        "customRangeLabel": "Personalizado",
-        "weekLabel": "W",
-        "daysOfWeek": [
-            "Do",
-            "Lu",
-            "Ma",
-            "Mi",
-            "Ju",
-            "Vi",
-            "Sa"
-        ],
-        "monthNames": [
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
-            "Diciembre"
-        ],
-        "firstDay": 1
-    },
-    minDate: '01-01-1900',
-    drops: "up"
-
-  });
+	$('.select2-search__field').addClass('mayuscula');
 
 });
-
-
-
-

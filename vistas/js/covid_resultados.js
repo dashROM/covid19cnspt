@@ -1,64 +1,3 @@
-// /*=============================================
-// CARGAR LA TABLA DINÁMICA DE COVID RESULTADOS
-// =============================================*/
-
-// var perfilOculto = $("#perfilOculto").val();
-
-// var actionCovidResultados = $("#actionCovidResultados").val();
-
-// $('#tablaCovidResultados').DataTable({
-
-// 	"ajax": "ajax/datatable-covid_resultados.ajax.php?perfilOculto="+perfilOculto+"&actionCovidResultados="+actionCovidResultados,
-
-// 	"deferRender": true,
-
-// 	"retrieve" : true,
-
-// 	"processing" : true,
-
-// 	"rowCallback": function(row, data, index) {
-// 		if ( data[22] == "0" ) {
-//            $('td', row).addClass('bg-lightblue color-palette');
-//            $('tr.child', row).addClass('bg-lightblue color-palette');
-// 		}
-// 	},
-
-// 	"language": {
-
-// 		"sProcessing":     "Procesando...",
-// 		"sLengthMenu":     "Mostrar _MENU_ registros",
-// 		"sZeroRecords":    "No se encontraron resultados",
-// 		"sEmptyTable":     "Ningún dato disponible en esta tabla",
-// 		"sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
-// 		"sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
-// 		"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-// 		"sInfoPostFix":    "",
-// 		"sSearch":         "Buscar:",
-// 		"searchPlaceholder": "Escribe aquí para buscar...",
-// 		"sUrl":            "",
-// 		"sInfoThousands":  ",",
-// 		"sLoadingRecords": "Cargando...",
-// 		"oPaginate": {
-// 		"sFirst":    "Primero",
-// 		"sLast":     "Último",
-// 		"sNext":     "Siguiente",
-// 		"sPrevious": "Anterior"
-// 		},
-// 		"oAria": {
-// 			"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-// 			"sSortDescending": ": Activar para ordenar la columna de manera descendente"
-// 		}
-		
-// 	},
-
-// 	"responsive": true,
-
-// 	"lengthChange": false,
-
-// 	"ordering": false
-
-// }); 
-
 /*=============================================
 CARGAR LA TABLA DINÁMICA DE COVID RESULTADOS
 =============================================*/
@@ -69,10 +8,24 @@ var actionCovidResultados = $("#actionCovidResultados").val();
 
 $('#tablaCovidResultados').DataTable({
 
-	"ajax": "ajax/datatable-covid_resultados.ajax.php?perfilOculto="+perfilOculto+"&actionCovidResultados="+actionCovidResultados,
-
 	"processing": true,
+
     "serverSide": true,
+
+    "ajax": {
+		url: "ajax/datatable-covid_resultados.ajax.php",
+		data: { 'perfilOculto' : perfilOculto, 'actionCovidResultados' : actionCovidResultados },
+		type: "post"
+	},
+
+	"rowCallback": function(row, data, index) {
+		if ( data[23] == 0 ) {
+           $('td', row).addClass('bg-lightblue color-palette');
+           $('tr.child', row).addClass('bg-lightblue color-palette');
+		}
+	},
+
+	"order": [[ 0, "desc" ]],
 
 	"language": {
 
@@ -104,9 +57,7 @@ $('#tablaCovidResultados').DataTable({
 
 	"responsive": true,
 
-	"lengthChange": false,
-
-	"ordering": false
+	"lengthChange": false
 
 }); 
 
@@ -304,6 +255,7 @@ $(document).on("click", ".btnCovidResultados", function() {
             '<th>LOCALIDAD</th>'+
             '<th>ZONA</th>'+
             '<th>DIRECCION</th>'+
+            '<th>MÉTODO DE DIAGNÓSTICO</th>'+
             '<th>RESULTADO</th>'+
             '<th>FECHA RESULTADO</th>'+
             '<th>OBSERVACIONES</th>'+
@@ -337,7 +289,7 @@ $(document).on("click", ".btnCovidResultados", function() {
 		"processing" : true,
 
 		"rowCallback": function(row, data, index) {
-	       if ( data[22] == "0" )
+	       if ( data[23] == "0" )
 	       {
 	           $('td', row).addClass('bg-lightblue color-palette');
 	           $('tr.child', row).addClass('bg-lightblue color-palette');
@@ -442,5 +394,139 @@ $(document).on("blur", "#editarTipoMuestra", function() {
 	            '<textarea class="form-control mayuscula" id="editarObservacion" name="editarObservacion" placeholder="Ingresar observaciones (Opcional)" rows="3" pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-(),/#]+" title="Caracteres no admitidos"></textarea>'+
 	        '</div>');
 	}
+
+});
+
+/*=============================================
+SI TIPO DE LABORARIO ES EXTERNO SE HABILITA NOMBRE DE LABORATORIO
+=============================================*/
+
+$(document).on("change", "input:radio[name='tipoLaboratorio']", function() {
+	
+	var tipoLaboratorio = $(this).val();
+	
+	if (tipoLaboratorio == "EXTERNO") {
+
+		$("#nuevoCodLab").removeAttr("required");
+		$("#nuevoCodLab").siblings("i").remove();
+		$("#nuevoCodLab").attr("readonly","");
+		$("#nuevoCodLab").val("999");
+
+		$("#nuevoNombreLab").attr("required","");
+		$("#nuevoNombreLab").before("<i class='fas fa-asterisk asterisk'></i>");
+
+	} else {
+
+		$("#nuevoCodLab").attr("required","");
+		$("#nuevoCodLab").before("<i class='fas fa-asterisk asterisk'></i>");
+		$("#nuevoCodLab").removeAttr("readonly");
+		$("#nuevoCodLab").val("");
+
+		$("#nuevoNombreLab").removeAttr("required");
+		$("#nuevoNombreLab").siblings("i").remove();
+
+	}
+
+});
+
+/*=============================================
+SI TIPO DE LABORARIO ES EXTERNO SE HABILITA NOMBRE DE LABORATORIO EN EDITAR
+=============================================*/
+
+$(document).on("change", "input:radio[name='editarTipoLaboratorio']", function() {
+	
+	var tipoLaboratorio = $(this).val();
+	
+	if (tipoLaboratorio == "EXTERNO") {
+
+		$("#editarCodLab").removeAttr("required");
+		$("#editarCodLab").siblings("i").remove();
+		$("#editarCodLab").attr("readonly","");
+		$("#editarCodLab").val("999");
+
+		$("#editarNombreLab").attr("required","");
+		$("#editarNombreLab").before("<i class='fas fa-asterisk asterisk'></i>");
+
+	} else {
+
+		$("#editarCodLab").attr("required","");
+		$("#editarCodLab").before("<i class='fas fa-asterisk asterisk'></i>");
+		$("#editarCodLab").removeAttr("readonly");
+		$("#editarCodLab").val("");
+
+		$("#editarNombreLab").removeAttr("required");
+		$("#editarNombreLab").siblings("i").remove();
+
+		$("#editarDepartamento").removeAttr("readonly");
+		$("#editarEstablecimiento").removeAttr("readonly");
+
+	}
+
+});
+
+/*=============================================
+BUSCADOR DE DATOS DE AFILIADO ERP
+=============================================*/
+
+$("#frmBuscarAfiliadoERP").on("click", "#btnSearch", function() {
+
+    var fecha_nacimiento = $('#fecha_nacimiento').val();
+    var documento = $('#documento').val();
+
+    if(fecha_nacimiento === "" || documento === "") {
+        alert("Por favor complete los campos requeridos");
+        return;
+    }
+
+    $("#error").css("display", "none");
+    $("#mensaje").css("display", "block");
+
+    var datos = new FormData();
+    datos.append("buscadorAfiliados", "buscadorAfiliados")
+    datos.append("fecha_nacimiento", fecha_nacimiento);
+    datos.append("documento", documento);
+
+    $.ajax({
+
+        url: "ajax/afiliadosERP.ajax.php",
+        method: "POST",
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: "json",
+        success: function(respuesta) {
+
+    		$("#mensaje").css("display", "none");
+
+            dato = JSON.parse(respuesta.response);
+
+            console.log("dato", dato);
+            $("#nuevoPaterno").val(dato.primerApellido);
+            $("#nuevoMaterno").val(dato.segundoApellido);
+            $("#nuevoNombre").val(dato.nombres);
+            $("#nuevoDocumentoCI").val(dato.documentoIdentidad);
+            $("#nuevaFechaNacimiento").val(dato.fechaNacimiento);
+						
+            if(dato.sexo == "MASCULINO") {
+            	$('#nuevoSexo').prepend("<option value='M' >"+dato.sexo+"</option>");
+            } else {
+            	$('#nuevoSexo').prepend("<option value='F' >"+dato.sexo+"</option>");
+            }
+            $("#nuevoMatricula").val(dato.matricula.slice(2));
+            $("#nuevoNroEmpleador").val(dato.nroPatronal);
+            $("#nuevoRazonSocial").val(dato.razonSocial);
+            $("#codAfiliado").val(dato.matricula.slice(2)+'-'+dato.codigo);
+            $("#codAsegurado").val(dato.matricula.slice(2));
+            $("#codEmpleador").val(dato.nroPatronal);
+
+        },
+        error: function(error){
+
+          console.log("No funciona");
+            
+        }
+
+    });
 
 });

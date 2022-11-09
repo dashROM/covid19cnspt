@@ -44,7 +44,7 @@ class ModeloPacientesAsegurados {
 		 
 		    //Query 1: Attempt to insert the payment record into our database.
 			
-			$stmt = $pdo->prepare("INSERT INTO $tabla(cod_asegurado, cod_afiliado, cod_empleador, nombre_empleador, paterno, materno, nombre, sexo, nro_documento, fecha_nacimiento, edad, id_departamento, id_localidad, id_pais, zona, calle, nro_calle, telefono, nombre_apoderado, telefono_apoderado, id_ficha) VALUES (:cod_asegurado, :cod_afiliado, :cod_empleador, :nombre_empleador, :paterno, :materno, :nombre, :sexo, :nro_documento, :fecha_nacimiento, :edad, :id_departamento, :id_localidad, :id_pais, :zona, :calle, :nro_calle, :telefono, :nombre_apoderado, :telefono_apoderado, :id_ficha)");
+			$stmt = $pdo->prepare("INSERT INTO $tabla(cod_asegurado, cod_afiliado, cod_empleador, nombre_empleador, paterno, materno, nombre, sexo, nro_documento, fecha_nacimiento, edad, id_departamento, id_localidad, id_pais, zona, calle, nro_calle, telefono, email, nombre_apoderado, telefono_apoderado, id_ficha) VALUES (:cod_asegurado, :cod_afiliado, :cod_empleador, :nombre_empleador, :paterno, :materno, :nombre, :sexo, :nro_documento, :fecha_nacimiento, :edad, :id_departamento, :id_localidad, :id_pais, :zona, :calle, :nro_calle, :telefono, :email, :nombre_apoderado, :telefono_apoderado, :id_ficha)");
 
 			$stmt->bindParam(":cod_asegurado", $datos["cod_asegurado"], PDO::PARAM_STR);
 			$stmt->bindParam(":cod_afiliado", $datos["cod_afiliado"], PDO::PARAM_STR);
@@ -64,6 +64,7 @@ class ModeloPacientesAsegurados {
 			$stmt->bindParam(":calle", $datos["calle"], PDO::PARAM_STR);
 			$stmt->bindParam(":nro_calle", $datos["nro_calle"], PDO::PARAM_STR);
 			$stmt->bindParam(":telefono", $datos["telefono"], PDO::PARAM_STR);
+			$stmt->bindParam(":email", $datos["email"], PDO::PARAM_STR);
 			$stmt->bindParam(":nombre_apoderado", $datos["nombre_apoderado"], PDO::PARAM_STR);
 			$stmt->bindParam(":telefono_apoderado", $datos["telefono_apoderado"], PDO::PARAM_STR);
 			$stmt->bindParam(":id_ficha", $datos["id_ficha"], PDO::PARAM_INT);

@@ -1,30 +1,86 @@
 <?php 
 
 class ControladorCovidResultados {
-	
+
 	/*=============================================
-	CONTAR EL NUMERO DE REGISTROS QUE EXISTE EN LA TABLA COVID RESULTADOS
+	CONTAR EL NUMERO DE REGISTROS QUE EXISTE EN LA TABLA COVID RESULTADOS (LABORATORIO)
 	=============================================*/
 	
-	static public function ctrContarCovidResultadosLab($where) {
+	static public function ctrContarCovidResultadosLab() {
 
-		$tabla = "mostrar_covid_resultados";
+		$tabla = "vista_covid_resultados";
 
-		$respuesta = ModeloCovidResultados::mdlContarCovidResultadosLab($where ,$tabla);
+		$respuesta = ModeloCovidResultados::mdlContarCovidResultadosLab($tabla);
 
 		return $respuesta;
 
 	}
 
 	/*=============================================
-	MOSTRAR LOS AFILIADOS QUE TIENEN RESULTADOS DE PRUEBAS DE LABORATORIO COVID-19
+	CONTAR EL NUMERO DE REGISTROS QUE EXISTE EN LA TABLA COVID RESULTADOS FILTRADO (LABORATORIO)
 	=============================================*/
 	
-	static public function ctrMostrarCovidResultadosLab($where, $colum, $order, $start, $length) {
+	static public function ctrContarFiltradoCovidResultadosLab($sql) {
 
-		$tabla = "mostrar_covid_resultados";
+		$tabla = "vista_covid_resultados";
 
-		$respuesta = ModeloCovidResultados::mdlMostrarCovidResultadoLab($where, $colum, $order, $start, $length,$tabla);
+		$respuesta = ModeloCovidResultados::mdlContarFiltradoCovidResultadosLab($tabla, $sql);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	MOSTRAR LOS REGISTROS QUE EXISTE EN LA TABLA COVID RESULTADOS (LABORATORIO)
+	=============================================*/
+	
+	static public function ctrMostrarCovidResultadosLab($sql) {
+
+		$tabla = "vista_covid_resultados";
+
+		$respuesta = ModeloCovidResultados::mdlMostrarCovidResultadosLab($tabla, $sql);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	CONTAR EL NUMERO DE REGISTROS QUE EXISTE EN LA TABLA COVID RESULTADOS (CENTRO COVID)
+	=============================================*/
+	
+	static public function ctrContarCovidResultadosCentro() {
+
+		$tabla = "vista_covid_resultados";
+
+		$respuesta = ModeloCovidResultados::mdlContarCovidResultadosCentro($tabla);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	CONTAR EL NUMERO DE REGISTROS QUE EXISTE EN LA TABLA COVID RESULTADOS FILTRADO (CENTRO COVID)
+	=============================================*/
+	
+	static public function ctrContarFiltradoCovidResultadosCentro($sql) {
+
+		$tabla = "vista_covid_resultados";
+
+		$respuesta = ModeloCovidResultados::mdlContarFiltradoCovidResultadosCentro($tabla, $sql);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	MOSTRAR LOS REGISTROS QUE EXISTE EN LA TABLA COVID RESULTADOS (CENTRO COVID)
+	=============================================*/
+	
+	static public function ctrMostrarCovidResultadosCentro($sql) {
+
+		$tabla = "vista_covid_resultados";
+
+		$respuesta = ModeloCovidResultados::mdlMostrarCovidResultadosCentro($tabla, $sql);
 
 		return $respuesta;
 
@@ -87,23 +143,28 @@ class ControladorCovidResultados {
 				
 				$ruta = "vistas/img/covid_resultados/default/anonymous.png";
 
-				/*=============================================
-				TRAEMOS DATOS DE EMPLEADORES DE LA BASE DE DATOS SIAIS
-				=============================================*/
+				if ($_POST['idAfiliado'] == "1") {
 
-				if ($_POST['codEmpleador'] != "SIN REGISTRAR") {
+					$empleador["emp_nombre"] = $_POST['nuevoRazonSocial'];
 
-					$item = "emp_nro_empleador";
-		            $valor = $_POST['codEmpleador'];
-
-		            $empleador = ControladorEmpleadoresSIAIS::ctrMostrarEmpleadoresSIAIS($item, $valor);
-					
 				} else {
+					/*=============================================
+					TRAEMOS DATOS DE EMPLEADORES DE LA BASE DE DATOS SIAIS
+					=============================================*/
 
-					$empleador["emp_nombre"] = "SIN REGISTRAR";
+					if ($_POST['codEmpleador'] != "SIN REGISTRAR") {
 
-				}
+						$item = "emp_nro_empleador";
+	          $valor = $_POST['codEmpleador'];
 
+	          $empleador = ControladorEmpleadoresSIAIS::ctrMostrarEmpleadoresSIAIS($item, $valor);
+						
+					} else {
+
+						$empleador["emp_nombre"] = "SIN REGISTRAR";
+
+					}
+				}	
 
 				/*=============================================
 				SI NO EXISTE EL CAMPO OBSERVACIÓN SE GUARDA DATOS DE PRUEBA ELISA
@@ -124,36 +185,36 @@ class ControladorCovidResultados {
 
 				$tabla = "covid_resultados";
 
-				$datos = array( "cod_asegurado"			=> strtoupper($_POST["codAsegurado"]), 
-								"cod_afiliado"			=> $_POST["codAfiliado"], 
-
-								"cod_empleador"     	=> $_POST["codEmpleador"],
-								"nombre_empleador"     	=> rtrim($empleador["emp_nombre"]),
-								"fecha_recepcion"  		=> $_POST["nuevaFechaRecepcion"],
-								"fecha_muestra"     	=> $_POST["nuevaFechaMuestra"],
-								"cod_laboratorio"   	=> strtoupper($_POST["nuevoCodLab"]),
-								"nombre_laboratorio"   	=> strtoupper($_POST["nuevoNombreLab"]),
-								"muestra_control"   	=> $_POST["nuevaMuestraControl"],
-								"tipo_muestra"   		=> strtoupper($_POST["nuevoTipoMuestra"]),
-								"id_departamento"   	=> $_POST["nuevoDepartamento"],
-								"id_establecimiento"	=> $_POST["nuevoEstablecimiento"],
-								"documento_ci"			=> $_POST["nuevoDocumentoCI"],
-								"paterno"				=> strtoupper($_POST["nuevoPaterno"]),
-								"materno"				=> strtoupper($_POST["nuevoMaterno"]),
-								"nombre" 		        => strtoupper($_POST["nuevoNombre"]),
-								"sexo"	                => $_POST["nuevoSexo"],
-								"fecha_nacimiento"	    => $_POST["nuevaFechaNacimiento"],
-								"telefono"				=> $_POST["nuevoTelefono"],
-								"email"					=> $_POST["nuevoEmail"],
-								"id_localidad"			=> $_POST["nuevaLocalidad"],
-								"zona"   		        => strtoupper($_POST["nuevaZona"]),
-								"calle"   		        => strtoupper($_POST["nuevaCalle"]),
-								"nro_calle"   		    => strtoupper($_POST["nuevoNroCalle"]),
-								"resultado"   		    => $_POST["nuevoResultado"],
-								"fecha_resultado"   	=> $_POST["nuevaFechaResultado"],
-								"observaciones"   		=> $observaciones,
-								"id_usuario"	   		=> $_POST["idUsuario"],
-								"foto"     		        => $ruta);	
+				$datos = array( "cod_asegurado"			    => strtoupper($_POST["codAsegurado"]), 
+								        "cod_afiliado"			    => $_POST["codAfiliado"],
+								        "cod_empleador"     	  => $_POST["codEmpleador"],
+								        "nombre_empleador"     	=> rtrim($empleador["emp_nombre"]),
+								        "fecha_recepcion"  		  => $_POST["nuevaFechaRecepcion"],
+								        "fecha_muestra"     	  => $_POST["nuevaFechaMuestra"],
+								        "cod_laboratorio"   	  => strtoupper($_POST["nuevoCodLab"]),
+								        "nombre_laboratorio"   	=> strtoupper($_POST["nuevoNombreLab"]),
+								        "muestra_control"   	  => $_POST["nuevaMuestraControl"],
+								        "tipo_muestra"   		    => strtoupper($_POST["nuevoTipoMuestra"]),
+								        "id_departamento"   	  => $_POST["nuevoDepartamento"],
+								        "id_establecimiento"	  => $_POST["nuevoEstablecimiento"],
+								        "documento_ci"			    => $_POST["nuevoDocumentoCI"],
+								        "paterno"				        => strtoupper($_POST["nuevoPaterno"]),
+								        "materno"				        => strtoupper($_POST["nuevoMaterno"]),
+								        "nombre" 		            => strtoupper($_POST["nuevoNombre"]),
+								        "sexo"	                => $_POST["nuevoSexo"],
+								        "fecha_nacimiento"	    => $_POST["nuevaFechaNacimiento"],
+								        "telefono"				      => $_POST["nuevoTelefono"],
+								        "email"					        => $_POST["nuevoEmail"],
+								        "id_localidad"			    => $_POST["nuevaLocalidad"],
+								        "zona"   		            => strtoupper($_POST["nuevaZona"]),
+								        "calle"   		          => strtoupper($_POST["nuevaCalle"]),
+								        "nro_calle"   		      => strtoupper($_POST["nuevoNroCalle"]),
+								        "metodo_diagnostico"    => $_POST["nuevoMetodoDiagnostico"],
+								        "resultado"   		      => $_POST["nuevoResultado"],
+								        "fecha_resultado"   	  => $_POST["nuevaFechaResultado"],
+								        "observaciones"   		  => $observaciones,
+								        "id_usuario"	   		    => $_POST["idUsuario"],
+								        "foto"     		          => $ruta);	
 
 				$respuesta = ModeloCovidResultados::mdlIngresarCovidResultado($tabla, $datos);
 
@@ -360,37 +421,38 @@ class ControladorCovidResultados {
 
 				$tabla = "covid_resultados";
 
-				$datos = array( "id"					=> $_POST["idCovidResultado"], 
-								"cod_asegurado"			=> $_POST["codAsegurado"], 
-								"cod_afiliado"			=> $_POST["codAfiliado"], 
-								"cod_empleador"     	=> $_POST["codEmpleador"],
-								"nombre_empleador"     	=> rtrim($empleador["emp_nombre"]),
-								"fecha_recepcion"  		=> $_POST["editarFechaRecepcion"],
-								"fecha_muestra"     	=> $_POST["editarFechaMuestra"],
-								"cod_laboratorio"   	=> strtoupper($_POST["editarCodLab"]),
-								"nombre_laboratorio"   	=> strtoupper($_POST["editarNombreLab"]),
-								"muestra_control"   	=> $_POST["editarMuestraControl"],
-								"tipo_muestra"   		=> $_POST["editarTipoMuestra"],
-								"id_departamento"   	=> $_POST["editarDepartamento"],
-								"id_establecimiento"	=> $_POST["editarEstablecimiento"],
-								"documento_ci"			=> $_POST["editarDocumentoCI"],
-								"paterno"				=> strtoupper($_POST["editarPaterno"]),
-								"materno"				=> strtoupper($_POST["editarMaterno"]),
-								"nombre" 		        => strtoupper($_POST["editarNombre"]),
-								"sexo"	                => $_POST["editarSexo"],
-								"fecha_nacimiento"	    => $_POST["editarFechaNacimiento"],
-								"telefono"				=> $_POST["editarTelefono"],
-								"email"					=> $_POST["editarEmail"],
-								"id_localidad"			=> $_POST["editarLocalidad"],
-								"zona"   		        => strtoupper($_POST["editarZona"]),
-								"calle"   		        => strtoupper($_POST["editarCalle"]),
-								"nro_calle"   		    => $_POST["editarNroCalle"],
-								"resultado"   		    => $_POST["editarResultado"],
-								"fecha_resultado"   	=> $_POST["editarFechaResultado"],
-								"observaciones"   		=> $observaciones,
-								"id_usuario"	   		=> $_POST["idUsuario"],
-								"id_ficha"	   			=> $_POST["idFicha"],
-								"foto"     		        => $ruta);	
+				$datos = array( "id"									  => $_POST["idCovidResultado"], 
+								        "cod_asegurado"			    => $_POST["codAsegurado"], 
+								        "cod_afiliado"			    => $_POST["codAfiliado"], 
+								        "cod_empleador"     	  => $_POST["codEmpleador"],
+								        "nombre_empleador"     	=> rtrim($empleador["emp_nombre"]),
+								        "fecha_recepcion"  		  => $_POST["editarFechaRecepcion"],
+								        "fecha_muestra"     	  => $_POST["editarFechaMuestra"],
+								        "cod_laboratorio"   	  => strtoupper($_POST["editarCodLab"]),
+								        "nombre_laboratorio"   	=> strtoupper($_POST["editarNombreLab"]),
+								        "muestra_control"   	  => $_POST["editarMuestraControl"],
+								        "tipo_muestra"   		    => $_POST["editarTipoMuestra"],
+								        "id_departamento"   	  => $_POST["editarDepartamento"],
+								        "id_establecimiento"	  => $_POST["editarEstablecimiento"],
+								        "documento_ci"			    => $_POST["editarDocumentoCI"],
+								        "paterno"				        => strtoupper($_POST["editarPaterno"]),
+								        "materno"				        => strtoupper($_POST["editarMaterno"]),
+								        "nombre" 		            => strtoupper($_POST["editarNombre"]),
+								        "sexo"	                => $_POST["editarSexo"],
+								        "fecha_nacimiento"	    => $_POST["editarFechaNacimiento"],
+								        "telefono"				      => $_POST["editarTelefono"],
+								        "email"					        => $_POST["editarEmail"],
+								        "id_localidad"			    => $_POST["editarLocalidad"],
+								        "zona"   		            => strtoupper($_POST["editarZona"]),
+								        "calle"   		          => strtoupper($_POST["editarCalle"]),
+								        "nro_calle"   		      => $_POST["editarNroCalle"],
+								        "metodo_diagnostico"    => $_POST["editarMetodoDiagnostico"],
+								        "resultado"   		      => $_POST["editarResultado"],
+								        "fecha_resultado"   	  => $_POST["editarFechaResultado"],
+								        "observaciones"   		  => $observaciones,
+								        "id_usuario"	   		    => $_POST["idUsuario"],
+								        "id_ficha"	   			    => $_POST["idFicha"],
+								        "foto"     		          => $ruta);	
 
 				//var_dump($datos);
 				$respuesta = ModeloCovidResultados::mdlEditarCovidResultado($tabla, $datos);

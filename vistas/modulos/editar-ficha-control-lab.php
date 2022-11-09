@@ -42,7 +42,7 @@
 
         <div class="form-inline col-md-10">
 
-          Todos los campos con <span class="text-danger mx-2 font-weight-bold"> * </span> son obligatorios
+          Todos los campos con<i class="fas fa-asterisk asterisk mr-1"></i>son obligatorios
 
         </div>
 
@@ -125,7 +125,7 @@
 
             <div class="form-group col-md-4">
 
-              <label class="m-0 font-weight-normal" for="nuevoEstablecimiento">Establecimiento de Salud / Centro Aislamiento<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="m-0 font-weight-normal" for="nuevoEstablecimiento">Establecimiento de Salud / Centro Aislamiento</label>
               <select class="form-control form-control-sm" name="nuevoEstablecimiento" id="nuevoEstablecimiento" disabled>
                 <option value="<?= $establecimientos['id']?>"><?= $establecimientos['nombre_establecimiento']?></option>
               </select>
@@ -134,7 +134,27 @@
             <div class="form-group col-md-3">
 
               <label class="m-0 font-weight-normal" for="nuevoConsultorio">Consultorio</label>
-              <input type="text" class="form-control form-control-sm" name="nuevoConsultorio" id="nuevoConsultorio" value="<?= $consultorios["nombre_consultorio"]?>" readonly>
+              <?php
+
+              if ($consultorios == false) {
+
+              ?>
+
+                <input type="text" class="form-control form-control-sm" name="nuevoConsultorio" id="nuevoConsultorio" value="" readonly>
+
+              <?php
+
+              } else {
+
+              ?>
+
+                <input type="text" class="form-control form-control-sm" name="nuevoConsultorio" id="nuevoConsultorio" value="<?= $consultorios["nombre_consultorio"]?>" readonly>
+
+              <?php
+
+              }
+
+              ?>       
 
             </div>             
             
@@ -144,7 +164,7 @@
 
             <div class="form-group col-md-3">
 
-              <label class="m-0 font-weight-normal" for="nuevoDepartamento">Departamento<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="m-0 font-weight-normal" for="nuevoDepartamento">Departamento</label>
               <select class="form-control form-control-sm" name="nuevoDepartamento" id="nuevoDepartamento" disabled>
                 <option value="<?= $departamentos['id']?>"><?= $departamentos["nombre_depto"]?></option>
               </select>
@@ -153,7 +173,7 @@
 
             <div class="form-group col-md-3">
 
-              <label class="m-0 font-weight-normal" for="nuevoLocalidad">Localidad<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="m-0 font-weight-normal" for="nuevoLocalidad">Localidad</label>
               <select class="form-control form-control-sm" name="nuevoLocalidad" id="nuevoLocalidad" disabled>
                   <option value="<?= $localidades['id']?>"><?= $localidades["nombre_localidad"]?></option>
                 </select>
@@ -162,7 +182,7 @@
 
             <div class="form-group col-md-3">
 
-              <label class="m-0 font-weight-normal" for="nuevoFechaNotificacion">Fecha de Notificación<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="m-0 font-weight-normal" for="nuevoFechaNotificacion">Fecha de Notificación</label>
               <input type="date" class="form-control form-control-sm" name="nuevoFechaNotificacion" id="nuevoFechaNotificacion" value="<?= $ficha['fecha_notificacion'] ?>" readonly>
 
             </div>
@@ -207,7 +227,7 @@
             
             <div class="form-group col-md-2">
 
-              <label class="m-0 font-weight-normal" for="nuevoCodAsegurado">Cod. Asegurado<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="m-0 font-weight-normal" for="nuevoCodAsegurado">Cod. Asegurado</label>
               <input type="text" class="form-control form-control-sm" id="nuevoCodAsegurado" name="nuevoCodAsegurado" value="<?= $pacienteAsegurado['cod_asegurado']?>" readonly>
 
             </div>
@@ -260,7 +280,7 @@
 
             <div class="form-group col-md-2">
 
-              <label class="m-0 font-weight-normal" for="nuevoSexoPaciente">Sexo<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="m-0 font-weight-normal" for="nuevoSexoPaciente">Sexo</label>
               <?php 
 
                 if ($pacienteAsegurado['sexo'] == "F") {
@@ -281,7 +301,7 @@
 
             <div class="form-group col-md-3">
 
-              <label class="m-0 font-weight-normal" for="nuevoNroDocumentoPaciente">Nro. Documento<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="m-0 font-weight-normal" for="nuevoNroDocumentoPaciente">Nro. Documento</label>
               <input class="form-control form-control-sm" name="nuevoNroDocumentoPaciente" id="nuevoNroDocumentoPaciente" value="<?= $pacienteAsegurado['nro_documento'] ?>" readonly>
 
             </div>
@@ -308,6 +328,13 @@
 
               <label class="m-0 font-weight-normal" for="nuevoTelefonoPaciente">Teléfono</label>
               <input type="text" class="form-control form-control-sm" name="nuevoTelefonoPaciente" id="nuevoTelefonoPaciente" data-inputmask="'mask': '9{7,8}'" value="<?= $pacienteAsegurado['telefono'] ?>" readonly>
+
+            </div>
+
+            <div class="form-group col-md-5">
+
+              <label class="m-0 font-weight-normal" for="nuevoEmailPaciente">Email</label>
+              <input type="text" class="form-control form-control-sm" name="nuevoEmailPaciente" id="nuevoEmailPaciente" data-inputmask="'alias': 'email'" inputmode="email" value="<?= $pacienteAsegurado['email'] ?>" readonly>
 
             </div>
 
@@ -412,7 +439,7 @@
 
             <div class="form-group col-md-3">
 
-              <label class="m-0 font-weight-normal" for="nuevoVentilacionMecanica">Ventilación mecánica<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="m-0 font-weight-normal" for="nuevoVentilacionMecanica">Ventilación mecánica</label>
               <input type="text" class="form-control form-control-sm col-md-6" name="nuevoVentilacionMecanica" id="nuevoVentilacionMecanica" value="<?= $hospitalizaciones_aislamientos['ventilacion_mecanica'] ?>" readonly>
             
             </div>
@@ -589,7 +616,7 @@
         
         <div class="card-header bg-dark py-1 text-center">
 
-          <span>8. LABORATORIO</span>
+          <span>4. LABORATORIO</span>
           
         </div>
 
@@ -598,100 +625,207 @@
           <div class="form-row">
 
             <div class="form-group col-md-3">
-            
-              <label class="m-0" for="nuevoTipoMuestra">Tipo de muestra tomada<span class="text-danger font-weight-bold"> *</span></label> 
-              <input list="tipoMuestra" class="form-control form-control-sm mayuscula" id="nuevoTipoMuestra" name="nuevoTipoMuestra" value="<?= $laboratorios['tipo_muestra'] ?>">
-              <datalist id="tipoMuestra">
-                <option value="ASPIRADO"></option>
-                <option value="LAVADO BRONCO ALVELAR"></option>
-                <option value="HISOPADO NASOFARÍNGEO"></option>
-                <option value="HISOPADO COMBINADO"></option>
-              </datalist>           
+
+              <label class="m-0 font-weight-normal" for="nuevoEstadoMuestra">Se tomó muestra para Laboratorio </label>
+              <select class="form-control form-control-sm col-md-6" name="nuevoEstadoMuestra" id="nuevoEstadoMuestra" disabled>
+              <?php 
+
+                if ($laboratorios['estado_muestra'] == "SI") {
+
+                  echo '
+                  <option value="'.$laboratorios["estado_muestra"].'">'.$laboratorios["estado_muestra"].'</option>
+                  <option value="NO">NO</option>';
+                  
+                } else if ($laboratorios['estado_muestra'] == "NO") {
+                  
+                  echo '
+                  <option value="SI">SI</option>
+                  <option value="'.$laboratorios["estado_muestra"].'">'.$laboratorios["estado_muestra"].'</option>';
+
+                } else {
+
+                  echo '
+                  <option value="">Elegir...</option>
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>';
+                }
+
+              ?>   
+              </select>
 
             </div>
 
             <div class="form-group col-md-3">
 
-              <label class="my-0 mr-2 font-weight-normal" for="nuevoNombreLaboratorio">Nombre de Lab. que procesara la muestra</label>
-              <input type="text" class="form-control form-control-sm mayuscula" id="nuevoNombreLaboratorio" name="nuevoNombreLaboratorio" value="<?= $laboratorios['nombre_laboratorio'] ?>"> 
+              <label class="m-0 font-weight-normal" for="nuevoNoTomaMuestra">¿Por qué no se tomó la muestra?</label>
+              <input list="noTomaMuestra" class="form-control form-control-sm mayuscula" id="nuevoNoTomaMuestra" name="nuevoNoTomaMuestra" value="<?= $laboratorios['no_toma_muestra'] ?>" readonly>
 
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
 
-              <label class="m-0 font-weight-normal" for="nuevoFechaMuestra">Fecha de toma de muestra<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="my-0 mr-2 font-weight-normal" for="nuevoLugarMuestra">Lugar de toma de muestra</label>
+              <select class="form-control form-control-sm" name="nuevoLugarMuestra" id="nuevoLugarMuestra" disabled>
+                <option value="<?= $establecimientos['id'] ?>"><?= $establecimientos['nombre_establecimiento'] ?></option>
+                <?php 
+
+                  $item = null;
+                  $valor = null;
+
+                  $establecimientos = ControladorEstablecimientos::ctrMostrarEstablecimientos($item, $valor);
+
+                  foreach ($establecimientos as $key => $value) {
+                    
+                    echo '<option value="'.$value["id"].'">'.$value["nombre_establecimiento"].'</option>';
+                  } 
+
+                ?>
+              </select> 
+
+            </div>
+
+            <div class="form-group col-md-3">
+            
+              <label class="m-0" for="nuevoTipoMuestra">Tipo de muestra tomada</label> 
+              <i class="fas fa-asterisk asterisk"></i>
+              <select class="form-control form-control-sm select2_dinamic" id="nuevoTipoMuestra" name="nuevoTipoMuestra" data-dropdown-css-class="select2-info" style="width: 100%;">
+
+                <option value="<?= $laboratorios['tipo_muestra'] ?>"><?= $laboratorios['tipo_muestra'] ?></option>
+                <option value="ASPIRADO">ASPIRADO</option>
+                <option value="ESPUTO">ESPUTO</option>
+                <option value="LAVADO BRONCO ALVELAR">LAVADO BRONCO ALVELAR</option>
+                <option value="HISOPADO NASOFARÍNGEO">HISOPADO NASOFARÍNGEO</option>
+                <option value="HISOPADO COMBINADO">HISOPADO COMBINADO</option>
+
+              </select>
+        
+            </div>
+            
+          </div>
+
+          <div class="form-row">
+
+            <div class="form-group col-md-3">
+
+              <label class="my-0 mr-2 font-weight-normal" for="nuevoNombreLaboratorio">Nombre de Lab. que procesara la muestra</label>
+              <input type="text" class="form-control form-control-sm mayuscula" id="nuevoNombreLaboratorio" name="nuevoNombreLaboratorio" value="<?= $laboratorios['nombre_laboratorio'] ?>" readonly> 
+
+            </div>
+
+            <div class="form-group col-md-3">
+
+              <label class="m-0 font-weight-normal" for="nuevoFechaMuestra">Fecha de toma de muestra</label>
               <input type="date" class="form-control form-control-sm" name="nuevoFechaMuestra" id="nuevoFechaMuestra" value="<?= $laboratorios['fecha_muestra'] ?>" readonly>
 
             </div>
 
             <div class="form-group col-md-2">
 
-              <label class="m-0 font-weight-normal" for="nuevoFechaEnvio">Fecha de Envío<span class="text-danger"> *</span></label>
+              <label class="m-0 font-weight-normal" for="nuevoFechaEnvio">Fecha de Envío</label>
               <input type="date" class="form-control form-control-sm" name="nuevoFechaEnvio" id="nuevoFechaEnvio" value="<?= $laboratorios['fecha_envio'] ?>" readonly>
 
             </div>
-            
+
+            <div class="form-group col-md-4">
+
+              <label class="my-0 mr-2 font-weight-normal" for="nuevoResponsableMuestra">Responsable de Toma de Muestra</label>
+              <input type="text" class="form-control form-control-sm mayuscula" name="nuevoResponsableMuestra" id="nuevoResponsableMuestra" value="<?= $laboratorios['responsable_muestra'] ?>" readonly>
+
+            </div>
+
           </div>
+
+          <div class="form-row">
+            
+            <div class="form-group col-md-12">
+
+              <label class="my-0 mr-2 font-weight-normal" for="nuevoObsMuestra">Observaciones</label>
+              <input type="text" class="form-control form-control-sm mayuscula" id="nuevoObsMuestra" name="nuevoObsMuestra" value="<?= $laboratorios['observaciones_muestra'] ?>"> 
+
+            </div>
+
+          </div>    
+
+        </div>
+
+      </div>
+
+      <div class="card mb-0">
+
+        <div class="card-header bg-secondary py-1 text-center">
+
+          <span>RESULTADO</span>
+          
+        </div>
+
+        <div class="card-body">
 
           <div class="form-row">
 
             <div class="form-group col-md-2">
 
-              <label class="m-0 font-weight-normal" for="nuevoCodLaboratorio">Cod. Laboratorio<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="m-0 font-weight-normal" for="nuevoCodLaboratorio">Cod. Laboratorio<i class="fas fa-asterisk asterisk"></i></label>
               <input type="text" class="form-control form-control-sm" name="nuevoCodLaboratorio" id="nuevoCodLaboratorio" value="<?= $laboratorios['cod_laboratorio'] ?>">
 
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-2 offset-md-1">
 
-              <label class="my-0 mr-2 font-weight-normal" for="nuevoResponsableMuestra">Responsable de Toma de Muestra<span class="text-danger font-weight-bold"> *</span></label>
-              <input type="text" class="form-control form-control-sm mayuscula" name="nuevoResponsableMuestra" placeholder="INGRESE APELLIDO(S) Y NOMBRE(S)" id="nuevoResponsableMuestra" value="<?= $laboratorios['responsable_muestra'] ?>" readonly>
+              <label class="m-0" for="nuevoMetodoDiagnostico">Mètodo de Diagnostico<i class="fas fa-asterisk asterisk"></i></label>
+              <select class="form-control form-control-sm select2" name="nuevoMetodoDiagnostico" id="nuevoMetodoDiagnostico" data-dropdown-css-class="select2-info" style="width: 100%;">
+                <?php 
 
-              <!-- <select class="form-control form-control-sm" name="nuevoResponsableMuestra" id="nuevoResponsableMuestra">
-              <option value="">Elegir...</option>
-              <?php 
+                  if ($laboratorios['metodo_diagnostico'] == "RT-PCR EN TIEMPO REAL") {
 
-                // $item = null;
-                // $valor = null;
+                    echo 
+                      '<option value="'.$laboratorios['metodo_diagnostico'].'">'.$laboratorios['metodo_diagnostico'].'</option>
+                      <option value="RT-PCR GENEXPERT">RT-PCR GENEXPERT</option>
+                      <option value="PRUEBA ANTIGÈNICA">PRUEBA ANTIGÈNICA</option>';
+                    
+                  } else if ($laboratorios['metodo_diagnostico'] == "RT-PCR GENEXPERT") {
+                    
+                    echo 
+                      '<option value="'.$laboratorios['metodo_diagnostico'].'">'.$laboratorios['metodo_diagnostico'].'</option>
+                      <option value="RT-PCR EN TIEMPO REAL">RT-PCR EN TIEMPO REAL</option>
+                      <option value="PRUEBA ANTIGÈNICA">PRUEBA ANTIGÈNICA</option>';
 
-                // $paises = ControladorResponsablesMuestras::ctrMostrarResponsablesMuestras($item, $valor);
+                  } else if ($laboratorios['metodo_diagnostico'] == "PRUEBA ANTIGÈNICA") {
 
-                // foreach ($paises as $key => $value) {
-                  
-                //   echo '<option value="'.$value["id"].'">'.$value["paterno_responsable"].' '.$value["materno_responsable"].' '.$value["nombre_responsable"].'</option>';
-                // } 
-              ?>
-              </select> -->
+                    echo 
+                      '<option value="'.$laboratorios['metodo_diagnostico'].'">'.$laboratorios['metodo_diagnostico'].'</option>
+                      <option value="RT-PCR EN TIEMPO REAL">RT-PCR EN TIEMPO REAL</option>
+                      <option value="RT-PCR GENEXPERT">RT-PCR GENEXPERT</option>';
+
+                  } else {
+
+                    echo 
+                      '<option value="">Elegir...</option>
+                      <option value="RT-PCR EN TIEMPO REAL">RT-PCR EN TIEMPO REAL</option>
+                      <option value="RT-PCR GENEXPERT">RT-PCR GENEXPERT</option>
+                      <option value="PRUEBA ANTIGÈNICA">PRUEBA ANTIGÈNICA</option>';
+                  }
+
+                ?>   
+              </select>
 
             </div>
 
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-2 offset-md-1">
 
-              <label class="my-0 mr-2 font-weight-normal" for="nuevoObsMuestra">Observaciones</label>
-              <input type="text" class="form-control form-control-sm" id="nuevoObsMuestra" name="nuevoObsMuestra" value="<?= $laboratorios['observaciones_muestra'] ?>"> 
-
-            </div>
-
-          </div>
-
-          <div class="form-row">
-
-            <div class="form-group col-md-4">
-
-              <label class="my-0 mr-2 font-weight-normal" for="nuevoResultadoLaboratorio">Resultados Laboratorio<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="my-0 mr-2 font-weight-normal" for="nuevoResultadoLaboratorio">Resultados Laboratorio<i class="fas fa-asterisk asterisk"></i></label>
             
               <?php
 
               if ($laboratorios['resultado_laboratorio'] == "POSITIVO") {
 
                 echo'
-                <div class="icheck-danger icheck-inline">
+                <div class="icheck-danger icheck">
                   <input type="radio" name="nuevoResultadoLaboratorio" id="positivo" value="POSITIVO" checked>
                   <label for="positivo">
                     POSITIVO
                   </label>
                 </div>
-                <div class="icheck-success icheck-inline">
+                <div class="icheck-success icheck">
                   <input type="radio" name="nuevoResultadoLaboratorio" id="negativo" value="NEGATIVO">
                   <label for="negativo">
                     NEGATIVO
@@ -701,13 +835,13 @@
               } else if ($laboratorios['resultado_laboratorio'] == "NEGATIVO") {
 
                 echo '
-                <div class="icheck-danger icheck-inline">
+                <div class="icheck-danger icheck">
                   <input type="radio" name="nuevoResultadoLaboratorio" id="positivo" value="POSITIVO">
                   <label for="positivo">
                     POSITIVO
                   </label>
                 </div>
-                <div class="icheck-success icheck-inline">
+                <div class="icheck-success icheck">
                   <input type="radio" name="nuevoResultadoLaboratorio" id="negativo" value="NEGATIVO" checked>
                   <label for="negativo">
                     NEGATIVO
@@ -717,13 +851,13 @@
               } else {
 
                 echo '
-                <div class="icheck-danger icheck-inline">
+                <div class="icheck-danger icheck">
                   <input type="radio" name="nuevoResultadoLaboratorio" id="positivo" value="POSITIVO">
                   <label for="positivo">
                     POSITIVO
                   </label>
                 </div>
-                <div class="icheck-success icheck-inline">
+                <div class="icheck-success icheck">
                   <input type="radio" name="nuevoResultadoLaboratorio" id="negativo" value="NEGATIVO">
                   <label for="negativo">
                     NEGATIVO
@@ -732,13 +866,13 @@
 
               }
 
-              ?>            
+              ?>                     
 
             </div>
 
             <div class="form-group col-md-3">
 
-              <label class="my-0 mr-2 font-weight-normal" for="nuevoFechaResultado">Fecha de Resultado<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="my-0 mr-2 font-weight-normal" for="nuevoFechaResultado">Fecha de Resultado<i class="fas fa-asterisk asterisk"></i></label>
               <input type="date" class="form-control form-control-sm" id="nuevoFechaResultado" name="nuevoFechaResultado" value="<?= $laboratorios['fecha_resultado'] ?>"> 
 
             </div>
@@ -808,7 +942,7 @@
 
             <div class="form-group col-md-3">
             
-              <label class="my-0 mr-2 font-weight-normal" for="nuevoNombreNotif">Ap. Nombre(s)<span class="text-danger font-weight-bold"> *</span></label>
+              <label class="my-0 mr-2 font-weight-normal" for="nuevoNombreNotif">Ap. Nombre(s)</label>
               <input type="text" class="form-control form-control-sm mayuscula" id="nuevoNombreNotif" name="nuevoNombreNotif" value="<?= $persona_notificador['nombre_notificador'] ?>" readonly> 
 
             </div>

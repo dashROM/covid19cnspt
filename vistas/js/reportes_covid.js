@@ -17,6 +17,17 @@ $(document).on("click", ".btnCovidResultadosReporte", function() {
 	datos.append("fechaFin", fechaFin);
 	datos.append("resultado", resultado);
 
+	//Para mostrar alerta personalizada de loading
+	swal.fire({
+    text: 'Procesando...',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    onOpen: () => {
+        swal.showLoading()
+    }
+  });
+
 	$.ajax({
 
 		url: "ajax/reportes_covid.ajax.php",
@@ -28,37 +39,41 @@ $(document).on("click", ".btnCovidResultadosReporte", function() {
 		dataType: "json",
 		success: function(respuesta) {
 
+			//Para cerrar la alerta personalizada de loading
+			swal.close();	
+
 			$("#reporteCovid").append(
 
-			  '<table class="table table-bordered table-striped dt-responsive table-hover" id="tablaCovidResultadosReporte" width="100%">'+
-                
-                '<thead>'+
-                  
-                  '<tr>'+
-                    '<th>COD. LAB.</th>'+
-                    '<th>COD. ASEGURADO</th>'+
-                    '<th>APELLIDOS Y NOMBRES</th>'+
-                    '<th>CI</th>'+
-                    '<th>NOMBRE EMPLEADOR</th>'+
-                    '<th>FECHA MUESTRA</th>'+
-                    '<th>FECHA RECEPCIÓN</th>'+
-                    '<th>MUESTRA CONTROL</th>'+
-                    '<th>DEPARTAMENTO</th>'+
-                    '<th>ESTABLECIMIENTO</th>'+
-                    '<th>SEXO</th>'+
-                    '<th>EDAD</th>'+
-                    '<th>TEL/CEL</th>'+
-                    '<th>FECHA RESULTADO</th>'+
-                    '<th>RESULTADO</th>'+
-                    '<th>OBSERVACIONES</th>'+
-                    '<th>ACCIONES</th>'+
-                  '</tr>'+
+		  '<table class="table table-bordered table-striped dt-responsive table-hover" id="tablaCovidResultadosReporte" width="100%">'+
+              
+        '<thead>'+
+          
+          '<tr>'+
+            '<th>COD. LAB.</th>'+
+            '<th>COD. ASEGURADO</th>'+
+            '<th>APELLIDOS Y NOMBRES</th>'+
+            '<th>CI</th>'+
+            '<th>NOMBRE EMPLEADOR</th>'+
+            '<th>FECHA MUESTRA</th>'+
+            '<th>FECHA RECEPCIÓN</th>'+
+            '<th>MUESTRA CONTROL</th>'+
+            '<th>DEPARTAMENTO</th>'+
+            '<th>ESTABLECIMIENTO</th>'+
+            '<th>SEXO</th>'+
+            '<th>EDAD</th>'+
+            '<th>TEL/CEL</th>'+
+            '<th>MÉTODO DE DIAGNÓSTICO</th>'+
+            '<th>FECHA RESULTADO</th>'+
+            '<th>RESULTADO</th>'+
+            '<th>OBSERVACIONES</th>'+
+            '<th>ACCIONES</th>'+
+          '</tr>'+
 
-                '</thead>'+
-                
-              '</table>'  
+        '</thead>'+
+        
+      '</table>'  
 
-            ); 			
+      ); 			
 
 			var t = $('#tablaCovidResultadosReporte').DataTable({
 
@@ -66,30 +81,31 @@ $(document).on("click", ".btnCovidResultadosReporte", function() {
 
 				"columns": [
 					{ data: "cod_laboratorio" },
-		            { data: "cod_asegurado" },
-		            { data: "nombre_completo" },
-		            { data: "documento_ci" },
-		            { data: "nombre_empleador" },
-		            { render: function (data, type, row) {
-							var date = new Date(row.fecha_muestra);
-							date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-							return (moment(date).format("DD/MM/YYYY"));
+          { data: "cod_asegurado" },
+          { data: "nombre_completo" },
+          { data: "documento_ci" },
+          { data: "nombre_empleador" },
+          { render: function (data, type, row) {
+						var date = new Date(row.fecha_muestra);
+						date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+						return (moment(date).format("DD/MM/YYYY"));
 					}},
 					{ render: function (data, type, row) {
 							var date = new Date(row.fecha_recepcion);
 							date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
 							return (moment(date).format("DD/MM/YYYY"));
 					}},
-		            { data: "muestra_control" },
-		            { data: "nombre_depto" },
-		            { data: "abreviatura_establecimiento" },
-		            { data: "sexo" },
-		            { data: "edad" },
-		            { data: "telefono" },
-		            { render: function (data, type, row) {
-							var date = new Date(row.fecha_resultado);
-							date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-							return (moment(date).format("DD/MM/YYYY"));
+          { data: "muestra_control" },
+          { data: "nombre_depto" },
+          { data: "abreviatura_establecimiento" },
+          { data: "sexo" },
+          { data: "edad" },
+          { data: "telefono" },
+          { data: "metodo_diagnostico" },
+          { render: function (data, type, row) {
+						var date = new Date(row.fecha_resultado);
+						date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+						return (moment(date).format("DD/MM/YYYY"));
 					}},
 		            { data: "resultado" },
 		            { data: "observaciones" },
@@ -136,14 +152,14 @@ $(document).on("click", ".btnCovidResultadosReporte", function() {
 
 				"ordering": false, 
         		
-        		"info":     true,
+    		"info":     true,
 
-        		//para usar los botones   
-		        "responsive": true,
+    		//para usar los botones   
+        "responsive": true,
 
-		        "dom": 'Bfrtilp',       
-		        
-		        "buttons":[ 
+        "dom": 'Bfrtilp',       
+        
+        "buttons":[ 
 					{
 						extend:    'excelHtml5',
 						title: 	   'Reporte '+fechaInicio+' '+fechaFin+' '+resultado,
@@ -151,18 +167,6 @@ $(document).on("click", ".btnCovidResultadosReporte", function() {
 						titleAttr: 'Exportar a Excel',
 						className: 'btn btn-success'
 					},
-					// {
-					// 	extend:    'pdfHtml5',
-					// 	text:      '<i class="fas fa-file-pdf"></i> ',
-					// 	titleAttr: 'Exportar a PDF',
-					// 	className: 'btn btn-danger'
-					// },
-					// {
-					// 	extend:    'print',
-					// 	text:      '<i class="fa fa-print"></i> Imprimir',
-					// 	titleAttr: 'Imprimir',
-					// 	className: 'btn btn-info'
-					// },
 				]	        
 
 			});
@@ -222,7 +226,7 @@ $(document).on("click", ".btnCovidResultadosPDF", function() {
 
 			});	
 
-			PDFObject.embed("temp/reporte-"+fechaInicio+"-"+fechaFin+"-"+resultado+".pdf", "#view_pdf");
+			PDFObject.embed("ajax/temp/reporte-"+fechaInicio+"-"+fechaFin+"-"+resultado+".pdf", "#view_pdf");
 
 		}
 
@@ -238,6 +242,7 @@ BOTON QUE PARA CERRAR LA VENTANA MODAL DEL REPORTE PDF Y ELIMINA EL ARCHIVO TEMP
 $("#ver-pdf").on("click", ".btnCerrarReporte", function() {
 
 	var url = $(this).parent().parent().children(".modal-body").children().children().attr("src");
+	console.log("url", url);
 
 	var datos = new FormData();
 
@@ -297,7 +302,7 @@ $(document).on("click", ".btnReportePersonalPDF", function() {
 
 			});	
 
-			PDFObject.embed("temp/reporte-"+idCovidResultado+".pdf", "#view_pdf");
+			PDFObject.embed("ajax/temp/reporte-"+idCovidResultado+".pdf", "#view_pdf");
 
 		}
 

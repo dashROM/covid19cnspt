@@ -2,11 +2,11 @@
 
 	<div class="float-right d-none d-sm-block">
 
-    <b>Version</b> 0.1
+    	<b>Version</b> 0.8
 
-   </div>
+	</div>
 
-  &copy; Copyright <strong class="text-info">CNS Regional Potosí 2020</strong>. Todos los Derechos Reservados.
+  	&copy; Copyright <strong class="text-info">CNS Regional Potosí 2020</strong>. Todos los Derechos Reservados.
 
 </footer>
 

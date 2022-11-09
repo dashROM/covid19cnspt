@@ -15,23 +15,24 @@ require_once "../modelos/establecimientos.modelo.php";
 require_once "../controladores/localidades.controlador.php";
 require_once "../modelos/localidades.modelo.php";
 
-require_once('../extensiones/tcpdf/tcpdf.php');
+// require_once('../extensiones/tcpdf/tcpdf.php');
+require_once('../extensiones/TCPDF-main/tcpdf.php');
 
 class MYPDF extends TCPDF {
 
     //Page header
     public function Header() {
         // Logo
-        $image_file = K_PATH_IMAGES.'cns-logo.png';
-        $this->Image($image_file, 5, 5, 10, '', 'PNG', '', 'T', false, 100, '', false, false, 0, false, false, false);
+        $image_file = K_PATH_IMAGES.'cns-logo-simple.png';
+        $this->Image($image_file, 5, 5, 15, '', 'PNG', '', 'T', false, 100, '', false, false, 0, false, false, false);
         // Set font
         $this->SetFont('helvetica', 'B', 14);
         // Titulo
-        $this->Cell(0, 0, 'CAJA  NACIONAL  DE  SALUD        ', 0, 1, 'C', 0, '', 1);
+        $this->Cell(0, 0, 'CAJA  NACIONAL  DE  SALUD             ', 0, 1, 'C', 0, '', 1);
         // Set font
         $this->SetFont('helvetica', 'B', 10);
         // Subtitulo
-        $this->Cell(0, 0, 'LABORATORIO HOSPITAL OBRERO', 0, 1, 'C', 0, '', 1);
+        $this->Cell(0, 0, 'LABORATORIO HOSPITAL OBRERO Nº5', 0, 1, 'C', 0, '', 1);
 
 	}
 
@@ -87,7 +88,7 @@ class AjaxReportesCovid {
 		// Extend the TCPDF class to create custom Header and Footer
 
 
-		$pdf = new MYPDF('L', 'mm', 'A4', true, 'UTF-8', false);
+		$pdf = new MYPDF('L', 'mm', 'letter', true, 'UTF-8', false);
 
 		// set document information
 		$pdf->SetCreator(PDF_CREATOR);
@@ -182,7 +183,7 @@ class AjaxReportesCovid {
 	                    <th width="60px" align="center">TEL/CEL</th>
 	                    <th width="60px" align="center">FECHA RESULTADO</th>
 	                    <th width="60px" align="center">RESULTADO</th>
-	                    <th width="60px" align="center">OBS.</th>
+	                    <th width="70px" align="center">OBS.</th>
 		          	</tr>
 		        </thead>
 			';
@@ -206,7 +207,7 @@ class AjaxReportesCovid {
 			            <td width="60px" align="center">'.$value["telefono"].'</td>
 			            <td width="60px">'.date("d/m/Y", strtotime($value["fecha_resultado"])).'</td>
 			            <td width="60px"><b>'.$value["resultado"].'</b></td>
-			            <td width="60px">'.$value["observaciones"].'</td>
+			            <td width="70px">'.$value["observaciones"].'</td>
 			        </tr>
 				';
 
@@ -228,7 +229,7 @@ class AjaxReportesCovid {
 
 		$pdf->lastPage();
 
-		$pdf->output('../temp/reporte-'.$this->fechaInicio.'-'.$this->fechaFin.'-'.$valor3.'.pdf', 'F');
+		$pdf->output(__DIR__ . '/temp/reporte-'.$this->fechaInicio.'-'.$this->fechaFin.'-'.$valor3.'.pdf', 'F');
 
 	}
 
@@ -308,7 +309,7 @@ class AjaxReportesCovid {
 		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 		// set margins
-		$pdf->SetMargins(5, 20, 5, 5);
+		$pdf->SetMargins(2, 15, 2, 5);
 		$pdf->SetAutoPageBreak(true, 5); 
 		$pdf->SetHeaderMargin(5);
 		$pdf->SetFooterMargin(5);
@@ -335,98 +336,296 @@ class AjaxReportesCovid {
 		// add a page
 		$pdf->AddPage();
 
-		$content = '';
+		/*=============================================
+		PRIMERA SECCION DATOS ASEGURADO FORMULARIO RESULTADO COVID-19
+		=============================================*/
+		$pdf->SetFillColor(220, 220, 220);
+		$pdf->SetTextColor(0,0,0);
+
+		$pdf->SetFont('Helvetica', 'B', 10);
+
+		$pdf->MultiCell(206, 6, 'DATOS PERSONALES', 1, 'C', 1, 0, '',24, true, 1);
+
+		$pdf->SetFont('Helvetica', '', 10);
+
+		$left_column = '
+		<style>	
+
+			table {
+
+			  line-height: 18px;
+
+			}
+
+		</style>
+		<table>
+			<tr>
+				<td width="50%"><b>APELLIDO. PATERNO: </b></td>
+				<td>'.$covid_respuesta["paterno"].'</td>
+			</tr>
+			<tr>
+				<td width="50%"><b>APELLIDO. MATERNO: </b></td>
+				<td>'.$covid_respuesta["materno"].'</td>
+			</tr>
+			<tr>
+				<td width="50%"><b>NOMBRE(S): </b></td>
+				<td>'.$covid_respuesta["nombre"].'</td>
+			</tr>
+			<tr>
+				<td width="50%"><b>NRO. CI: </b></td>
+				<td>'.$covid_respuesta["documento_ci"].'</td>
+			</tr>
+			<tr>
+				<td width="50%"><b>SEXO: </b></td>
+				<td>'.$covid_respuesta["sexo"].'</td>
+			</tr>
+			<tr>
+				<td width="50%"><b>FECHA NACIMIENTO: </b></td>
+				<td>'.date("d/m/Y", strtotime($covid_respuesta["fecha_nacimiento"])).'</td>
+			</tr>
+		</table>';
+
+		$right_column = '
+		<style>	
+
+			table {
+
+			  line-height: 18px;
+
+			}
+
+		</style>
+		<table>
+			<tr>
+				<td width="40%"><b>NRO. ASEGURADO: </b></td>
+				<td>'.$covid_respuesta["cod_asegurado"].'</td>
+			</tr>
+			<tr>
+				<td width="40%"><b>DEPARTAMENTO: </b></td>
+				<td>'.$departamentos["nombre_depto"].'</td>
+			</tr>
+			<tr>
+				<td width="40%"><b>LOCALIDAD: </b></td>
+				<td>'.$localidades["nombre_localidad"].'</td>
+			</tr>
+			<tr>
+				<td width="40%"><b>ZONA: </b></td>
+				<td>'.$covid_respuesta["zona"].'</td>
+			</tr>
+			<tr>
+				<td width="40%"><b>DIRECCIÓN: </b></td>
+				<td>'.$covid_respuesta["calle"].' #'.$covid_respuesta["nro_calle"].'</td>
+			</tr>
+			<tr>
+				<td width="40%"><b>TELF. / CEL.: </b></td>
+				<td>'.$covid_respuesta["telefono"].'</td>
+			</tr>
+		</table>';
+
+		// // writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
+
+		// get current vertical position
+		$y = $pdf->getY();
 
 
-		    $content .= '
+		// write the first column
+		$pdf->writeHTMLCell(103, '', '', 30 + $n, $left_column, 1, 0, 0, true, 'J', true);
 
-		    <div>
+		$pdf->writeHTMLCell(103, '', 105, '', $right_column, 1, 1, 0, true, 'J', true);
 
-		    	<p><b>Matricula Asegurado: </b>'.$covid_respuesta["cod_asegurado"].'</p>
-	            <p><b>Nombre o Razón Social del Empleador: </b>'.$covid_respuesta["nombre_empleador"].'</p>
-	            <p><b>Nro. Empleador: </b>'.$covid_respuesta["cod_empleador"].'</p>
 
-		    	<table width="800px" cellspacing="1" cellpadding="4" border="1">
-					<tr bgcolor="#E5E5E5">
-					    <td align="center" width="205px"><b>Fecha Toma de Muestra</b></td>
-					    <td align="center" width="105px"><b>Muestra de Control</b></td>
-					    <td align="center" width="205px"><b>Tipo de Muestra</b></td>					    
-					    <td align="center" width="205px"><b>Fecha Recepción</b></td>
-					</tr>
-					<tr>
-					    <td align="center" width="205px">'.date("d/m/Y", strtotime($covid_respuesta["fecha_muestra"])).'</td>
-					    <td align="center" width="105px">'.$covid_respuesta["muestra_control"].'</td>				    
-					    <td align="center" width="205px">'.$covid_respuesta["tipo_muestra"].'</td>
-					    <td align="center" width="205px">'.date("d/m/Y", strtotime($covid_respuesta["fecha_recepcion"])).'</td>
-					</tr>
+		$pdf->SetFont('Helvetica', 'B', 10);
 
-					<tr bgcolor="#E5E5E5">
-					    <td align="center" width="205px"><b>Código Laboratorio</b></td>
-					    <td align="center" width="105px"><b>Nombre Laboratorio</b></td>
-					    <td align="center" width="205px"><b>Departamento</b></td>
-					    <td align="center" width="205px"><b>Establecimiento</b></td>
-					</tr>
-					<tr>
-					    <td align="center" width="205px">'.$covid_respuesta["cod_laboratorio"].'</td>
-					    <td align="center" width="105px">'.$covid_respuesta["nombre_laboratorio"].'</td>
-					    <td align="center" width="205px">'.$departamentos["nombre_depto"].'</td>
-					    <td align="center" width="205px">'.$establecimientos["nombre_establecimiento"].'</td>
-					</tr>
+		$pdf->MultiCell(154, 6, 'NOMBRE O RAZÓN SOCIAL DEL EMPLEADOR', 1, 'C', 1, 0, '', 60.5, true, 0);
+		$pdf->MultiCell(52, 6, 'NÚMERO EMPLEADOR', 1, 'C', 1, 1, 156, '', true);
 
-					<tr bgcolor="#E5E5E5">
-					    <td align="center" width="205px"><b>Apellido(s) y Nombre(s)</b></td>
-					    <td align="center" width="205px"><b>Documento CI</b></td>
-					    <td align="center" width="105px"><b>Sexo</b></td>
-					    <td align="center" width="205px"><b>Fecha Nacimiento</b></td>
-					</tr>
-					<tr>
-					    <td align="center" width="205px">'.$covid_respuesta["paterno"].' '.$covid_respuesta["materno"].' '.$covid_respuesta["nombre"].'</td>
-					    <td align="center" width="205px">'.$covid_respuesta["documento_ci"].'</td>
-					    <td align="center" width="105px">'.$covid_respuesta["sexo"].'</td>
-					    <td align="center" width="205px">'.date("d/m/Y", strtotime($covid_respuesta["fecha_nacimiento"])).'</td>
-					</tr>
+		$pdf->SetFont('Helvetica', '', 10);
 
-					<tr bgcolor="#E5E5E5">
-					    <td align="center" width="205px"><b>Localidad</b></td>
-					    <td align="center" width="205px"><b>Zona</b></td>
-					    <td align="center" width="205px"><b>Dirección</b></td>
-					    <td align="center" width="105px"><b>Teléfono / Celular</b></td>
-					</tr>
-					<tr>
-					    <td align="center" width="205px">'.$localidades["nombre_localidad"].'</td>
-					    <td align="center" width="205px">'.$covid_respuesta["zona"].'</td>
-					    <td align="center" width="205px">'.$covid_respuesta["calle"].' #'.$covid_respuesta["nro_calle"].'</td>
-					    <td align="center" width="105px">'.$covid_respuesta["telefono"].'</td>
-					</tr>
+		$pdf->MultiCell(154, 6, $covid_respuesta["nombre_empleador"], 1, 'C', 0, 0, '', 66.5, true, 0);
+		$pdf->MultiCell(52, 6, $covid_respuesta["cod_empleador"], 1, 'C', 0, 1, 156, '', true);
 
-					<tr bgcolor="#E5E5E5">
-					    <td align="center" width="205px"><b>Fecha Resultado</b></td>
-					    <td align="center" width="205px"><b>Resultado</b></td>
-					    <td align="center" width="311px"><b>Observaciones</b></td>
-					</tr>
-					<tr>
-					    <td align="center" width="205px">'.date("d/m/Y", strtotime($covid_respuesta["fecha_resultado"])).'</td>
-					    <td align="center" width="205px"><b>'.$covid_respuesta["resultado"].'</b></td>
-					    <td align="center" width="311px">'.$covid_respuesta["observaciones"].'</td>
-					</tr>
+		// $pdf->MultiCell(50, 6, 'AP. PATERNO', 1, 'C', 1, 0, '',24, true, 1);
+		// $pdf->MultiCell(52, 6, 'AP. MATERNO', 1, 'C', 1, 0, 52, '', true, 1);
+		// $pdf->MultiCell(52, 6, 'NOMBRE', 1, 'C', 1, 0, 104, '', true, 0);
+		// $pdf->MultiCell(52, 6, 'NRO. ASEGURADO', 1, 'C', 1, 1, 156, '', true);
 
-				</table>
+		// $pdf->SetFont('Helvetica', '', 10);
 
-			';
+		// $pdf->MultiCell(50, 6, $covid_respuesta["paterno"], 1, 'C', 0, 0, '', 30, true, 0);
+		// $pdf->MultiCell(52, 6, $covid_respuesta["materno"], 1, 'C', 0, 0, 52, '', true, 0);
+		// $pdf->MultiCell(52, 6, $covid_respuesta["nombre"], 1, 'C', 0, 0, 104, '', true, 0);
+		// $pdf->MultiCell(52, 6, $covid_respuesta["cod_asegurado"], 1, 'C', 0, 1, 156, '', true);
 
-			$content .= '</br>
-					<h3 style="text-align: left; padding-top: 10px;">Reporte Generado por el Usuario: '.$this->nombre_usuario.'</h3>
-					<h3 style="text-align: left; padding-top: 10px;">Reporte Generado en fecha: '.date("d/m/Y H:i:s").'</h3>		
-		    </div>';
+		// $pdf->SetFont('Helvetica', 'B', 10);
 
-			
-		//CONSULTA
+		// $pdf->MultiCell(50, 6, 'NRO. CI', 1, 'C', 1, 0, '',36, true, 1);
+		// $pdf->MultiCell(52, 6, 'SEXO', 1, 'C', 1, 0, 52, '', true, 1);
+		// $pdf->MultiCell(52, 6, 'FECHA NACIMIENTO', 1, 'C', 1, 0, 104, '', true, 0);
+		// $pdf->MultiCell(52, 6, 'DEPARTAMENTO', 1, 'C', 1, 1, 156, '', true);
 
-		$pdf->writeHTML($content, true, 0, true, 0);
+		// $pdf->SetFont('Helvetica', '', 10);
+
+		// $pdf->MultiCell(50, 6, $covid_respuesta["documento_ci"], 1, 'C', 0, 0, '', 42, true, 0);
+		// $pdf->MultiCell(52, 6, $covid_respuesta["sexo"], 1, 'C', 0, 0, 52, '', true, 0);
+		// $pdf->MultiCell(52, 6, date("d/m/Y", strtotime($covid_respuesta["fecha_nacimiento"])), 1, 'C', 0, 0, 104, '',true, 0);
+		// $pdf->MultiCell(52, 6, $departamentos["nombre_depto"], 1, 'C', 0, 1, 156, '', true);
+
+		// $pdf->SetFont('Helvetica', 'B', 10);
+
+		// $pdf->MultiCell(50, 6, 'LOCALIDAD', 1, 'C', 1, 0, '',48, true, 1);
+		// $pdf->MultiCell(52, 6, 'ZONA', 1, 'C', 1, 0, 52, '', true, 1);
+		// $pdf->MultiCell(52, 6, 'DIRECCIÓN', 1, 'C', 1, 0, 104, '', true, 0);
+		// $pdf->MultiCell(52, 6, 'TELF. / CEL.', 1, 'C', 1, 1, 156, '', true);
+
+		// $pdf->SetFont('Helvetica', '', 10);
+
+		// $pdf->MultiCell(50, 6, $localidades["nombre_localidad"], 1, 'C', 0, 0, '', 54, true, 0);
+		// $pdf->MultiCell(52, 6, $covid_respuesta["zona"], 1, 'C', 0, 0, 52, '', true, 0);
+		// $pdf->MultiCell(52, 6, $covid_respuesta["calle"].' #'.$covid_respuesta["nro_calle"], 1, 'C', 0, 0, 104, '',true, 0);
+		// $pdf->MultiCell(52, 6, $covid_respuesta["telefono"], 1, 'C', 0, 1, 156, '', true);
+
+		// $pdf->SetFont('Helvetica', 'B', 10);
+
+		// $pdf->MultiCell(154, 6, 'NOMBRE O RAZÓN SOCIAL DEL EMPLEADOR', 1, 'C', 1, 0, '', 60, true, 0);
+		// $pdf->MultiCell(52, 6, 'NÚMERO EMPLEADOR', 1, 'C', 1, 1, 156, '', true);
+
+		// $pdf->SetFont('Helvetica', '', 10);
+
+		// $pdf->MultiCell(154, 6, $covid_respuesta["nombre_empleador"], 1, 'C', 0, 0, '', 66, true, 0);
+		// $pdf->MultiCell(52, 6, $covid_respuesta["cod_empleador"], 1, 'C', 0, 1, 156, '', true);
+
+		/*=============================================
+		SEGUNDA SECCION FORMULARIO RESULTADO COVID-19
+		=============================================*/
+
+		$pdf->SetFont('Helvetica', 'B', 10);
+
+		$pdf->MultiCell(206, 6, 'DATOS RESULTADO LABORATORIO', 1, 'C', 1, 0, '', 72.5, true, 0);
+
+		$pdf->SetFont('Helvetica', '', 10);
+
+		$left_column2 = '
+		<style>	
+
+			table {
+
+			  line-height: 18px;
+
+			}
+
+		</style>
+		<table>
+			<tr>
+				<td width="55%"><b>FECHA TOMA DE MUESTRA: </b></td>
+				<td>'.date("d/m/Y", strtotime($covid_respuesta["fecha_muestra"])).'</td>
+			</tr>
+			<tr>
+				<td width="55%"><b>FECHA RECEPCIÓN: </b></td>
+				<td>'.date("d/m/Y", strtotime($covid_respuesta["fecha_recepcion"])).'</td>
+			</tr>
+			<tr>
+				<td width="55%"><b>COD LABORATORIO: </b></td>
+				<td>'.$covid_respuesta["cod_laboratorio"].'</td>
+			</tr>
+			<tr>
+				<td width="55%"><b>RESULTADO LABORATORIO: </b></td>
+				<td><b>'.$covid_respuesta["resultado"].'</b></td>
+			</tr>
+			<tr>
+				<td width="55%"><b>MÉTODO DIAGNOSTICO: </b></td>
+				<td>'.$covid_respuesta["metodo_diagnostico"].'</td>
+			</tr>
+		</table>';
+
+		$right_column2 = '
+		<style>	
+
+			table {
+
+			  line-height: 18px;
+
+			}
+
+		</style>
+		<table>
+			<tr>
+				<td width="50%"><b>MUESTRA DE CONTROL: </b></td>
+				<td>'.$covid_respuesta["muestra_control"].'</td>
+			</tr>
+			<tr>
+				<td width="50%"><b>TIPO DE MUESTRA: </b></td>
+				<td>'.$covid_respuesta["tipo_muestra"].'</td>
+			</tr>
+			<tr>
+				<td width="50%"><b>ESTABLECIMIENTO: </b></td>
+				<td>'.$establecimientos["abreviatura_establecimiento"].'</td>
+			</tr>
+			<tr>
+				<td width="50%"><b>FECHA RESULTADO: </b></td>
+				<td>'.date("d/m/Y", strtotime($covid_respuesta["fecha_resultado"])).'</td>
+			</tr>
+			<tr>
+				<td width="55%"></td>
+				<td></td>
+			</tr>
+		</table>';
+
+		// // writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
+
+		// get current vertical position
+		$y = $pdf->getY();
+
+
+		// write the first column
+		$pdf->writeHTMLCell(103, '', '', 78.5 + $n, $left_column2, 1, 0, 0, true, 'J', true);
+
+		$pdf->writeHTMLCell(103, '', 105, '', $right_column2, 1, 1, 0, true, 'J', true);
+
+		/*=============================================
+		TERCERA SECCION FORMULARIO RESULTADO COVID-19
+		=============================================*/
+
+		$left_column3 = '
+		<table>
+			<tr>
+				<td><br><br><b>REPORTE GENERADO POR EL USUARIO:</b> '.$this->nombre_usuario.'</td>
+			</tr>
+			<tr>
+				<td><b>REPORTE GENERADO EN FECHA:</b> '.date("d/m/Y H:i:s").'</td>
+			</tr>
+		</table>';
+
+		// // writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
+
+		// get current vertical position
+		$y = $pdf->getY();
+
+		$pdf->SetFont('Helvetica', '', 8);
+
+
+		// write the first column
+		$pdf->writeHTMLCell(206, 15, '', 104 + $n, $left_column3, 1, 0, 0, true, 'J', true);
+
+		// Estilos necesarios para el Codigo QR
+		$style = array(
+		    'border' => 0,
+		    'vpadding' => 'auto',
+		    'hpadding' => 'auto',
+		    'fgcolor' => array(0,0,0),
+		    'bgcolor' => false, //array(255,255,255)
+		    'module_width' => 1, // width of a single module in points
+		    'module_height' => 1 // height of a single module in points
+		);
+
+		//	Datos a mostrar en el código QR
+		$codeContents = 'NRO. ASEGURADO: '.$covid_respuesta["cod_asegurado"]."\n";
+
+		// insertando el código QR
+		$pdf->write2DBarcode($codeContents, 'QRCODE,L', 187, 4, 20, 20, $style, 'N');	
 
 		$pdf->lastPage();
 
-		$pdf->output('../temp/reporte-'.$valor.'.pdf', 'F');
+		$pdf->output(__DIR__ . '/temp/reporte-'.$valor.'.pdf', 'F');
 
 	}
 

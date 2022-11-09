@@ -76,7 +76,8 @@
                     <th>INCAPACIDAD HASTA</th>
                     <th>DIAS INCAPACIDAD</th>
                     <th>LUGAR Y FECHA</th> 
-                    <th>CLAVE</th>                         
+                    <th>CLAVE</th>
+                    <th>CÓDIGO</th>                         
                     <th>ACCIONES</th>
                   </tr>
 

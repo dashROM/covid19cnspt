@@ -1,6 +1,90 @@
 <?php 
 
 class ControladorFichas {
+
+	/*=============================================
+	CONTAR EL NUMERO DE REGISTROS QUE EXISTE EN LA TABLA FICHAS (LABORATORIO)
+	=============================================*/
+	
+	static public function ctrContarFichasLab() {
+
+		$tabla = "vista_fichas";
+
+		$respuesta = ModeloFichas::mdlContarFichasLab($tabla);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	CONTAR EL NUMERO DE REGISTROS QUE EXISTE EN LA TABLA FICHAS FILTRADO (LABORATORIO)
+	=============================================*/
+	
+	static public function ctrContarFiltradoFichasLab($sql) {
+
+		$tabla = "vista_fichas";
+
+		$respuesta = ModeloFichas::mdlContarFiltradoFichasLab($tabla, $sql);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	MOSTAR LOS REGISTROS QUE EXISTE EN LA TABLA FICHAS (LABORATORIO)
+	=============================================*/
+	
+	static public function ctrMostrarFichasLab($sql) {
+
+		$tabla = "vista_fichas";
+
+		$respuesta = ModeloFichas::mdlMostrarFichasLab($tabla, $sql);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	CONTAR EL NUMERO DE REGISTROS QUE EXISTE EN LA TABLA COVID RESULTADOS (CENTRO COVID)
+	=============================================*/
+	
+	static public function ctrContarFichasCentro() {
+
+		$tabla = "vista_fichas";
+
+		$respuesta = ModeloFichas::mdlContarFichasCentro($tabla);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	CONTAR EL NUMERO DE REGISTROS QUE EXISTE EN LA TABLA COVID RESULTADOS FILTRADO (CENTRO COVID)
+	=============================================*/
+	
+	static public function ctrContarFiltradoFichasCentro($sql) {
+
+		$tabla = "vista_fichas";
+
+		$respuesta = ModeloFichas::mdlContarFiltradoFichasCentro($tabla, $sql);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	MOSTRAR LOS REGISTROS QUE EXISTE EN LA TABLA COVID RESULTADOS (CENTRO COVID)
+	=============================================*/
+	
+	static public function ctrMostrarFichasCentro($sql) {
+
+		$tabla = "vista_fichas";
+
+		$respuesta = ModeloFichas::mdlMostrarFichasCentro($tabla, $sql);
+
+		return $respuesta;
+
+	}
 	
 	/*=============================================
 	MOSTRAR LOS DATOS DE FICHAS COVID-19
@@ -111,5 +195,18 @@ class ControladorFichas {
 		echo $respuesta;
 
 	}
+
+	/*=============================================
+	ELIMINAR FICHA
+	=============================================*/
+
+	static public function ctrEliminarFicha($id_ficha)	{
+
+		$respuesta = ModeloFichas::mdlEliminarFicha($id_ficha);
+
+		echo $respuesta;
+
+	}
+
 
 }

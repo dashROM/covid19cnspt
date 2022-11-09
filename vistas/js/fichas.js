@@ -4,30 +4,34 @@ CARGAR LA TABLA DINÁMICA DE FICHAS
 
 var perfilOculto = $("#perfilOculto").val();
 
-var actionBuscarFichaFecha = $("#actionBuscarFichaFecha").val();
+var actionFichas = $("#actionFichas").val();
 
-var table = $('#tablaFichas').DataTable( {
+var tablafichas = $('#tablaFichas').DataTable( {
 
-	"ajax": "ajax/datatable-fichas.ajax.php?perfilOculto="+perfilOculto+"&actionBuscarFichaFecha="+actionBuscarFichaFecha,
+	"processing": true,
+	
+	"serverSide": true,
 
-	"deferRender": true,
-
-	"retrieve" : true,
-
-	"processing" : true,
+	"ajax": {
+		url: "ajax/datatable-fichas.ajax.php",
+		data: { 'perfilOculto' : perfilOculto, 'actionFichas' : actionFichas },
+		type: "post"
+	},
 
 	"rowCallback": function(row, data, index) {
 		if ( data[8] == "" ) {
-           $('td', row).addClass('bg-lightblue color-palette');
-           $('tr.child', row).addClass('bg-lightblue color-palette');
+			$('td', row).addClass('bg-lightblue color-palette');
+			$('tr.child', row).addClass('bg-lightblue color-palette');
 
-           if ( data[11] == "0" ) {
-	           $('td', row).addClass('bg-maroon color-palette');
-	           $('tr.child', row).addClass('bg-maroon color-palette');
+			if ( data[11] == "0" ) {
+				$('td', row).addClass('bg-maroon color-palette');
+				$('tr.child', row).addClass('bg-maroon color-palette');
 
-	        }
+			}
 		}
 	},
+
+	"order": [[ 0, "desc" ]],
 
 	"language": {
 
@@ -45,10 +49,10 @@ var table = $('#tablaFichas').DataTable( {
 		"sInfoThousands":  ",",
 		"sLoadingRecords": "Cargando...",
 		"oPaginate": {
-		"sFirst":    "Primero",
-		"sLast":     "Último",
-		"sNext":     "Siguiente",
-		"sPrevious": "Anterior"
+			"sFirst":    "Primero",
+			"sLast":     "Último",
+			"sNext":     "Siguiente",
+			"sPrevious": "Anterior"
 		},
 		"oAria": {
 			"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
@@ -61,16 +65,14 @@ var table = $('#tablaFichas').DataTable( {
 
 	"lengthChange": false,
 
-	"ordering": false
-
 });
 
 // actualiza el contenido de la DataTable automaticamente cada 10000 ms.
 setInterval( function () {
 
-    table.ajax.reload( null, false ); // user paging is not reset on reload
+    tablafichas.ajax.reload( null, false ); // user paging is not reset on reload
 
-}, 30000 );
+  }, 30000 );
 
 
 /*=============================================
@@ -101,7 +103,7 @@ $(document).on("click", ".btnNuevaFichaEpidemiologica", function() {
 		processData: false,
 		dataType: "html",
 		success: function(respuesta) {
-		
+
 			if (respuesta != "error") {
 
 				swal.fire({
@@ -113,10 +115,10 @@ $(document).on("click", ".btnNuevaFichaEpidemiologica", function() {
 					confirmButtonText: "Cerrar"
 
 				}).then((result) => {
-  					
-  					if (result.value) {
 
-  						window.location = "index.php?ruta=editar-ficha-epidemiologica&idFicha="+respuesta;
+					if (result.value) {
+
+						window.location = "index.php?ruta=editar-ficha-epidemiologica&idFicha="+respuesta;
 
 					}
 
@@ -125,7 +127,7 @@ $(document).on("click", ".btnNuevaFichaEpidemiologica", function() {
 			} else {
 
 				swal.fire({
-						
+
 					title: "¡Error en la Base de Datos, No se puede Generar la FICHA EPIDEMIOLÓGICA!",
 					icon: "error",
 					allowOutsideClick: false,
@@ -138,9 +140,9 @@ $(document).on("click", ".btnNuevaFichaEpidemiologica", function() {
 		},
 		error: function(error) {
 
-	        console.log("No funciona");
-	        
-	    }
+			console.log("No funciona");
+
+		}
 
 	});
 
@@ -174,7 +176,7 @@ $(document).on("click", ".btnNuevaFichaControl", function() {
 		processData: false,
 		dataType: "html",
 		success: function(respuesta) {
-		
+
 			if (respuesta != "error") {
 
 				swal.fire({
@@ -186,10 +188,10 @@ $(document).on("click", ".btnNuevaFichaControl", function() {
 					confirmButtonText: "Cerrar"
 
 				}).then((result) => {
-  					
-  					if (result.value) {
 
-  						window.location = "index.php?ruta=editar-ficha-control&idFicha="+respuesta;
+					if (result.value) {
+
+						window.location = "index.php?ruta=editar-ficha-control&idFicha="+respuesta;
 
 					}
 
@@ -198,7 +200,7 @@ $(document).on("click", ".btnNuevaFichaControl", function() {
 			} else {
 
 				swal.fire({
-						
+
 					title: "¡Error en la Base de Datos, No se puede Generar la FICHA EPIDEMIOLÓGICA!",
 					icon: "error",
 					allowOutsideClick: false,
@@ -211,9 +213,9 @@ $(document).on("click", ".btnNuevaFichaControl", function() {
 		},
 		error: function(error) {
 
-	        console.log("No funciona");
-	        
-	    }
+			console.log("No funciona");
+
+		}
 
 	});
 
@@ -230,30 +232,29 @@ $(document).on("click", ".btnBuscarFichaFecha", function() {
 
 	$("#fichas").append(
 
-	  '<table class="table table-bordered table-striped dt-responsive" id="tablaFichas" width="100%">'+
-        
-        '<thead>'+
-          
-          '<tr>'+
-            '<th>COD. FICHA.</th>'+
-            '<th>TIPO DE FICHA.</th>'+
-            '<th>COD. ASEGURADO</th>'+
-            '<th>APELLIDOS Y NOMBRES</th>'+
-            '<th>CI</th>'+
-            '<th>SEXO</th>'+
-            '<th>FECHA NACIMIENTO</th>'+
-            '<th>FECHA NOTIFICACIÓN</th>'+
-            '<th>BÜSQUEDA ACTIVA</th>'+
-            '<th>RESULTADO</th>'+
-            '<th>FECHA RESULTADO</th>'+
-            '<th>ACCIONES</th>'+
-          '</tr>'+
+		'<table class="table table-bordered table-striped dt-responsive" id="tablaFichas" width="100%">'+
 
-        '</thead>'+
-        
-      '</table>'  
+		'<thead>'+
 
-    );       			
+		'<tr>'+
+		'<th>COD. FICHA.</th>'+
+		'<th>TIPO DE FICHA.</th>'+
+		'<th>COD. ASEGURADO</th>'+
+		'<th>APELLIDOS Y NOMBRES</th>'+
+		'<th>CI</th>'+
+		'<th>SEXO</th>'+
+		'<th>FECHA NACIMIENTO</th>'+
+		'<th>FECHA TOMA MUESTRA</th>'+
+		'<th>RESULTADO</th>'+
+		'<th>FECHA RESULTADO</th>'+
+		'<th>ACCIONES</th>'+
+		'</tr>'+
+
+		'</thead>'+
+
+		'</table>'  
+
+		);       			
 
 	var fecha = $("#fechaMuestra").val();
 
@@ -276,12 +277,18 @@ $(document).on("click", ".btnBuscarFichaFecha", function() {
 		"processing" : true,
 
 		"rowCallback": function(row, data, index) {
-	       if ( data[21] == "0" )
-	       {
-	           $('td', row).addClass('bg-lightblue color-palette');
-	           $('tr.child', row).addClass('bg-lightblue color-palette');
-	       }
+			if ( data[8] == "" ) {
+				$('td', row).addClass('bg-lightblue color-palette');
+				$('tr.child', row).addClass('bg-lightblue color-palette');
+
+				if ( data[11] == "0" ) {
+					$('td', row).addClass('bg-maroon color-palette');
+					$('tr.child', row).addClass('bg-maroon color-palette');
+
+				}
+			}
 		},
+
 
 		"language": {
 
@@ -299,10 +306,10 @@ $(document).on("click", ".btnBuscarFichaFecha", function() {
 			"sInfoThousands":  ",",
 			"sLoadingRecords": "Cargando...",
 			"oPaginate": {
-			"sFirst":    "Primero",
-			"sLast":     "Último",
-			"sNext":     "Siguiente",
-			"sPrevious": "Anterior"
+				"sFirst":    "Primero",
+				"sLast":     "Último",
+				"sNext":     "Siguiente",
+				"sPrevious": "Anterior"
 			},
 			"oAria": {
 				"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
@@ -336,14 +343,14 @@ $(document).on("click", ".btnBuscarAfiliadoFichas", function() {
 
 		//Para mostrar alerta personalizada de loading
 		swal.fire({
-	        text: 'Procesando...',
-	        allowOutsideClick: false,
-	        allowEscapeKey: false,
-	        allowEnterKey: false,
-	        onOpen: () => {
-	            swal.showLoading()
-	        }
-	    });
+			text: 'Procesando...',
+			allowOutsideClick: false,
+			allowEscapeKey: false,
+			allowEnterKey: false,
+			onOpen: () => {
+				swal.showLoading()
+			}
+		});
 
 		$.ajax({
 
@@ -364,45 +371,45 @@ $(document).on("click", ".btnBuscarAfiliadoFichas", function() {
 
 				$("#tblAfiliadosSIAISFichas").append(
 
-				  '<table class="table table-bordered table-striped dt-responsive" id="tablaAfiliadosSIAISFichas" width="100%">'+
-	                
-	                '<thead>'+
-	                  
-	                  '<tr>'+
-	                    '<th>COD. ASEGURADO123</th>'+
-	                    '<th>COD. BENEFICIARIO</th>'+
-	                    '<th>APELLIDOS Y NOMBRES</th>'+
-	                    '<th>FECHA NACIMIENTO</th>'+
-	                    '<th>COD. EMPLEADOR</th>'+
-	                    '<th>NOMBRE EMPLEADOR</th>'+
-	                    '<th>ACCIONES</th>'+
-	                  '</tr>'+
+					'<table class="table table-bordered table-striped dt-responsive" id="tablaAfiliadosSIAISFichas" width="100%">'+
 
-	                '</thead>'+
-	                
-	              '</table>'  
+					'<thead>'+
 
-	            );       			
+					'<tr>'+
+					'<th>COD. ASEGURADO123</th>'+
+					'<th>COD. BENEFICIARIO</th>'+
+					'<th>APELLIDOS Y NOMBRES</th>'+
+					'<th>FECHA NACIMIENTO</th>'+
+					'<th>COD. EMPLEADOR</th>'+
+					'<th>NOMBRE EMPLEADOR</th>'+
+					'<th>ACCIONES</th>'+
+					'</tr>'+
+
+					'</thead>'+
+
+					'</table>'  
+
+					);       			
 
 				var t = $('#tablaAfiliadosSIAISFichas').DataTable({
 
 					"data": respuesta,
 
 					"columns": [
-			            { data: "cod_asegurado" },
-			            { data: "cod_beneficiario" },
-			            { data: "nombre_completo" },
-			            { render: function (data, type, row) {
-							var date = new Date(row.fecha_nacimiento);
-							date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-							return (moment(date).format("DD-MM-YYYY"));
-						}},
-			            { data: "cod_empleador" },
-			            { data: "nombre_empleador" },
-			            { render: function(data, type, row) {
-			            	return "<div class='btn-group'><button class='btn btn-info btnSeleccionarAfiliadoFicha' idAfiliado='"+row.idafiliacion+"' data-toggle='tooltip' title='Seleccionar Afiliado'><i class='fas fa-check'></i></button></div>"
-			            }}
-			        ],
+					{ data: "cod_asegurado" },
+					{ data: "cod_beneficiario" },
+					{ data: "nombre_completo" },
+					{ render: function (data, type, row) {
+						var date = new Date(row.fecha_nacimiento);
+						date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+						return (moment(date).format("DD-MM-YYYY"));
+					}},
+					{ data: "cod_empleador" },
+					{ data: "nombre_empleador" },
+					{ render: function(data, type, row) {
+						return "<div class='btn-group'><button class='btn btn-info btnSeleccionarAfiliadoFicha' idAfiliado='"+row.idafiliacion+"' data-toggle='tooltip' title='Seleccionar Afiliado'><i class='fas fa-check'></i></button></div>"
+					}}
+					],
 
 					"deferRender": true,
 
@@ -424,10 +431,10 @@ $(document).on("click", ".btnBuscarAfiliadoFichas", function() {
 						"sInfoThousands":  ",",
 						"sLoadingRecords": "Cargando...",
 						"oPaginate": {
-						"sFirst":    "Primero",
-						"sLast":     "Último",
-						"sNext":     "Siguiente",
-						"sPrevious": "Anterior"
+							"sFirst":    "Primero",
+							"sLast":     "Último",
+							"sNext":     "Siguiente",
+							"sPrevious": "Anterior"
 						},
 						"oAria": {
 							"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
@@ -441,17 +448,17 @@ $(document).on("click", ".btnBuscarAfiliadoFichas", function() {
 					"searching": true,
 
 					"ordering": true, 
-	        		
-	        		"info":     false 
+
+					"info":     false 
 
 				});
 
 			},
-		    error: function(error){
+			error: function(error){
 
-		      console.log("No funciona");
-		        
-		    }
+				console.log("No funciona");
+
+			}
 
 		});
 
@@ -472,8 +479,8 @@ BUSQUEDA DE AFILIADO A PARTIR DEL NOMBRE O COD ASEGURADO POR LA TECLA ENTER
 $(document).on("keypress", "#buscardorAfiliadosFichas", function(e) {
 
 	if (e.which == 13) {
-    
-    	var afiliado = $("#buscardorAfiliadosFichas").val();
+
+		var afiliado = $("#buscardorAfiliadosFichas").val();
 
 		if (afiliado != "") {
 
@@ -482,14 +489,14 @@ $(document).on("keypress", "#buscardorAfiliadosFichas", function(e) {
 
 			//Para mostrar alerta personalizada de loading
 			swal.fire({
-		        text: 'Procesando...',
-		        allowOutsideClick: false,
-		        allowEscapeKey: false,
-		        allowEnterKey: false,
-		        onOpen: () => {
-		            swal.showLoading()
-		        }
-		    });
+				text: 'Procesando...',
+				allowOutsideClick: false,
+				allowEscapeKey: false,
+				allowEnterKey: false,
+				onOpen: () => {
+					swal.showLoading()
+				}
+			});
 
 			$.ajax({
 
@@ -501,6 +508,7 @@ $(document).on("keypress", "#buscardorAfiliadosFichas", function(e) {
 				processData: false,
 				dataType: "json",
 				success: function(respuesta) {		
+					console.log("respuesta", respuesta);
 
 					//Para cerrar la alerta personalizada de loading
 					swal.close();		
@@ -510,45 +518,45 @@ $(document).on("keypress", "#buscardorAfiliadosFichas", function(e) {
 
 					$("#tblAfiliadosSIAISFichas").append(
 
-					  '<table class="table table-bordered table-striped dt-responsive" id="tablaAfiliadosSIAISFichas" width="100%">'+
-		                
-		                '<thead>'+
-		                  
-		                  '<tr>'+
-		                    '<th>COD. ASEGURADO123</th>'+
-		                    '<th>COD. BENEFICIARIO</th>'+
-		                    '<th>APELLIDOS Y NOMBRES</th>'+
-		                    '<th>FECHA NACIMIENTO</th>'+
-		                    '<th>COD. EMPLEADOR</th>'+
-		                    '<th>NOMBRE EMPLEADOR</th>'+
-		                    '<th>ACCIONES</th>'+
-		                  '</tr>'+
+						'<table class="table table-bordered table-striped dt-responsive" id="tablaAfiliadosSIAISFichas" width="100%">'+
 
-		                '</thead>'+
-		                
-		              '</table>'  
+						'<thead>'+
 
-		            );       			
+						'<tr>'+
+						'<th>COD. ASEGURADO123</th>'+
+						'<th>COD. BENEFICIARIO</th>'+
+						'<th>APELLIDOS Y NOMBRES</th>'+
+						'<th>FECHA NACIMIENTO</th>'+
+						'<th>COD. EMPLEADOR</th>'+
+						'<th>NOMBRE EMPLEADOR</th>'+
+						'<th>ACCIONES</th>'+
+						'</tr>'+
+
+						'</thead>'+
+
+						'</table>'  
+
+						);       			
 
 					var t = $('#tablaAfiliadosSIAISFichas').DataTable({
 
 						"data": respuesta,
 
 						"columns": [
-				            { data: "cod_asegurado" },
-				            { data: "cod_beneficiario" },
-				            { data: "nombre_completo" },
-				            { render: function (data, type, row) {
-								var date = new Date(row.fecha_nacimiento);
-								date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-								return (moment(date).format("DD-MM-YYYY"));
-							}},
-				            { data: "cod_empleador" },
-				            { data: "nombre_empleador" },
-				            { render: function(data, type, row) {
-				            	return "<div class='btn-group'><button class='btn btn-info btnSeleccionarAfiliadoFicha' idAfiliado='"+row.idafiliacion+"' data-toggle='tooltip' title='Seleccionar Afiliado'><i class='fas fa-check'></i></button></div>"
-				            }}
-				        ],
+						{ data: "cod_asegurado" },
+						{ data: "cod_beneficiario" },
+						{ data: "nombre_completo" },
+						{ render: function (data, type, row) {
+							var date = new Date(row.fecha_nacimiento);
+							date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+							return (moment(date).format("DD-MM-YYYY"));
+						}},
+						{ data: "cod_empleador" },
+						{ data: "nombre_empleador" },
+						{ render: function(data, type, row) {
+							return "<div class='btn-group'><button class='btn btn-info btnSeleccionarAfiliadoFicha' idAfiliado='"+row.idafiliacion+"' data-toggle='tooltip' title='Seleccionar Afiliado'><i class='fas fa-check'></i></button></div>"
+						}}
+						],
 
 						"deferRender": true,
 
@@ -570,10 +578,10 @@ $(document).on("keypress", "#buscardorAfiliadosFichas", function(e) {
 							"sInfoThousands":  ",",
 							"sLoadingRecords": "Cargando...",
 							"oPaginate": {
-							"sFirst":    "Primero",
-							"sLast":     "Último",
-							"sNext":     "Siguiente",
-							"sPrevious": "Anterior"
+								"sFirst":    "Primero",
+								"sLast":     "Último",
+								"sNext":     "Siguiente",
+								"sPrevious": "Anterior"
 							},
 							"oAria": {
 								"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
@@ -587,17 +595,17 @@ $(document).on("keypress", "#buscardorAfiliadosFichas", function(e) {
 						"searching": true,
 
 						"ordering": true, 
-		        		
-		        		"info":     false 
+
+						"info":     false 
 
 					});
 
 				},
-			    error: function(error){
+				error: function(error){
 
-			      console.log("No funciona");
-			        
-			    }
+					console.log("No funciona");
+
+				}
 
 			});
 
@@ -675,9 +683,9 @@ $(document).on("click", ".btnSeleccionarAfiliadoFicha", function() {
 		},
 		error: function(error) {
 
-	        toastr.warning('¡Error! Falla en la consulta a BD, no se modificaron.')
-	        
-	    }
+			toastr.warning('¡Error! Falla en la consulta a BD, no se modificaron.')
+
+		}
 
 	});
 
@@ -708,19 +716,19 @@ function calcularEdad(fecha) {
     var edad = (ahora_ano + 1900) - ano;
     if ( ahora_mes < mes ) {
 
-        edad--;
+    	edad--;
 
     }
 
     if ((mes == ahora_mes) && (ahora_dia < dia)) {
 
-        edad--;
+    	edad--;
 
     }
 
     if (edad > 1900) {
 
-        edad -= 1900;
+    	edad -= 1900;
 
     }
 
@@ -729,33 +737,33 @@ function calcularEdad(fecha) {
 
     if(ahora_mes > mes)
 
-        meses = ahora_mes - mes;
+    	meses = ahora_mes - mes;
 
     if(ahora_mes < mes)
 
-        meses = 12 - (mes - ahora_mes);
+    	meses = 12 - (mes - ahora_mes);
 
     if(ahora_mes == mes && dia > ahora_dia)
 
-        meses = 11;
+    	meses = 11;
 
     // calculamos los dias
     var dias = 0;
 
     if (ahora_dia > dia)
 
-        dias = ahora_dia - dia;
+    	dias = ahora_dia - dia;
 
     if (ahora_dia < dia) {
 
-        ultimoDiaMes = new Date(ahora_ano, ahora_mes, 0);
-        dias = ultimoDiaMes.getDate() - (dia - ahora_dia);
+    	ultimoDiaMes = new Date(ahora_ano, ahora_mes, 0);
+    	dias = ultimoDiaMes.getDate() - (dia - ahora_dia);
 
     }
 
     return edad;
 
-}
+  }
 
 /*=============================================
 SI TIENE ANTECEDENTES DE VACUNA HABILITAN LOS CAMPOS CASO CONTRARIO SE MANTIENEN INABILITADOS
@@ -797,38 +805,7 @@ $(document).on("change", "#nuevoEstablecimiento", function() {
 
 
 /*=============================================
-SI VIAJO ALGUN LUGAR DE RIESGO SE HABILITAN LOS CAMPOS CASO CONTRARIO SE MANTIENEN INABILITADOS
-=============================================*/
-
-$(document).on("change", "#nuevoViajeRiesgo", function() {
-
-	if ($(this).val() == "SI") {
-
-		$("#nuevoPaisCiudadRiesgo").removeAttr("readonly");
-		$("#nuevoFechaRetorno").removeAttr("readonly");
-		$("#nuevoEmpresaVuelo").removeAttr("readonly");
-		$("#nuevoNroVuelo").removeAttr("readonly");
-		$("#nuevoNroAsiento").removeAttr("readonly");
-
-	} else {
-
-		$("#nuevoPaisCiudadRiesgo").attr("readonly","");
-		$("#nuevoPaisCiudadRiesgo").val("");
-		$("#nuevoFechaRetorno").attr("readonly","");
-		$("#nuevoFechaRetorno").val("");
-		$("#nuevoEmpresaVuelo").attr("readonly","");
-		$("#nuevoEmpresaVuelo").val("");
-		$("#nuevoNroVuelo").attr("readonly","");
-		$("#nuevoNroVuelo").val("");
-		$("#nuevoNroAsiento").attr("readonly","");
-		$("#nuevoNroAsiento").val("");
-
-	}
-	
-});
-
-/*=============================================
-SI TUVO ALGUN CONTACTO CON ALGUIEN CON COVID SE HABILITAN LOS CAMPOS CASO CONTRARIO SE MANTIENEN INABILITADOS
+SI TUVO CONTACTO CON ALGUIEN CON COVID SE HABILITAN LOS CAMPOS CASO CONTRARIO SE MANTIENEN INABILITADOS
 =============================================*/
 
 $(document).on("change", "#nuevoContactoCovid", function() {
@@ -836,30 +813,93 @@ $(document).on("change", "#nuevoContactoCovid", function() {
 	if ($(this).val() == "SI") {
 
 		$("#nuevoFechaContactoCovid").removeAttr("readonly");
-		$("#nuevoNombreContactoCovid").removeAttr("readonly");
-		$("#nuevoNombreContactoCovid").val("");
-		$("#nuevoTelefonoContactoCovid").removeAttr("readonly");
-		$("#nuevoPaisContactoCovid").removeAttr("readonly");
-		$("#nuevoPaisContactoCovid").val("");
-		$("#nuevoDepartamentoContactoCovid").removeAttr("readonly");
-		$("#nuevoDepartamentoContactoCovid").val("");
-		$("#nuevoLocalidadContactoCovid").removeAttr("readonly");
-		$("#nuevoLocalidadContactoCovid").val("");
 
 	} else {
 
 		$("#nuevoFechaContactoCovid").attr("readonly","");
 		$("#nuevoFechaContactoCovid").val("");
-		$("#nuevoNombreContactoCovid").attr("readonly","");
-		$("#nuevoNombreContactoCovid").val("COMUNITARIO");
-		$("#nuevoTelefonoContactoCovid").attr("readonly","");
-		$("#nuevoTelefonoContactoCovid").val("");
-		$("#nuevoPaisContactoCovid").attr("readonly","");
-		$("#nuevoPaisContactoCovid").val("BOLIVIA");
-		$("#nuevoDepartamentoContactoCovid").attr("readonly","");
-		$("#nuevoDepartamentoContactoCovid").val("POTOSÍ");
-		$("#nuevoLocalidadContactoCovid").attr("readonly","");
-		$("#nuevoLocalidadContactoCovid").val("POTOSÍ");
+
+	}
+	
+});
+
+/*=============================================
+SI FUE VACUNADO CONTRA EL COVID SE HABILITAN LOS CAMPOS CASO CONTRARIO SE MANTIENEN INABILITADOS
+=============================================*/
+
+$(document).on("change", "#nuevoAntVacunacion", function() {
+
+	if ($(this).val() == "SI") {
+
+		$("#nuevoFechaDosisVacuna").removeAttr("readonly");
+		$("#nuevoDosisVacuna").removeAttr("disabled");
+		$("#nuevoProveedorVacuna").removeAttr("disabled");
+		
+
+	} else {
+
+		$("#nuevoFechaDosisVacuna").attr("readonly","");
+		$("#nuevoFechaDosisVacuna").val("");
+		$("#nuevoDosisVacuna").attr("disabled","");
+		$("#nuevoDosisVacuna").val("");
+		$("#nuevoProveedorVacuna").attr("disabled","");
+		$("#nuevoProveedorVacuna").val("");
+		$
+
+	}
+	
+});
+
+/*=============================================
+SI LA VACUNA ES DOSIS UNICA PROVEEDOR DE VACUNA SERA JOHNSON & JOHNSON
+=============================================*/
+
+$(document).on("change", "#nuevoDosisVacuna", function() {
+
+	if ($(this).val() == "DOSIS UNICA") {
+
+		$("#nuevoProveedorVacuna").empty().append('<option value="JOHNSON & JOHNSON">JOHNSON & JOHNSON</option>')	
+		$("#nuevoProveedorVacuna").attr("disabled","");
+
+	} else {
+
+		$("#nuevoProveedorVacuna").removeAttr("disabled");
+		$("#nuevoProveedorVacuna").empty().append('<option value="SPUTNIK-V">SPUTNIK-V</option>')	
+		$("#nuevoProveedorVacuna").append('<option value="SINOPHARM">SINOPHARM</option>')	
+		$("#nuevoProveedorVacuna").append('<option value="PFIZER">PFIZER</option>')	
+		$("#nuevoProveedorVacuna").append('<option value="ASTRAZENECA">ASTRAZENECA</option>')	
+		$("#nuevoProveedorVacuna").append('<option value="MODERNA">MODERNA</option>')	
+
+	}
+	
+});
+
+/*=============================================
+SI FUE DIAGNOSTICADO CON COVID SE HABILITAN LOS CAMPOS CASO CONTRARIO SE MANTIENEN INABILITADOS
+=============================================*/
+
+$(document).on("change", "#nuevoDiagnosticadoCovid", function() {
+
+	if ($(this).val() == "SI") {
+
+		$("#nuevoFechaDiagnosticadoCovid").removeAttr("readonly");
+		$("#nuevoPaisInfeccion").removeAttr("readonly");
+		$("#nuevoDepartamentoInfeccion").removeAttr("readonly");
+		$("#nuevoMunicipioInfeccion").removeAttr("readonly");
+		$("#nuevoLocalidadInfeccion").removeAttr("readonly");
+
+	} else {
+
+		$("#nuevoFechaDiagnosticadoCovid").attr("readonly","");
+		$("#nuevoFechaDiagnosticadoCovid").val("");
+		$("#nuevoPaisInfeccion").attr("readonly","");
+		$("#nuevoPaisInfeccion").val("");
+		$("#nuevoDepartamentoInfeccion").attr("readonly","");
+		$("#nuevoDepartamentoInfeccion").val("");
+		$("#nuevoMunicipioInfeccion").attr("readonly","");
+		$("#nuevoMunicipioInfeccion").val("");
+		$("#nuevoLocalidadInfeccion").attr("readonly","");
+		$("#nuevoLocalidadInfeccion").val("");
 
 	}
 	
@@ -890,8 +930,6 @@ SI PRESENTA ENFERMEDADES DE BASE SE HABILITAN LOS CAMPOS CASO CONTRARIO SE MANTI
 
 $(document).on("click", "input:radio[name=enfEstado]:checked", function() {
 
-	console.log("PRESIONADO");
-
 	if ($(this).val() == "PRESENTA") {
 
 		$("#nuevoHipertensionArterial").removeAttr("disabled");
@@ -921,6 +959,181 @@ $(document).on("click", "input:radio[name=enfEstado]:checked", function() {
 		$("#nuevoEnfRenalCronica").prop("checked", false);
 		$("#nuevoEnfRiesgoOtros").attr("readonly","");
 		$("#nuevoEnfRiesgoOtros").val("");
+
+	}
+	
+});
+
+/*=============================================
+SI SE TOMO MUESTRA PARA LABORATORIO SE HABILITAN LOS CAMPOS REQUERIDOS
+=============================================*/
+
+$(document).on("change", "#nuevoEstadoMuestra", function() {
+
+	if ($(this).val() == "NO") {
+
+		$(".errorMsq").remove();
+
+		$("#nuevoNoTomaMuestra").removeAttr("disabled");
+		$("#nuevoNoTomaMuestra").attr("required","");
+		$("#nuevoNoTomaMuestra").before("<i class='fas fa-asterisk asterisk'></i>");
+
+		$("#nuevoLugarMuestra").attr("disabled","");
+		$("#nuevoLugarMuestra").val("");
+		$("#nuevoLugarMuestra").removeAttr("required");
+		$("#nuevoLugarMuestra").siblings("i").remove();
+
+		$("#nuevoTipoMuestra").attr("disabled","");
+		$("#nuevoTipoMuestra").val("");
+		$("#nuevoTipoMuestra").removeAttr("required");
+		$("#nuevoTipoMuestra").siblings("i").remove();
+
+		$("#nuevoNombreLaboratorio").attr("readonly","");
+		$("#nuevoNombreLaboratorio").val("");
+
+		$("#nuevoFechaMuestra").attr("readonly","");
+		$("#nuevoFechaMuestra").val("");
+		$("#nuevoFechaMuestra").removeAttr("required");
+		$("#nuevoFechaMuestra").siblings("i").remove();
+
+		$("#nuevoFechaEnvio").attr("readonly","");
+		$("#nuevoFechaEnvio").val("");
+		$("#nuevoFechaEnvio").removeAttr("required");
+		$("#nuevoFechaEnvio").siblings("i").remove();
+
+		$("#nuevoResponsableMuestra").attr("readonly","");
+		$("#nuevoResponsableMuestra").val("");
+		$("#nuevoResponsableMuestra").removeAttr("required");
+		$("#nuevoResponsableMuestra").siblings("i").remove();
+
+	} else {
+
+		$(".errorMsq").remove();
+
+		$("#nuevoNoTomaMuestra").attr("disabled","");
+		$("#nuevoNoTomaMuestra").val("");
+		$("#nuevoNoTomaMuestra").removeAttr("required");
+		$("#nuevoNoTomaMuestra").siblings("i").remove();
+
+		$("#nuevoLugarMuestra").removeAttr("disabled");
+		$("#nuevoLugarMuestra").attr("required","");
+		$("#nuevoLugarMuestra").before("<i class='fas fa-asterisk asterisk'></i>");
+
+		$("#nuevoTipoMuestra").removeAttr("disabled");
+		$("#nuevoTipoMuestra").attr("required","");
+		$("#nuevoTipoMuestra").before("<i class='fas fa-asterisk asterisk'></i>");
+
+		$("#nuevoNombreLaboratorio").removeAttr("readonly");
+
+		$("#nuevoFechaMuestra").removeAttr("readonly");
+		$("#nuevoFechaMuestra").attr("required","");
+		$("#nuevoFechaMuestra").before("<i class='fas fa-asterisk asterisk'></i>");
+
+		$("#nuevoFechaEnvio").removeAttr("readonly");
+		$("#nuevoFechaEnvio").attr("required","");
+		$("#nuevoFechaEnvio").before("<i class='fas fa-asterisk asterisk'></i>");
+
+		$("#nuevoResponsableMuestra").removeAttr("readonly");
+		$("#nuevoResponsableMuestra").attr("required","");
+		$("#nuevoResponsableMuestra").before("<i class='fas fa-asterisk asterisk'></i>");
+
+	}
+	
+});
+
+/*=============================================
+SI EL PACIENTE ES SINTOMATICO SE HABILITAN LOS CAMPOS CASO CONTRARIO SE MANTIENEN INABILITADOS
+=============================================*/
+
+$(document).on("click", "input:radio[name=tipoPaciente]:checked", function() {
+
+	console.log("PRESIONADO");
+
+	if ($(this).val() == "SINTOMÁTICO") {
+
+		$("#nuevoFechaInicioSintomas").removeAttr("readonly");
+		$("#nuevoFechaInicioSintomas").attr("required","");
+		$("#nuevoFechaInicioSintomas").before("<i class='fas fa-asterisk asterisk'></i>");
+
+		$("#nuevoMalestaresTos").removeAttr("disabled");
+		$("#nuevoMalestaresFiebre").removeAttr("disabled");
+		$("#nuevoMalestaresGeneral").removeAttr("disabled");
+		$("#nuevoMalestaresCefalea").removeAttr("disabled");
+		$("#nuevoMalestaresDifRespiratoria").removeAttr("disabled");
+		$("#nuevoMalestaresMialgias").removeAttr("disabled");
+		$("#nuevoMalestaresDolorGaraganta").removeAttr("disabled");
+		$("#nuevoMalestaresPerdOlfato").removeAttr("disabled");
+		$("#nuevoMalestaresPerdGusto").removeAttr("disabled");
+		$("#nuevoMalestaresOtros").removeAttr("readonly");
+
+		$("#nuevoEstadoPaciente").removeAttr("disabled");
+		$("#nuevoEstadoPaciente").attr("required","");
+		$("#nuevoEstadoPaciente").before("<i class='fas fa-asterisk asterisk'></i>");
+
+		$("#nuevoDiagnosticoClinico").removeAttr("disabled");
+		$("#nuevoDiagnosticoClinico").attr("required","");
+		$("#nuevoDiagnosticoClinico").before("<i class='fas fa-asterisk asterisk'></i>");
+
+	} else {
+
+		$("#nuevoFechaInicioSintomas").attr("readonly","");
+		$("#nuevoFechaInicioSintomas").val("");
+		$("#nuevoFechaInicioSintomas").removeAttr("required");
+		$("#nuevoFechaInicioSintomas").siblings("i").remove();
+		$(".errorMsq").remove();
+
+		$("#nuevoMalestaresTos").attr("disabled","");
+		$("#nuevoMalestaresTos").prop("checked", false);
+		$("#nuevoMalestaresFiebre").attr("disabled","");
+		$("#nuevoMalestaresFiebre").prop("checked", false);
+		$("#nuevoMalestaresGeneral").attr("disabled","");
+		$("#nuevoMalestaresGeneral").prop("checked", false);
+		$("#nuevoMalestaresCefalea").attr("disabled","");
+		$("#nuevoMalestaresCefalea").prop("checked", false);
+		$("#nuevoMalestaresDifRespiratoria").attr("disabled","");
+		$("#nuevoMalestaresDifRespiratoria").prop("checked", false);
+		$("#nuevoMalestaresMialgias").attr("disabled","");
+		$("#nuevoMalestaresMialgias").prop("checked", false);
+		$("#nuevoMalestaresDolorGaraganta").attr("disabled","");
+		$("#nuevoMalestaresDolorGaraganta").prop("checked", false);
+		$("#nuevoMalestaresPerdOlfato").attr("disabled","");
+		$("#nuevoMalestaresPerdOlfato").prop("checked", false);
+		$("#nuevoMalestaresPerdGusto").attr("disabled","");
+		$("#nuevoMalestaresPerdGusto").prop("checked", false);
+		$("#nuevoMalestaresOtros").attr("readonly","");
+		$("#nuevoMalestaresOtros").val("");
+
+		$("#nuevoEstadoPaciente").attr("disabled","");
+		$("#nuevoEstadoPaciente").val("");
+		$("#nuevoEstadoPaciente").siblings("i").remove();
+
+		$("#nuevoDiagnosticoClinico").attr("disabled","");
+		$("#nuevoDiagnosticoClinico").val("");
+		$("#nuevoDiagnosticoClinico").siblings("i").remove();
+
+	}
+
+});
+
+/*=============================================
+SI LABORATORIO QUE TOMO LA MUESTRA ES EXTERNO SE DESABILITA ALGUNOS CAMPOS
+=============================================*/
+
+$(document).on("click", "input:radio[name=tipoLaboratorio]:checked", function() {
+
+	if ($(this).val() == "EXTERNO") {
+
+		$("#nuevoCodLaboratorio").removeAttr("required");
+		$("#nuevoCodLaboratorio").siblings("i").remove();
+		$("#nuevoCodLaboratorio").attr("readonly","");
+		$("#nuevoCodLaboratorio").val("999");
+
+	} else {
+
+		$("#nuevoCodLaboratorio").attr("required","");
+		$("#nuevoCodLaboratorio").before("<i class='fas fa-asterisk asterisk'></i>");
+		$("#nuevoCodLaboratorio").removeAttr("readonly");
+		$("#nuevoCodLaboratorio").val("");
 
 	}
 	
@@ -958,43 +1171,43 @@ $(document).ready(function() {
 
 	$.validator.addMethod("patron_letras", function (value, element) {
 
-	    var pattern = /^[a-zA-Z]+$/;
-	    return this.optional(element) || pattern.test(value);
+		var pattern = /^[a-zA-Z]+$/;
+		return this.optional(element) || pattern.test(value);
 
 	}, "El campo debe contener letras (azAZ)");
 
 	$.validator.addMethod("patron_numeros", function (value, element) {
 
-	    var pattern = /^[0-9]+$/;
-	    return this.optional(element) || pattern.test(value);
+		var pattern = /^[0-9]+$/;
+		return this.optional(element) || pattern.test(value);
 
 	}, "El campo debe tener un valor numérico (0-9)");
-    
-    $.validator.addMethod("patron_numerosLetras", function (value, element) {
 
-	    var pattern = /^[a-zA-Z0-9-]+$/;
-	    return this.optional(element) || pattern.test(value);
+	$.validator.addMethod("patron_numerosLetras", function (value, element) {
+
+		var pattern = /^[a-zA-Z0-9-]+$/;
+		return this.optional(element) || pattern.test(value);
 
 	}, "El campo debe tener un valor Alfa Numérico (a-zA-Z0-9)");
 
 	$.validator.addMethod("patron_numerosTexto", function (value, element) {
 
-	    var pattern = /^[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-]+$/;
-	    return this.optional(element) || pattern.test(value);
+		var pattern = /^[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-]+$/;
+		return this.optional(element) || pattern.test(value);
 
 	}, "Caracteres Especiales No Admitidos");
 
 	$.validator.addMethod("patron_texto", function (value, element) {
 
-	    var pattern = /^[A-Za-zñÑáéíóúÁÉÍÓÚ .]+$/;
-	    return this.optional(element) || pattern.test(value);
+		var pattern = /^[A-Za-zñÑáéíóúÁÉÍÓÚ .]+$/;
+		return this.optional(element) || pattern.test(value);
 
 	}, "Caracteres Especiales No Admitidos");
 
 	$.validator.addMethod("patron_textoEspecial", function (value, element) {
 
-	    var pattern = /^[^"'&%${}]*$/;
-	    return this.optional(element) || pattern.test(value);
+		var pattern = /^[^"'&%${}]*$/;
+		return this.optional(element) || pattern.test(value);
 
 	}, "Caracteres Especiales No Admitidos");
 
@@ -1002,152 +1215,155 @@ $(document).ready(function() {
 	/*=============================================
 	FICHA EPIDEMIOLOGICA
 	=============================================*/	
-    
-    //VALIDANDO DATOS DE FICHA EPIDEMIOLOGICA
 
-    $("#fichaEpidemiologicaCentro").validate({
+  //VALIDANDO DATOS DE FICHA EPIDEMIOLOGICA
 
-    	rules: {
-    		// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
-    		nuevoEstablecimiento : { required: true},
-			nuevoRedSalud: { required: true, patron_letras: true},
-			nuevoDepartamento : { required: true},
-           	nuevoLocalidad : { required: true},
-			nuevoFechaNotificacion : { required: true},
-     		nuevoSemEpidemiologica: { number: true},
-     		nuevoBusquedaActiva : { required: true},
+  $("#fichaEpidemiologicaCentro").validate({
 
-     		// 2. IDENTIFICACIÓN DEL CASO PACIENTE
-     		nuevoCodAsegurado : { required: true},
-			nuevoSexoPaciente: { required: true},
-			nuevoNroDocumentoPaciente : { required: true, patron_numerosLetras: true},
-           	nuevoDepartamentoPaciente : { required: true},
-			nuevoLocalidadPaciente : { required: true},
-     		nuevoPaisPaciente: { required: true},
-     		nuevoZonaPaciente: { patron_numerosTexto: true},
-     		nuevoCallePaciente: { patron_numerosTexto: true},
-     		nuevoNroCallePaciente: { number: true},
-     		nuevoNombreApoderado: { patron_texto: true},
+  	rules: {
+  		// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
+  		nuevoEstablecimiento : { required: true},
+  		nuevoRedSalud: { required: true, patron_letras: true},
+  		nuevoDepartamento : { required: true},
+  		nuevoLocalidad : { required: true},
+  		nuevoFechaNotificacion : { required: true},
+  		nuevoSemEpidemiologica: { number: true},
+  		nuevoBusquedaActiva : { required: true},
 
-     		// 3. ANTECEDENTES EPIDEMIOLOGICOS
-     		nuevoAntOcupacion : { required: true},
-			nuevoAntVacunaInfluenza: { required: true},
-			nuevoViajeRiesgo : { required: true},
-           	nuevoEmpresaVuelo : { patron_numerosTexto: true},
-			nuevoNroVuelo : { patron_numerosTexto: true},
-     		nuevoNroAsiento: { patron_numerosTexto: true},
-     		nuevoContactoCovid: { required: true},
-     		nuevoNombreContactoCovid: { patron_texto: true},
-     		nuevoPaisContactoCovid: { patron_texto: true},
-     		nuevoDepartamentoContactoCovid: { patron_texto: true},
-     		nuevoLocalidadContactoCovid: { patron_texto: true},
+   		// 2. IDENTIFICACIÓN DEL CASO PACIENTE
+   		nuevoCodAsegurado : { required: true},
+   		nuevoSexoPaciente: { required: true},
+   		nuevoNroDocumentoPaciente : { required: true, patron_numerosLetras: true},
+   		nuevoDepartamentoPaciente : { required: true},
+   		nuevoLocalidadPaciente : { required: true},
+   		nuevoPaisPaciente: { required: true},
+   		nuevoZonaPaciente: { patron_numerosTexto: true},
+   		nuevoCallePaciente: { patron_numerosTexto: true},
+   		nuevoNroCallePaciente: { number: true},
+   		nuevoNombreApoderado: { patron_texto: true},
 
-     		// 4. DATOS CLÍNICOS
-     		nuevoMalestaresOtros: { patron_numerosTexto: true},
-     		nuevoEstadoPaciente: { required: true},
-     		nuevoDepartamentoContactoCovid: { patron_texto: true},
-     		nuevoDiagnosticoClinico: { required: true, patron_texto: true},
+   		// 3. ANTECEDENTES EPIDEMIOLOGICOS
+   		nuevoAntOcupacion : { required: true},
+			// nuevoAntVacunaInfluenza: { required: true},
+			// nuevoViajeRiesgo : { required: true},
+   		// nuevoEmpresaVuelo : { patron_numerosTexto: true},
+			// nuevoNroVuelo : { patron_numerosTexto: true},
+   		// nuevoNroAsiento: { patron_numerosTexto: true},
+   		nuevoContactoCovid: { required: true},
+   		nuevoAntVacunacion: { required: true},
+   		nuevoDiagnosticadoCovid: { required: true},
+   		// nuevoNombreContactoCovid: { patron_texto: true},
+   		// nuevoPaisContactoCovid: { patron_texto: true},
+   		// nuevoDepartamentoContactoCovid: { patron_texto: true},
+   		// nuevoLocalidadContactoCovid: { patron_texto: true},
+   		nuevoPaisInfeccion: { patron_texto: true},
+   		nuevoDepartamentoInfeccion: { patron_texto: true},
+   		nuevoMunicipioInfeccion: { patron_texto: true},
+   		nuevoLocalidadInfeccion: { patron_texto: true},
 
-     		// 5. DATOS HOSPITALIZACIÓN AISLAMIENTO
-    		nuevoLugarAislamiento : { patron_numerosTexto: true},
-     		nuevoEstablecimientoInternacion: { patron_numerosTexto: true},
-     		nuevoVentilacionMecanica : { required: true},
-     		nuevoTerapiaIntensiva : { required: true},
+   		// 4. DATOS CLÍNICOS
+   		tipoPaciente : { required: true},
+   		nuevoMalestaresOtros: { patron_numerosTexto: true},
+   		nuevoDiagnosticoClinico: {patron_textoEspecial: true},
 
-     		// 6. ENFERMEDADES DE BASE O CONDICIONES DE RIESGO
-     		enfEstado : { required: true},
-     		nuevoEnfRiesgoOtros: { patron_numerosTexto: true},
+   		// 5. DATOS HOSPITALIZACIÓN AISLAMIENTO
+   		nuevoLugarAislamiento : { patron_numerosTexto: true},
+   		nuevoEstablecimientoInternacion: { patron_numerosTexto: true},
+   		nuevoVentilacionMecanica : { required: true},
+   		nuevoTerapiaIntensiva : { required: true},
 
-     		// 8. LABORATORIO
-     		nuevoEstadoMuestra : { required: true},
-     		nuevoLugarMuestra: { required: true},
-     		nuevoTipoMuestra: { required: true, patron_texto: true},
-     		nuevoFechaMuestra: { required: true},
-     		nuevoFechaEnvio: { required: true},
-     		nuevoResponsableMuestra: { required: true, patron_texto: true},
+   		// 6. ENFERMEDADES DE BASE O CONDICIONES DE RIESGO
+   		enfEstado : { required: true},
+   		nuevoEnfRiesgoOtros: { patron_numerosTexto: true},
 
-     		// DATOS DEL PERSONAL QUE NOTIFICA
-     		nuevoPaternoNotif : { patron_texto: true},
-     		nuevoMaternoNotif: { patron_texto: true},
-     		nuevoNombreNotif: { required: true, patron_texto: true},
-     		nuevoTelefonoNotif: { minlength: 7, patron_numeros: true},
-     		nuevoCargoNotif: { patron_numerosTexto: true}
-     		
-    	},
+   		// 8. LABORATORIO
+   		nuevoEstadoMuestra : { required: true},
+   		nuevoTipoMuestra: { patron_texto: true},
+   		nuevoResponsableMuestra: { patron_texto: true},
+   		nuevoNombreLaboratorio: { patron_textoEspecial: true},
+   		nuevoObsMuestra: { patron_textoEspecial: true},
 
-    	messages: {
-    		// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
-       		nuevoEstablecimiento : "Elija un establecimiento",
-           	nuevoDepartamento : "Elija un departamento",
-           	nuevoLocalidad : "Elija una Localidad",
-           	nuevoBusquedaActiva : "Elija un valor",
+   		// DATOS DEL PERSONAL QUE NOTIFICA
+   		nuevoPaternoNotif : { patron_texto: true},
+   		nuevoMaternoNotif: { patron_texto: true},
+   		nuevoNombreNotif: { required: true, patron_texto: true},
+   		nuevoTelefonoNotif: { minlength: 7, patron_numeros: true},
+   		nuevoCargoNotif: { patron_numerosTexto: true}
 
-           	// 2. IDENTIFICACIÓN DEL CASO PACIENTE
-           	nuevoCodAsegurado : "Elija un asegurado",
-           	nuevoSexoPaciente: "Elija un sexo",
-           	nuevoDepartamentoPaciente : "Elija un departamento",
-           	nuevoLocalidadPaciente : "Elija una localidad",
-           	nuevoPaisPaciente : "Elija un pais",
+   	},
 
-           	// 3. ANTECEDENTES EPIDEMIOLOGICOS
-           	nuevoAntVacunaInfluenza : "Elija una opción",
-           	nuevoViajeRiesgo: "Elija una opción",
-           	nuevoContactoCovid : "Elija una opción",
+   	messages: {
+  		// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
+  		nuevoEstablecimiento : "Elija un establecimiento",
+  		nuevoDepartamento : "Elija un departamento",
+  		nuevoLocalidad : "Elija una Localidad",
+  		nuevoBusquedaActiva : "Elija un valor",
 
-           	// 4. DATOS CLÍNICOS
-           	nuevoEstadoPaciente : "Elija una opción",
+     	// 2. IDENTIFICACIÓN DEL CASO PACIENTE
+     	nuevoCodAsegurado : "Elija un asegurado",
+     	nuevoSexoPaciente: "Elija un sexo",
+     	nuevoDepartamentoPaciente : "Elija un departamento",
+     	nuevoLocalidadPaciente : "Elija una localidad",
+     	nuevoPaisPaciente : "Elija un pais",
 
-           	// 5. DATOS HOSPITALIZACIÓN AISLAMIENTO
-           	nuevoVentilacionMecanica : "Elija una opción",
-     		nuevoTerapiaIntensiva : "Elija una opción",
+     	// 3. ANTECEDENTES EPIDEMIOLOGICOS
+     	nuevoContactoCovid : "Elija una opción",
+     	nuevoAntVacunacion : "Elija una opción",
+     	nuevoDiagnosticadoCovid : "Elija una opción",
 
-           	// 6. ENFERMEDADES DE BASE O CONDICIONES DE RIESGO
-           	enfEstado : "Elija una opción",
+     	// 4. DATOS CLÍNICOS
+     	nuevoEstadoPaciente : "Elija una opción",
 
-           	// 8. LABORATORIO
-           	nuevoEstadoMuestra : "Elija una opción",
-       		nuevoLugarMuestra : "Elija una opción",
+     	// 5. DATOS HOSPITALIZACIÓN AISLAMIENTO
+     	nuevoVentilacionMecanica : "Elija una opción",
+     	nuevoTerapiaIntensiva : "Elija una opción",
 
-		},
+     	// 6. ENFERMEDADES DE BASE O CONDICIONES DE RIESGO
+     	enfEstado : "Elija una opción",
 
-		errorPlacement: function(label, element) {
+     	// 8. LABORATORIO
+     	nuevoEstadoMuestra : "Elija una opción",
+     	nuevoLugarMuestra : "Elija una opción",
 
-       		if (element.attr("name") == "enfEstado" ) {
-            	
-            	label.addClass('errorMsq');
-           		element.parent().parent().append(label);
+     },
 
-			} else {
+     errorPlacement: function(label, element) {
 
-				label.addClass('errorMsq');
-				element.parent().append(label);
+     	if (element.attr("name") == "enfEstado" ) {
 
-			}
+     		label.addClass('errorMsq');
+     		element.parent().parent().append(label);
 
-        },
+     	} else {
 
-	});
+     		label.addClass('errorMsq');
+     		element.parent().append(label);
 
+     	}
+
+     },
+
+   });
 
 	//GUARDANDO DATOS DE FICHA EPIDEMIOLOGICA
 
 	$("#fichaEpidemiologicaCentro").on("click", ".btnGuardar", function() {
 
-        if ($("#fichaEpidemiologicaCentro").valid()) {
+		if ($("#fichaEpidemiologicaCentro").valid()) {
 
-        	console.log("VALIDADO FICHAS");
+			console.log("VALIDADO FICHAS");
 
-        	// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
-        	var id_ficha = $ ("#idFicha").val();
-        	var id_establecimiento = $("#nuevoEstablecimiento").val();	
-			var cod_establecimiento = $("#nuevoCodEstablecimiento").val();
-			var id_consultorio = $("#nuevoConsultorio").val();		
-			var red_salud = $("#nuevoRedSalud").val();
-			var id_departamento = $ ("#nuevoDepartamento").val();
-			var id_localidad = $ ("#nuevoLocalidad").val();
-			var fecha_notificacion = $ ("#nuevoFechaNotificacion").val();
-			var semana_epidemiologica = $ ("#nuevoSemEpidemiologica").val();
-			var busqueda_activa = $ ("#nuevoBusquedaActiva").val();
+    	// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
+    	var id_ficha = $ ("#idFicha").val();
+    	var id_establecimiento = $("#nuevoEstablecimiento").val();	
+    	var cod_establecimiento = $("#nuevoCodEstablecimiento").val();
+    	var id_consultorio = $("#nuevoConsultorio").val();		
+    	var red_salud = $("#nuevoRedSalud").val();
+    	var id_departamento = $("#nuevoDepartamento").val();
+    	var id_localidad = $("#nuevoLocalidad").val();
+    	var fecha_notificacion = $("#nuevoFechaNotificacion").val();
+    	var semana_epidemiologica = $("#nuevoSemEpidemiologica").val();
+    	var busqueda_activa = $("#nuevoBusquedaActiva").val();
 
 			// 2. IDENTIFICACIÓN DEL CASO PACIENTE
 			var cod_asegurado = $("#nuevoCodAsegurado").val();
@@ -1168,27 +1384,44 @@ $(document).ready(function() {
 			var calle = $ ("#nuevoCallePaciente").val();
 			var nro_calle = $ ("#nuevoNroCallePaciente").val();
 			var telefono = $ ("#nuevoTelefonoPaciente").val();
+			var email = $ ("#nuevoEmailPaciente").val();
 			var nombre_apoderado = $ ("#nuevoNombreApoderado").val();
 			var telefono_apoderado = $ ("#nuevoTelefonoApoderado").val();
 
 			// 3. ANTECEDENTES EPIDEMIOLOGICOS
 			var ocupacion = $("#nuevoAntOcupacion").val();
-			var ant_vacuna_influenza = $("#nuevoAntVacunaInfluenza").val();
-			var fecha_vacuna_influenza = $("#nuevoFechaVacunaInfluenza").val();
-			var viaje_riesgo = $("#nuevoViajeRiesgo").val();
-			var pais_ciudad_riesgo = $("#nuevoPaisCiudadRiesgo").val();		
-			var fecha_retorno = $("#nuevoFechaRetorno").val();		
-			var nro_vuelo = $("#nuevoNroVuelo").val();		
-			var nro_asiento = $("#nuevoNroAsiento").val();
+			// var ant_vacuna_influenza = $("#nuevoAntVacunaInfluenza").val();
+			// var fecha_vacuna_influenza = $("#nuevoFechaVacunaInfluenza").val();
+			// var viaje_riesgo = $("#nuevoViajeRiesgo").val();
+			// var pais_ciudad_riesgo = $("#nuevoPaisCiudadRiesgo").val();		
+			// var fecha_retorno = $("#nuevoFechaRetorno").val();		
+			// var nro_vuelo = $("#nuevoNroVuelo").val();		
+			// var nro_asiento = $("#nuevoNroAsiento").val();
+
 			var contacto_covid = $ ("#nuevoContactoCovid").val();
 			var fecha_contacto_covid = $ ("#nuevoFechaContactoCovid").val();
-			var nombre_contacto_covid = $ ("#nuevoNombreContactoCovid").val();
-			var telefono_contacto_covid = $ ("#nuevoTelefonoContactoCovid").val();
-			var pais_contacto_covid = $ ("#nuevoPaisContactoCovid").val();
-			var departamento_contacto_covid = $ ("#nuevoDepartamentoContactoCovid").val();
-			var localidad_contacto_covid = $ ("#nuevoLocalidadContactoCovid").val();
+
+			var ant_vacuna = $ ("#nuevoAntVacunacion").val();
+			var fecha_dosis_vacuna = $ ("#nuevoFechaDosisVacuna").val();
+			var dosis_vacuna = $ ("#nuevoDosisVacuna").val();
+			var proveedor_vacuna = $ ("#nuevoProveedorVacuna").val();
+			
+			var diagnosticado_covid = $ ("#nuevoDiagnosticadoCovid").val();
+			var fecha_diagnosticado_covid = $ ("#nuevoFechaDiagnosticadoCovid").val();
+
+			// var nombre_contacto_covid = $ ("#nuevoNombreContactoCovid").val();
+			// var telefono_contacto_covid = $ ("#nuevoTelefonoContactoCovid").val();
+			// var pais_contacto_covid = $ ("#nuevoPaisContactoCovid").val();
+			// var departamento_contacto_covid = $ ("#nuevoDepartamentoContactoCovid").val();
+			// var localidad_contacto_covid = $ ("#nuevoLocalidadContactoCovid").val();
+
+			var pais_infeccion = $ ("#nuevoPaisInfeccion").val();
+			var departamento_infeccion = $ ("#nuevoDepartamentoInfeccion").val();
+			var municipio_infeccion = $ ("#nuevoMunicipioInfeccion").val();
+			var localidad_infeccion = $ ("#nuevoLocalidadInfeccion").val();
 
 			// 4. DATOS CLÍNICOS
+			var tipo_paciente = $('input:radio[name="tipoPaciente"]:checked').val();
 			var fecha_inicio_sintomas = $("#nuevoFechaInicioSintomas").val();
 			var malestares = []; 
 			$('[name="nuevoMalestares"]').each(function() {
@@ -1196,6 +1429,7 @@ $(document).ready(function() {
 				if ($(this).is(":checked")) {
 
 					malestares.push($(this).val());
+					
 				}
 				
 			});
@@ -1206,6 +1440,7 @@ $(document).ready(function() {
 			var diagnostico_clinico = $ ("#nuevoDiagnosticoClinico").val();
 
 			// 5. DATOS HOSPITALIZACIÓN AISLAMIENTO
+			var tipo_aislamiento = $('input:radio[name="tipoAislamiento"]:checked').val();
 			var fecha_aislamiento = $("#nuevoFechaAislamiento").val();
 			var lugar_aislamiento = $("#nuevoLugarAislamiento").val();
 			var fecha_internacion = $("#nuevoFechaInternacion").val();
@@ -1230,11 +1465,14 @@ $(document).ready(function() {
 
 			// 8. LABORATORIO
 			var estado_muestra = $("#nuevoEstadoMuestra").val();
+			var no_toma_muestra = $("#nuevoNoTomaMuestra").val();
 			var id_establecimiento_lab = $("#nuevoLugarMuestra").val();
 			var tipo_muestra = $("#nuevoTipoMuestra").val();
+			var nombre_laboratorio = $("#nuevoNombreLaboratorio").val();
 			var fecha_muestra = $("#nuevoFechaMuestra").val();	
 			var fecha_envio = $("#nuevoFechaEnvio").val();
 			var responsable_muestra = $("#nuevoResponsableMuestra").val();
+			var observaciones_muestra = $("#nuevoObsMuestra").val();
 
 
 			// DATOS DEL PERSONAL QUE NOTIFICA
@@ -1278,27 +1516,44 @@ $(document).ready(function() {
 			datos.append("calle", calle);
 			datos.append("nro_calle", nro_calle);
 			datos.append("telefono", telefono);
+			datos.append("email", email);
 			datos.append("nombre_apoderado", nombre_apoderado);
 			datos.append("telefono_apoderado", telefono_apoderado);
 
 			// 3. ANTECEDENTES EPIDEMIOLOGICOS
 			datos.append("ocupacion", ocupacion);
-			datos.append("ant_vacuna_influenza", ant_vacuna_influenza);
-			datos.append("fecha_vacuna_influenza", fecha_vacuna_influenza);
-			datos.append("viaje_riesgo", viaje_riesgo);
-			datos.append("pais_ciudad_riesgo", pais_ciudad_riesgo);	
-			datos.append("fecha_retorno", fecha_retorno);	
-			datos.append("nro_vuelo", nro_vuelo);	
-			datos.append("nro_asiento", nro_asiento);
+			// datos.append("ant_vacuna_influenza", ant_vacuna_influenza);
+			// datos.append("fecha_vacuna_influenza", fecha_vacuna_influenza);
+			// datos.append("viaje_riesgo", viaje_riesgo);
+			// datos.append("pais_ciudad_riesgo", pais_ciudad_riesgo);	
+			// datos.append("fecha_retorno", fecha_retorno);	
+			// datos.append("nro_vuelo", nro_vuelo);	
+			// datos.append("nro_asiento", nro_asiento);
+
 			datos.append("contacto_covid", contacto_covid);
 			datos.append("fecha_contacto_covid", fecha_contacto_covid);
-			datos.append("nombre_contacto_covid", nombre_contacto_covid);
-			datos.append("telefono_contacto_covid", telefono_contacto_covid);
-			datos.append("pais_contacto_covid", pais_contacto_covid);
-			datos.append("departamento_contacto_covid", departamento_contacto_covid);
-			datos.append("localidad_contacto_covid", localidad_contacto_covid);
+
+			datos.append("ant_vacuna", ant_vacuna);
+			datos.append("fecha_dosis_vacuna", fecha_dosis_vacuna);
+			datos.append("dosis_vacuna", dosis_vacuna);
+			datos.append("proveedor_vacuna", proveedor_vacuna);			
+			
+			datos.append("diagnosticado_covid", diagnosticado_covid);
+			datos.append("fecha_diagnosticado_covid", fecha_diagnosticado_covid);
+
+			// datos.append("nombre_contacto_covid", nombre_contacto_covid);
+			// datos.append("telefono_contacto_covid", telefono_contacto_covid);
+			// datos.append("pais_contacto_covid", pais_contacto_covid);
+			// datos.append("departamento_contacto_covid", departamento_contacto_covid);
+			// datos.append("localidad_contacto_covid", localidad_contacto_covid);
+
+			datos.append("pais_infeccion", pais_infeccion);
+			datos.append("departamento_infeccion", departamento_infeccion);
+			datos.append("municipio_infeccion", municipio_infeccion);
+			datos.append("localidad_infeccion", localidad_infeccion);
 
 			// 4. DATOS CLÍNICOS
+			datos.append("tipo_paciente", tipo_paciente);
 			datos.append("fecha_inicio_sintomas", fecha_inicio_sintomas);
 			datos.append("malestares", malestares);
 			datos.append("malestares_otros", malestares_otros);
@@ -1307,6 +1562,7 @@ $(document).ready(function() {
 			datos.append("diagnostico_clinico", diagnostico_clinico);
 
 			// 5. DATOS HOSPITALIZACIÓN AISLAMIENTO
+			datos.append("tipo_aislamiento", tipo_aislamiento);
 			datos.append("fecha_aislamiento", fecha_aislamiento);
 			datos.append("lugar_aislamiento", lugar_aislamiento);
 			datos.append("fecha_internacion", fecha_internacion);
@@ -1322,11 +1578,14 @@ $(document).ready(function() {
 
 			// 8. LABORATORIO
 			datos.append("estado_muestra", estado_muestra);
+			datos.append("no_toma_muestra", no_toma_muestra);
 			datos.append("id_establecimiento_lab", id_establecimiento_lab);
 			datos.append("tipo_muestra", tipo_muestra);
+			datos.append("nombre_laboratorio", nombre_laboratorio);
 			datos.append("fecha_muestra", fecha_muestra);	
 			datos.append("fecha_envio", fecha_envio);	
 			datos.append("responsable_muestra", responsable_muestra);
+			datos.append("observaciones_muestra", observaciones_muestra);
 
 			// DATOS DEL PERSONAL QUE NOTIFICA
 			datos.append("paterno_notificador", paterno_notificador);
@@ -1346,7 +1605,7 @@ $(document).ready(function() {
 				dataType: "html",
 				success: function(respuesta) {
 					console.log("respuesta", respuesta);
-				
+
 					if (respuesta == "ok") {
 
 						swal.fire({
@@ -1358,10 +1617,10 @@ $(document).ready(function() {
 							confirmButtonText: "Cerrar"
 
 						}).then((result) => {
-		  					
-		  					if (result.value) {
 
-		  						window.location = "ficha-epidemiologica";
+							if (result.value) {
+
+								window.location = "ficha-epidemiologica";
 
 							}
 
@@ -1370,7 +1629,7 @@ $(document).ready(function() {
 					} else {
 
 						swal.fire({
-								
+
 							title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales!",
 							icon: "error",
 							allowOutsideClick: false,
@@ -1383,26 +1642,26 @@ $(document).ready(function() {
 				},
 				error: function(error) {
 
-			        console.log("No funciona");
-			        
-			    }
+					console.log("No funciona");
+
+				}
 
 			});
 
-        } 
-        else {
+		} 
+		else {
 
-        	swal.fire({
-								
+			swal.fire({
+
 				title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales, por favor revise el formulario!",
 				icon: "error",
 				allowOutsideClick: false,
 				confirmButtonText: "¡Cerrar!"
 
 			});
-        }
+		}
 
-    });
+	});
 
 	//GUARDANDO DATOS DE FICHA EPIDEMIOLOGICA DINAMICAMENTE
 
@@ -1416,7 +1675,7 @@ $(document).ready(function() {
 
 		// 1. DATOS DEL ESTABLECIMIENTO NOTIFICADOR
 
-    	$("#nuevoEstablecimiento").change(function() {
+		$("#nuevoEstablecimiento").change(function() {
 
 			item = "id_establecimiento";
 			valor = $(this).val();
@@ -1537,30 +1796,6 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoBusquedaActiva").change(function() {
-
-			item = "busqueda_activa";
-			valor = $(this).val();
-			tabla = "fichas"
-
-			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-			actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-		});
-
-		$("#nuevoNroControl").change(function() {
-
-			item = "nro_control";
-			valor = $(this).val();
-			tabla = "fichas"
-
-			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-			actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-		});
-
 		// 2. IDENTIFICACION DEL CASO/PACIENTE
 
 		$("#nuevoSexoPaciente").change(function() {
@@ -1671,6 +1906,18 @@ $(document).ready(function() {
 
 		});
 
+		$("#nuevoEmailPaciente").change(function() {
+
+			item = "email";
+			valor = $(this).val();
+			tabla = "pacientes_asegurados"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoEmailFicha(id_ficha, item, valor, tabla)
+
+		});
+
 		$("#nuevoNombreApoderado").change(function() {
 
 			item = "nombre_apoderado";
@@ -1709,47 +1956,11 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoAntVacunaInfluenza").change(function() {
+		$("#nuevoContactoCovid").change(function() {
 
-			item = "ant_vacuna_influenza";
+			item = "contacto_covid";
 			valor = $(this).val();
-			tabla = "ant_epidemiologicos"
-
-			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-			actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-			// SI EL VALOR ELEGIDO ES NO SE BORRA EL VALOR DE CAMPO FECHA DE VACUNACIÒN DE INFLUENZA
-
-			if (valor == "NO") {
-
-				item = "fecha_vacuna_influenza";
-				valor = "";
-
-				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-				actualizarCampoFicha(id_ficha, item, valor, tabla)
-			}
-
-		});
-
-		$("#nuevoFechaVacunaInfluenza").blur(function() {
-
-			item = "fecha_vacuna_influenza";
-			valor = $(this).val();
-			tabla = "ant_epidemiologicos"
-
-			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-			actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-		});
-
-		$("#nuevoViajeRiesgo").change(function() {
-
-			item = "viaje_riesgo";
-			valor = $(this).val();
-			tabla = "ant_epidemiologicos"
+			tabla = "ant_epidemiologicos";
 
 			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
 
@@ -1759,32 +1970,8 @@ $(document).ready(function() {
 
 			if (valor == "NO") {
 
-				item = "pais_ciudad_riesgo";
+				item = "fecha_contacto_covid";
 				valor = "";
-
-				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-				actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-				item = "fecha_retorno";
-
-				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-				actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-				item = "empresa_vuelo";
-
-				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-				actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-				item = "nro_vuelo";
-
-				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-				actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-				item = "nro_asiento";
 
 				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
 
@@ -1794,9 +1981,9 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoPaisCiudadRiesgo").change(function() {
+		$("#nuevoFechaContactoCovid").blur(function() {
 
-			item = "pais_ciudad_riesgo";
+			item = "fecha_contacto_covid";
 			valor = $(this).val();
 			tabla = "ant_epidemiologicos";
 
@@ -1806,9 +1993,46 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoFechaRetorno").blur(function() {
+		$("#nuevoAntVacunacion").change(function() {
 
-			item = "fecha_retorno";
+			item = "ant_vacuna";
+			valor = $(this).val();
+			tabla = "ant_epidemiologicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI EL VALOR ELEGIDO ES NO, SE BORRA LOS VALORES DE LOS CAMPOS INHABILITADOS
+
+			if (valor == "NO") {
+
+				item = "fecha_dosis_vacuna";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "dosis_vacuna";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "proveedor_vacuna";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			}
+
+		});
+
+		$("#nuevoFechaDosisVacuna").blur(function() {
+
+			item = "fecha_dosis_vacuna";
 			valor = $(this).val();
 			tabla = "ant_epidemiologicos";
 
@@ -1818,9 +2042,34 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoEmpresaVuelo").change(function() {
+		$("#nuevoDosisVacuna").change(function() {
 
-			item = "empresa_vuelo";
+			item = "dosis_vacuna";
+			valor = $(this).val();
+			tabla = "ant_epidemiologicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI EL VALOR ELEGIDO ES DOSIS UNICA SE ALMACENA EN PROVEEROR VACUNA JOHNSON & JOHNSON
+
+			if (valor == "DOSIS UNICA") {
+
+				item = "proveedor_vacuna";
+				valor = "JOHNSON & JOHNSON";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			}
+
+		});
+
+		$("#nuevoProveedorVacuna").change(function() {
+
+			item = "proveedor_vacuna";
 			valor = $(this).val();
 			tabla = "ant_epidemiologicos";
 
@@ -1830,9 +2079,58 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoNroVuelo").change(function() {
+		$("#nuevoDiagnosticadoCovid").change(function() {
 
-			item = "nro_vuelo";
+			item = "diagnosticado_covid";
+			valor = $(this).val();
+			tabla = "ant_epidemiologicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI EL VALOR ELEGIDO ES NO SE BORRA LOS VALORES DE LOS CAMPOS INHABILITADOS
+
+			if (valor == "NO") {
+
+				item = "fecha_diagnosticado_covid";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "pais_infeccion";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "departamento_infeccion";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "municipio_infeccion";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "localidad_infeccion";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			}
+
+		});
+
+		$("#nuevoFechaDiagnosticadoCovid").change(function() {
+
+			item = "fecha_diagnosticado_covid";
 			valor = $(this).val();
 			tabla = "ant_epidemiologicos";
 
@@ -1842,11 +2140,1457 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoNroAsiento").change(function() {
+		$("#nuevoPaisInfeccion").change(function() {
 
-			item = "nro_asiento";
+			item = "pais_infeccion";
 			valor = $(this).val();
 			tabla = "ant_epidemiologicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoDepartamentoInfeccion").change(function() {
+
+			item = "departamento_infeccion";
+			valor = $(this).val();
+			tabla = "ant_epidemiologicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoMunicipioInfeccion").change(function() {
+
+			item = "municipio_infeccion";
+			valor = $(this).val();
+			tabla = "ant_epidemiologicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoLocalidadInfeccion").change(function() {
+
+			item = "localidad_infeccion";
+			valor = $(this).val();
+			tabla = "ant_epidemiologicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		// 4. DATOS CLINICOS
+
+		$("input:radio[name='tipoPaciente']").change(function() {
+
+			item = "tipo_paciente";
+			valor = $(this).val();
+			console.log("valor", valor);
+			tabla = "datos_clinicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI SE CAMBIA A ASINTOMÁTICO SE BORRAN LOS SINTOMAS
+
+			if (valor == "ASINTOMÁTICO") {
+
+				item = "fecha_inicio_sintomas";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "malestares";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "malestares_otros";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "estado_paciente";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "fecha_defuncion";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "diagnostico_clinico";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			}
+
+		});
+
+		$("#nuevoFechaInicioSintomas").change(function() {
+
+			item = "fecha_inicio_sintomas";
+			valor = $(this).val();
+			tabla = "datos_clinicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		var malestares = []; 
+
+		$('[name="nuevoMalestares"]').change(function() {
+
+			// malestares = $("#malestares").val();
+
+			if ($(this).is(":checked")) {
+
+				malestares.push($(this).val());
+
+			} else {
+
+
+			}
+
+			item = "malestares";
+			valor = malestares;
+			tabla = "datos_clinicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+			
+		});
+
+		$("#nuevoMalestaresOtros").change(function() {
+
+			item = "malestares_otros";
+			valor = $(this).val();
+			tabla = "datos_clinicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoEstadoPaciente").change(function() {
+
+			item = "estado_paciente";
+			valor = $(this).val();
+			tabla = "datos_clinicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI EL VALOR ELEGIDO ES LEVE SE BORRA EL VALOR DE FECHA DE DEFUNCION INHABILITADOS
+
+			if (valor == "LEVE" || valor == "GRAVE") {
+
+				item = "fecha_defuncion";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			}
+
+		});
+
+		$("#nuevoFechaDefuncion").blur(function() {
+
+			item = "fecha_defuncion";
+			valor = $(this).val();
+			tabla = "datos_clinicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoDiagnosticoClinico").change(function() {
+
+			item = "diagnostico_clinico";
+			valor = $(this).val();
+			tabla = "datos_clinicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		// 5. DATOS EN CASO DE HOSPITALIZACIÓN Y/O AISLAMIENTO (SEGUIMIENTO)
+
+		$("input:radio[name='tipoAislamiento']").change(function() {
+
+			item = "tipo_aislamiento";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoDiasNotificacion").change(function() {
+
+			item = "dias_notificacion";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoDiasSinSintomas").change(function() {
+
+			item = "dias_sin_sintomas";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoFechaAislamiento").blur(function() {
+
+			item = "fecha_aislamiento";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoLugarAislamiento").change(function() {
+
+			item = "lugar_aislamiento";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoFechaInternacion").blur(function() {
+
+			item = "fecha_internacion";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoEstablecimientoInternacion").change(function() {
+
+			item = "establecimiento_internacion";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoVentilacionMecanica").change(function() {
+
+			item = "ventilacion_mecanica";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoTerapiaIntensiva").change(function() {
+
+			item = "terapia_intensiva";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoFechaIngresoUTI").blur(function() {
+
+			item = "fecha_ingreso_UTI";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoLugarIngresoUTI").change(function() {
+
+			item = "lugar_ingreso_UTI";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		var tratamiento = []; 
+
+		$('[name="nuevoTratamiento"]').change(function() {
+
+			if ($(this).is(":checked")) {
+
+				tratamiento.push($(this).val());
+
+			} else {
+
+
+			}
+
+			item = "tratamiento";
+			valor = tratamiento;
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+			
+		});
+
+		$("#nuevoTratamientoOtros").change(function() {
+
+			item = "tratamiento_otros";
+			valor = $(this).val();
+			tabla = "hospitalizaciones_aislamientos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		// 6. ENFERMEDADES DE BASE O CONDICIONES DE RIESGO
+
+		$("input:radio[name='enfEstado']").change(function() {
+
+			item = "enf_estado";
+			valor = $(this).val();
+			console.log("valor", valor);
+			tabla = "enfermedades_bases";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI SE CAMBIA A NO PRESENTA SE BORRAN LOS SINTOMAS
+
+			if (valor == "NO PRESENTA") {
+
+				item = "enf_riesgo";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "enf_riesgo_otros";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			}
+
+		});
+
+		var enf_riesgo = []; 
+
+		$('[name="nuevoEnfRiesgo"]').change(function() {
+
+			if ($(this).is(":checked")) {
+
+				enf_riesgo.push($(this).val());
+
+			} else {
+
+
+			}
+
+			item = "enf_riesgo";
+			valor = enf_riesgo;
+			tabla = "enfermedades_bases";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+			
+		});
+
+		$("#nuevoEnfRiesgoOtros").change(function() {
+
+			item = "enf_riesgo_otros";
+			valor = $(this).val();
+			tabla = "enfermedades_bases";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		// 8. LABORATORIOS
+
+		$("#nuevoEstadoMuestra").change(function() {
+
+			item = "estado_muestra";
+			valor = $(this).val();
+			tabla = "laboratorios";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI SE CAMBIA A NO PRESENTA SE BORRAN LOS SINTOMAS
+
+			if (valor == "NO") {
+
+				item = "id_establecimiento";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "tipo_muestra";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "nombre_laboratorio";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "fecha_muestra";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "fecha_envio";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "responsable_muestra";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			} else {
+
+				item = "no_toma_muestra";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+			}
+
+		});
+
+		$("#nuevoNoTomaMuestra").change(function() {
+
+			item = "no_toma_muestra";
+			valor = $(this).val();
+			tabla = "laboratorios";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+
+		$("#nuevoLugarMuestra").change(function() {
+
+			item = "id_establecimiento";
+			valor = $(this).val();
+			tabla = "laboratorios";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoTipoMuestra").change(function() {
+
+			item = "tipo_muestra";
+			valor = $(this).val();
+			tabla = "laboratorios";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoFechaMuestra").blur(function() {
+
+			item = "fecha_muestra";
+			valor = $(this).val();
+			tabla = "laboratorios";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoFechaEnvio").blur(function() {
+
+			item = "fecha_envio";
+			valor = $(this).val();
+			tabla = "laboratorios";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoResponsableMuestra").change(function() {
+
+			item = "responsable_muestra";
+			valor = $(this).val();
+			tabla = "laboratorios";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		// DATOS DEL PERSONAL QUE NOTIFICA:
+
+		$("#nuevoPaternoNotif").change(function() {
+
+			item = "paterno_notificador";
+			valor = $(this).val();
+			tabla = "personas_notificadores";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoMaternoNotif").change(function() {
+
+			item = "materno_notificador";
+			valor = $(this).val();
+			tabla = "personas_notificadores";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoNombreNotif").change(function() {
+
+			item = "nombre_notificador";
+			valor = $(this).val();
+			tabla = "personas_notificadores";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoTelefonoNotif").change(function() {
+
+			item = "telefono_notificador";
+			valor = $(this).val();
+			tabla = "personas_notificadores";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoCargoNotif").change(function() {
+
+			item = "cargo_notificador";
+			valor = $(this).val();
+			tabla = "personas_notificadores";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+	});
+
+
+	//VALIDANDO DATOS DE MODAL NUEVA PERSONA CONTACTO
+
+	$("#nuevoPersonaContacto").validate({
+
+		rules: {
+			nuevoPaternoContacto : { patron_texto: true},
+			nuevoMaternoContacto: { patron_texto: true},
+			nuevoNombreContacto: { required: true, patron_texto: true},
+			nuevoRelacionContacto: { required: true, patron_numerosTexto: true},
+			nuevoEdadContacto: { patron_numeros: true},
+			nuevoTelefonoContacto: { minlength: 7, patron_numeros: true},
+			nuevaDireccionContacto: { patron_textoEspecial: true},
+			nuevoFechaContacto: { required: true},
+			nuevoLugarContacto: { patron_numerosTexto: true}
+		},
+
+	});
+
+	//GUARDANDO DATOS DE MODAL NUEVA PERSONA CONTACTO
+
+	$("#nuevoPersonaContacto").on("click", "#guardarPersonaContacto", function() {
+
+		if ($("#nuevoPersonaContacto").valid()) {
+
+			$('#modalNuevoPersonaContacto').modal('toggle');
+
+			console.log("AGREGAR PERSONA CONTACTO");
+
+			var paterno_contacto = $('#nuevoPaternoContacto').val();
+			var materno_contacto = $('#nuevoMaternoContacto').val();
+			var nombre_contacto = $('#nuevoNombreContacto').val();
+			var relacion_contacto = $('#nuevoRelacionContacto').val();
+			var edad_contacto = $('#nuevoEdadContacto').val();
+			var telefono_contacto = $('#nuevoTelefonoContacto').val();
+			var direccion_contacto = $('#nuevaDireccionContacto').val();
+			var fecha_contacto = $('#nuevoFechaContacto').val();
+			var lugar_contacto = $('#nuevoLugarContacto').val();
+			var id_ficha = $ ("#idFicha").val();
+
+			var datos = new FormData();
+			datos.append("guardarPersonasContactos", 'guardarPersonasContactos');
+			datos.append("paterno_contacto", paterno_contacto);
+			datos.append("materno_contacto", materno_contacto);
+			datos.append("nombre_contacto", nombre_contacto);
+			datos.append("relacion_contacto", relacion_contacto);
+			datos.append("edad_contacto", edad_contacto);
+			datos.append("telefono_contacto", telefono_contacto);
+			datos.append("direccion_contacto", direccion_contacto);
+			datos.append("fecha_contacto", fecha_contacto);
+			datos.append("lugar_contacto", lugar_contacto);
+			datos.append("id_ficha", id_ficha);
+
+			$.ajax({
+
+				url:"ajax/personas_contactos.ajax.php",
+				method: "POST",
+				data: datos,
+				cache: false,
+				contentType: false,
+				processData: false,
+				dataType: "html",
+				success: function(id_persona_contacto) {
+					console.log("id_persona_contacto", id_persona_contacto);
+
+					if (id_persona_contacto != "error") {
+
+						swal.fire({
+							
+							icon: "success",
+							title: "¡Los datos se guardaron correctamente!",
+							showConfirmButton: true,
+							allowOutsideClick: false,
+							confirmButtonText: "Cerrar"
+
+						}).then((result) => {
+
+							if (result.value) {
+
+								var datos2 = new FormData();
+								datos2.append("mostrarPersonaContacto", 'mostrarPersonaContacto');
+								datos2.append("id_persona_contacto", id_persona_contacto);
+
+								$.ajax({
+
+									url:"ajax/personas_contactos.ajax.php",
+									method: "POST",
+									data: datos2,
+									cache: false,
+									contentType: false,
+									processData: false,
+									dataType: "json",
+									success: function(respuesta) {
+										
+										$('#nuevoPaternoContacto').val("");
+										$('#nuevoMaternoContacto').val("");
+										$('#nuevoNombreContacto').val("");
+										$('#nuevoRelacionContacto').val("");
+										$('#nuevoEdadContacto').val("");
+										$('#nuevoTelefonoContacto').val("");
+										$('#nuevaDireccionContacto').val("");
+										$('#nuevoFechaContacto').val("");
+										$('#nuevoLugarContacto').val("");
+
+										$("#tablaPersonasContactos").append(
+
+											'<tr>'+
+											'<td>'+respuesta["paterno_contacto"]+' '+respuesta["materno_contacto"]+' '+respuesta["nombre_contacto"]+'</td>'+
+											'<td>'+respuesta["relacion_contacto"]+'</td>'+
+											'<td>'+respuesta["edad_contacto"]+'</td>'+
+											'<td>'+respuesta["telefono_contacto"]+'</td>'+
+											'<td>'+respuesta["direccion_contacto"]+'</td>'+
+											'<td>'+respuesta["fecha_contacto"]+'</td>'+
+											'<td>'+respuesta["lugar_contacto"]+'</td>'+
+											'<td>'+
+											'<div class="btn-group"><button class="btn btn-warning btnEditarPersonaContacto" idPersonaContacto="'+respuesta["id"]+'" data-toggle="modal" data-target="#modalEditarPersonaContacto" data-toggle="tooltip" title="Editar"><i class="fas fa-pencil-alt"></i></button><button class="btn btn-danger btnEliminarPersonaContacto" idPersonaContacto="'+respuesta["id"]+'" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></button>'+
+											'</div>'+
+											'</td>'+
+											'</tr>'		
+											)	
+
+									},
+									error: function(error) {
+
+										console.log("No funciona2");
+
+									}
+
+								});
+
+							}
+
+						});
+
+					} else {
+
+						swal.fire({
+
+							title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales!",
+							icon: "error",
+							allowOutsideClick: false,
+							confirmButtonText: "¡Cerrar!"
+
+						});
+						
+					}
+
+				},
+				error: function(error) {
+
+					console.log("No funciona");
+
+				}
+
+			});
+
+		}
+
+	});
+
+	//VALIDANDO DATOS DE LABORATORIO EN LA FICHA EPIDEMIOLOGICA
+
+	$("#fichaEpidemiologicaLab").validate({
+
+		rules: {
+			nuevoCodLaboratorio: { required: true, patron_numerosLetras: true},
+			nuevoMetodoDiagnostico : { required: true},
+			nuevoResultadoLaboratorio: { required: true},
+			nuevoFechaResultado: { required: true}
+		},
+
+		messages: {
+
+			nuevoMetodoDiagnostico : "Elija una opción",
+			nuevoResultadoLaboratorio : "Elija una opción"
+		},
+
+		errorPlacement: function(label, element) {
+
+			if (element.attr("name") == "nuevoResultadoLaboratorio" ) {
+
+				label.addClass('errorMsq');
+				element.parent().parent().append(label);
+
+			} else {
+
+				label.addClass('errorMsq');
+				element.parent().append(label);
+
+			}
+
+		},
+
+	});
+
+	//GUARDANDO DATOS DE LABORATORIO EN LA FICHA EPIDEMIOLOGICA
+
+	$("#fichaEpidemiologicaLab").on("click", ".btnGuardarLab", function() {
+
+		if ($("#fichaEpidemiologicaLab").valid()) {
+
+			var estado_muestra = $("#nuevoEstadoMuestra").val();
+			var no_toma_muestra = $("#nuevoNoTomaMuestra").val();
+			var id_establecimiento = $("#nuevoLugarMuestra").val();
+			var tipo_muestra = $("#nuevoTipoMuestra").val();
+			var nombre_laboratorio = $("#nuevoNombreLaboratorio").val();
+			var fecha_muestra = $("#nuevoFechaMuestra").val();	
+			var fecha_envio = $("#nuevoFechaEnvio").val();
+			var cod_laboratorio = $("#nuevoCodLaboratorio").val();
+			var metodo_diagnostico = $("#nuevoMetodoDiagnostico").val();
+			var responsable_muestra = $("#nuevoResponsableMuestra").val();
+			var observaciones_muestra = $("#nuevoObsMuestra").val();		
+			var resultado_laboratorio = $('input:radio[name="nuevoResultadoLaboratorio"]:checked').val();
+			var fecha_resultado = $("#nuevoFechaResultado").val();				
+			var id_ficha = $ ("#idFicha").val();
+
+			var cod_asegurado = $("#nuevoCodAsegurado").val();
+			var cod_afiliado = $("#nuevoCodAfiliado").val();
+			var cod_empleador = $("#nuevoCodEmpleador").val();
+			var nombre_empleador = $("#nuevoNombreEmpleador").val();
+			var paterno = $("#nuevoPaternoPaciente").val();
+			var materno = $("#nuevoMaternoPaciente").val();
+			var nombre = $("#nuevoNombrePaciente").val();
+			var id_departamento = $("#nuevoDepartamentoPaciente").val();
+			var documento_ci = $("#nuevoNroDocumentoPaciente").val();
+			var sexo = $("#nuevoSexoPaciente").val();
+			var fecha_nacimiento = $("#nuevoFechaNacPaciente").val();
+			var telefono = $("#nuevoTelefonoPaciente").val();
+			var email = $ ("#nuevoEmailPaciente").val();
+			var id_localidad = $("#nuevoLocalidadPaciente").val();
+			var zona = $("#nuevoZonaPaciente").val();
+			var calle = $("#nuevoCallePaciente").val();
+			var nro_calle = $("#nuevoNroCallePaciente").val();
+			var id_usuario = $("#idUsuario").val();
+			var foto = "vistas/img/covid_resultados/default/anonymous.png";
+
+			
+			var datos = new FormData();
+			datos.append("guardarLaboratorio", 'guardarLaboratorio');
+			datos.append("estado_muestra", estado_muestra);
+			datos.append("no_toma_muestra", no_toma_muestra);
+			datos.append("id_establecimiento", id_establecimiento);
+			datos.append("tipo_muestra", tipo_muestra);
+			datos.append("nombre_laboratorio", nombre_laboratorio);
+			datos.append("fecha_muestra", fecha_muestra);	
+			datos.append("fecha_envio", fecha_envio);
+			datos.append("cod_laboratorio", cod_laboratorio);	
+			datos.append("metodo_diagnostico", metodo_diagnostico);	
+			datos.append("responsable_muestra", responsable_muestra);
+			datos.append("observaciones_muestra", observaciones_muestra);
+			datos.append("resultado_laboratorio", resultado_laboratorio);
+			datos.append("fecha_resultado", fecha_resultado);
+			datos.append("id_ficha", id_ficha);
+
+			datos.append("cod_asegurado", cod_asegurado);
+			datos.append("cod_afiliado", cod_afiliado);
+			datos.append("cod_empleador", cod_empleador);
+			datos.append("nombre_empleador", nombre_empleador);
+			datos.append("paterno", paterno);	
+			datos.append("materno", materno);
+			datos.append("nombre", nombre);	
+			datos.append("id_departamento", id_departamento);
+			datos.append("documento_ci", documento_ci);
+			datos.append("sexo", sexo);
+			datos.append("fecha_nacimiento", fecha_nacimiento);
+			datos.append("telefono", telefono);
+			datos.append("email", email);
+			datos.append("id_localidad", id_localidad);	
+			datos.append("zona", zona);
+			datos.append("calle", calle);
+			datos.append("nro_calle", nro_calle);
+			datos.append("id_usuario", id_usuario);
+			datos.append("foto", foto);
+
+			$.ajax({
+
+				url:"ajax/laboratorios.ajax.php",
+				method: "POST",
+				data: datos,
+				cache: false,
+				contentType: false,
+				processData: false,
+				dataType: "html",
+				success: function(respuesta) {
+					console.log("respuesta", respuesta);
+
+					if (respuesta == "ok") {
+
+						swal.fire({
+							
+							icon: "success",
+							title: "¡Los datos se guardaron correctamente!",
+							showConfirmButton: true,
+							allowOutsideClick: false,
+							confirmButtonText: "Cerrar"
+
+						}).then((result) => {
+
+							if (result.value) {
+
+								window.location = "ficha-epidemiologica";
+
+							}
+
+						});
+
+					} else {
+
+						swal.fire({
+
+							title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales!",
+							icon: "error",
+							allowOutsideClick: false,
+							confirmButtonText: "¡Cerrar!"
+
+						});
+						
+					}
+
+				},
+				error: function(error) {
+
+					console.log("No funciona");
+
+				}
+
+			});
+
+		}
+
+		else {
+
+			swal.fire({
+
+				title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales, por favor revise el formulario!",
+				icon: "error",
+				allowOutsideClick: false,
+				confirmButtonText: "¡Cerrar!"
+
+			});
+		}
+
+	});
+
+	//CARGANDO DATOS AL FORMULARIO DE PERSONAS CONTACTO EN LA FICHA EPIDEMIOLOGICA
+
+	$(document).on("click", ".btnEditarPersonaContacto", function() {
+
+		console.log("CARGAR PERSONA CONTACTO");
+
+		var id_persona_contacto = $(this).attr("idPersonaContacto");
+		console.log("id_persona_contacto", id_persona_contacto);
+
+		var fila = $(this).parent().parent().parent().attr("id", "fila"+id_persona_contacto);
+		console.log("fila", fila);
+
+		var datos = new FormData();
+		datos.append("mostrarPersonaContacto", 'mostrarPersonaContacto');
+		datos.append("id_persona_contacto", id_persona_contacto);
+
+		$.ajax({
+
+			url: "ajax/personas_contactos.ajax.php",
+			method: "POST",
+			data: datos,
+			cache: false,
+			contentType: false,
+			processData: false,
+			dataType: "json",
+			success: function(respuesta) {
+
+				$('#editarPaternoContacto').val(respuesta["paterno_contacto"]);
+				$('#editarMaternoContacto').val(respuesta["materno_contacto"]);
+				$('#editarNombreContacto').val(respuesta["nombre_contacto"]);
+				$('#editarRelacionContacto').val(respuesta["relacion_contacto"]);
+				$('#editarEdadContacto').val(respuesta["edad_contacto"]);
+				$('#editarTelefonoContacto').val(respuesta["telefono_contacto"]);
+				$('#editarDireccionContacto').val(respuesta["direccion_contacto"]);
+				$('#editarFechaContacto').val(respuesta["fecha_contacto"]);
+				$('#editarLugarContacto').val(respuesta["lugar_contacto"]);
+				$('#editarIdPersonaContacto').val(respuesta["id"]);
+
+			},
+			error: function(error){
+
+				console.log("No funciona");
+
+			}
+
+		});
+
+	});
+
+	//VALIDANDO DATOS DE MODAL EDITAR PERSONA CONTACTO 
+
+	$("#guardarEditarPersonaContacto").validate({
+
+		rules: {
+			editarPaternoContacto : { patron_texto: true},
+			editarMaternoContacto: { patron_texto: true},
+			editarNombreContacto: { required: true, patron_texto: true},
+			editarRelacionContacto: { required: true, patron_numerosTexto: true},
+			editarEdadContacto: { patron_numeros: true},
+			editarTelefonoContacto: { minlength: 7, patron_numeros: true},
+			nuevaDireccionContacto: { patron_textoEspecial: true},
+			editarFechaContacto: { required: true},
+			editarLugarContacto: { patron_numerosTexto: true}
+		},
+
+	});
+
+	//EDITANDO DE MODAL EDITAR PERSONA CONTACTO 
+
+	$("#guardarEditarPersonaContacto").on("click", "#btnModificarPersonaContacto", function() {
+
+		if ($("#guardarEditarPersonaContacto").valid()) {
+
+			$('#modalEditarPersonaContacto').modal('toggle');
+
+			console.log("EDITAR PERSONA CONTACTO");
+
+			var id_persona_contacto = $('#editarIdPersonaContacto').val();
+			var paterno_contacto = $('#editarPaternoContacto').val();
+			var materno_contacto = $('#editarMaternoContacto').val();
+			var nombre_contacto = $('#editarNombreContacto').val();
+			var relacion_contacto = $('#editarRelacionContacto').val();
+			var edad_contacto = $('#editarEdadContacto').val();
+			var telefono_contacto = $('#editarTelefonoContacto').val();
+			var direccion_contacto = $('#editarDireccionContacto').val();
+			var fecha_contacto = $('#editarFechaContacto').val();
+			var lugar_contacto = $('#editarLugarContacto').val();
+			//var id_ficha = $ ("#idFicha").val();
+
+			var datos = new FormData();
+			datos.append("editarPersonasContactos", 'editarPersonasContactos');
+			datos.append("id_persona_contacto", id_persona_contacto);
+			datos.append("paterno_contacto", paterno_contacto);
+			datos.append("materno_contacto", materno_contacto);
+			datos.append("nombre_contacto", nombre_contacto);
+			datos.append("relacion_contacto", relacion_contacto);
+			datos.append("edad_contacto", edad_contacto);
+			datos.append("telefono_contacto", telefono_contacto);
+			datos.append("direccion_contacto", direccion_contacto);
+			datos.append("fecha_contacto", fecha_contacto);
+			datos.append("lugar_contacto", lugar_contacto);
+			//datos.append("id_ficha", id_ficha);
+
+			$.ajax({
+
+				url:"ajax/personas_contactos.ajax.php",
+				method: "POST",
+				data: datos,
+				cache: false,
+				contentType: false,
+				processData: false,
+				dataType: "html",
+				success: function(id_persona_contacto) {
+
+					if (id_persona_contacto != "error") {
+
+						swal.fire({
+							
+							icon: "success",
+							title: "¡Los datos se modificaron correctamente!",
+							showConfirmButton: true,
+							allowOutsideClick: false,
+							confirmButtonText: "Cerrar"
+
+						}).then((result) => {
+
+							if (result.value) {
+
+		  						// Eliminamos el contenido de la fila
+		  						$("#fila"+id_persona_contacto).empty();
+
+		  						var datos2 = new FormData();
+		  						datos2.append("mostrarPersonaContacto", 'mostrarPersonaContacto');
+		  						datos2.append("id_persona_contacto", id_persona_contacto);
+
+		  						$.ajax({
+
+		  							url:"ajax/personas_contactos.ajax.php",
+		  							method: "POST",
+		  							data: datos2,
+		  							cache: false,
+		  							contentType: false,
+		  							processData: false,
+		  							dataType: "json",
+		  							success: function(respuesta) {
+
+		  								$('#editarPaternoContacto').val("");
+		  								$('#editarMaternoContacto').val("");
+		  								$('#editarNombreContacto').val("");
+		  								$('#editarRelacionContacto').val("");
+		  								$('#editarEdadContacto').val("");
+		  								$('#editarTelefonoContacto').val("");
+		  								$('#editarDireccionContacto').val("");
+		  								$('#editarFechaContacto').val("");
+		  								$('#editarLugarContacto').val("");
+
+										// Agregamos el contenido editado en la fila
+										$("#fila"+id_persona_contacto).append(
+
+											// '<tr>'+
+											'<td>'+respuesta["paterno_contacto"]+' '+respuesta["materno_contacto"]+' '+respuesta["nombre_contacto"]+'</td>'+
+											'<td>'+respuesta["relacion_contacto"]+'</td>'+
+											'<td>'+respuesta["edad_contacto"]+'</td>'+
+											'<td>'+respuesta["telefono_contacto"]+'</td>'+
+											'<td>'+respuesta["direccion_contacto"]+'</td>'+
+											'<td>'+respuesta["fecha_contacto"]+'</td>'+
+											'<td>'+respuesta["lugar_contacto"]+'</td>'+
+											'<td>'+
+											'<div class="btn-group"><button class="btn btn-warning btnEditarPersonaContacto" idPersonaContacto="'+respuesta["id"]+'" data-toggle="modal" data-target="#modalEditarPersonaContacto" data-toggle="tooltip" title="Editar"><i class="fas fa-pencil-alt"></i></button><button class="btn btn-danger btnEliminarPersonaContacto" idPersonaContacto="'+respuesta["id"]+'" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></button>'+
+											'</div>'+
+											'</td>'
+											// '</tr>'		
+
+											)	
+
+									},
+									error: function(error) {
+
+										console.log("No funciona2");
+
+									}
+
+								});
+		  						
+		  					}
+
+		  				});
+
+					} else {
+
+						swal.fire({
+
+							title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales!",
+							icon: "error",
+							allowOutsideClick: false,
+							confirmButtonText: "¡Cerrar!"
+
+						});
+						
+					}
+
+				},
+				error: function(error) {
+
+					console.log("No funciona");
+
+				}
+
+			});
+
+		}
+
+	});
+
+	//ELIMINADO UNA FILA DE LA TABLA DE PERSONAS CONTACTO EN LA FICHA EPIDEMIOLOGICA
+
+	$(document).on("click", ".btnEliminarPersonaContacto", function() {
+
+		swal.fire({
+
+			title: "¿Está seguro de borrar el registro?",
+			text: "¡Si no lo está puede cancelar la acción!",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#3085d6",
+			cancelButtonColor: "#d33",
+			cancelButtonText: "Cancelar",
+			confirmButtonText: "¡Si, borrar registro!"
+
+		}).then((result)=> {
+
+			if (result.value) {
+
+				console.log("ELIMINAR PERSONA CONTACTO");
+
+				var id_persona_contacto = $(this).attr("idPersonaContacto");
+				console.log("id_persona_contacto", id_persona_contacto);
+
+				var fila = $(this).parent().parent().parent().attr("id", "fila"+id_persona_contacto);
+				console.log("fila", fila);
+
+				var datos = new FormData();
+				datos.append("eliminarPersonaContacto", 'eliminarPersonaContacto');
+				datos.append("id_persona_contacto", id_persona_contacto);
+
+				$.ajax({
+
+					url: "ajax/personas_contactos.ajax.php",
+					method: "POST",
+					data: datos,
+					cache: false,
+					contentType: false,
+					processData: false,
+					dataType: "html",
+					success: function(respuesta) {
+						console.log("respuesta", respuesta);
+
+						if (respuesta == "ok") {
+
+							swal.fire({
+								
+								icon: "success",
+								title: "¡Los datos se eliminaron correctamente!",
+								showConfirmButton: true,
+								allowOutsideClick: false,
+								confirmButtonText: "Cerrar"
+
+							}).then((result) => {
+
+								if (result.value) {
+
+			  						// Eliminamos el contenido de la fila
+			  						$("#fila"+id_persona_contacto).empty();
+
+			  					}
+
+			  				});
+
+						} else {
+
+							swal.fire({
+
+								title: "¡Erroe en la Transacción o conexión a la Base de Datos!",
+								icon: "error",
+								allowOutsideClick: false,
+								confirmButtonText: "¡Cerrar!"
+
+							});
+							
+						}
+
+					},
+					error: function(error) {
+
+						console.log("No funciona");
+
+					}
+
+				});
+
+			}
+
+		});
+
+	});
+
+	/*=============================================
+	FICHA CONTROL Y SEGUIMIENTO
+	=============================================*/	
+	//GUARDANDO DATOS DE FICHA CONTROL Y SEGUIMIENTO DINAMICAMENTE
+
+	$("#fichaControlCentro").ready(function() {
+		
+		var id_ficha = $ ("#idFicha").val();
+		// console.log("id_ficha", id_ficha);
+		var item = "";
+		var valor = "";
+		var tabla = "";
+
+		// 1. DATOS DEL ESTABLECIMIENTO NOTIFICADOR
+
+		$("#nuevoEstablecimiento").change(function() {
+
+			item = "id_establecimiento";
+			valor = $(this).val();
+			tabla = "fichas"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI EL VALOR ELEGIDO ES DIFERENTE DE POLICLINICO 10 DE NOVIEMBRE SE BORRA EL VALOR DE CONSULTORIO
+
+			if (valor != "2") {
+
+				item = "id_consultorio";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			}
+
+		});
+
+		$("#nuevoConsultorio").change(function() {
+
+			item = "id_consultorio";
+			valor = $(this).val();
+			tabla = "fichas"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoDepartamento").change(function() {
+
+			item = "id_departamento";
+			valor = $(this).val();
+			tabla = "fichas"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoLocalidad").change(function() {
+
+			item = "id_localidad";
+			valor = $(this).val();
+			tabla = "fichas"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoFechaNotificacion").blur(function() {
+
+			item = "fecha_notificacion";
+			valor = $(this).val();
+			tabla = "fichas"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoNroControl").change(function() {
+
+			item = "nro_control";
+			valor = $(this).val();
+			tabla = "fichas"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		// 2. IDENTIFICACION DEL CASO/PACIENTE
+
+		$("#nuevoSexoPaciente").change(function() {
+
+			item = "sexo";
+			valor = $(this).val();
+			tabla = "pacientes_asegurados"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoNroDocumentoPaciente").change(function() {
+
+			item = "nro_documento";
+			valor = $(this).val();
+			tabla = "pacientes_asegurados"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoTelefonoPaciente").change(function() {
+
+			item = "telefono";
+			valor = $(this).val();
+			tabla = "pacientes_asegurados"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		$("#nuevoEmailPaciente").change(function() {
+
+			item = "email";
+			valor = $(this).val();
+			tabla = "pacientes_asegurados"
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoEmailFicha(id_ficha, item, valor, tabla)
+
+		});
+
+		// 3. ANTECEDENTES EPIDEMIOLOGICOS
+
+		$("#nuevoAntOcupacion").change(function() {
+
+			item = "ocupacion";
+			valor = $(this).val();
+			tabla = "ant_epidemiologicos"
 
 			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
 
@@ -1875,41 +3619,6 @@ $(document).ready(function() {
 
 				actualizarCampoFicha(id_ficha, item, valor, tabla)
 
-				item = "nombre_contacto_covid";
-				valor = "COMUNITARIO";
-
-				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-				actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-				item = "telefono_contacto_covid";
-				valor = "";
-
-				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-				actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-				item = "pais_contacto_covid";
-				valor = "BOLIVIA";
-
-				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-				actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-				item = "departamento_contacto_covid";
-				valor = "POTOSÍ";
-
-				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-				actualizarCampoFicha(id_ficha, item, valor, tabla)
-
-				item = "localidad_contacto_covid";
-				valor = "POTOSÍ";
-
-				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
-
-				actualizarCampoFicha(id_ficha, item, valor, tabla)
-
 			}
 
 		});
@@ -1926,9 +3635,58 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoNombreContactoCovid").change(function() {
+		$("#nuevoDiagnosticadoCovid").change(function() {
 
-			item = "nombre_contacto_covid";
+			item = "diagnosticado_covid";
+			valor = $(this).val();
+			tabla = "ant_epidemiologicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI EL VALOR ELEGIDO ES NO SE BORRA LOS VALORES DE LOS CAMPOS INHABILITADOS
+
+			if (valor == "NO") {
+
+				item = "fecha_diagnosticado_covid";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "pais_infeccion";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "departamento_infeccion";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "municipio_infeccion";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "localidad_infeccion";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			}
+
+		});
+
+		$("#nuevoFechaDiagnosticadoCovid").change(function() {
+
+			item = "fecha_diagnosticado_covid";
 			valor = $(this).val();
 			tabla = "ant_epidemiologicos";
 
@@ -1938,9 +3696,9 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoTelefonoContactoCovid").change(function() {
+		$("#nuevoPaisInfeccion").change(function() {
 
-			item = "telefono_contacto_covid";
+			item = "pais_infeccion";
 			valor = $(this).val();
 			tabla = "ant_epidemiologicos";
 
@@ -1950,9 +3708,9 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoPaisContactoCovid").change(function() {
+		$("#nuevoDepartamentoInfeccion").change(function() {
 
-			item = "pais_contacto_covid";
+			item = "departamento_infeccion";
 			valor = $(this).val();
 			tabla = "ant_epidemiologicos";
 
@@ -1962,9 +3720,9 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoDepartamentoContactoCovid").change(function() {
+		$("#nuevoMunicipioInfeccion").change(function() {
 
-			item = "departamento_contacto_covid";
+			item = "municipio_infeccion";
 			valor = $(this).val();
 			tabla = "ant_epidemiologicos";
 
@@ -1974,9 +3732,9 @@ $(document).ready(function() {
 
 		});
 
-		$("#nuevoLocalidadContactoCovid").change(function() {
+		$("#nuevoLocalidadInfeccion").change(function() {
 
-			item = "localidad_contacto_covid";
+			item = "localidad_infeccion";
 			valor = $(this).val();
 			tabla = "ant_epidemiologicos";
 
@@ -1987,6 +3745,62 @@ $(document).ready(function() {
 		});
 
 		// 4. DATOS CLINICOS
+
+		$("input:radio[name='tipoPaciente']").change(function() {
+
+			item = "tipo_paciente";
+			valor = $(this).val();
+			console.log("valor", valor);
+			tabla = "datos_clinicos";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI SE CAMBIA A ASINTOMÁTICO SE BORRAN LOS SINTOMAS
+
+			if (valor == "ASINTOMÁTICO") {
+
+				item = "fecha_inicio_sintomas";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "malestares";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "malestares_otros";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "estado_paciente";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "fecha_defuncion";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "diagnostico_clinico";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			}
+
+		});
 
 		$("#nuevoFechaInicioSintomas").change(function() {
 
@@ -2256,6 +4070,25 @@ $(document).ready(function() {
 
 			actualizarCampoFicha(id_ficha, item, valor, tabla)
 
+			// SI SE CAMBIA A NO PRESENTA SE BORRAN LOS SINTOMAS
+
+			if (valor == "NO PRESENTA") {
+
+				item = "enf_riesgo";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "enf_riesgo_otros";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			}
+
 		});
 
 		var enf_riesgo = []; 
@@ -2298,6 +4131,69 @@ $(document).ready(function() {
 		$("#nuevoEstadoMuestra").change(function() {
 
 			item = "estado_muestra";
+			valor = $(this).val();
+			tabla = "laboratorios";
+
+			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+			actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			// SI SE CAMBIA A NO PRESENTA SE BORRAN LOS SINTOMAS
+
+			if (valor == "NO") {
+
+				item = "id_establecimiento";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "tipo_muestra";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "nombre_laboratorio";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "fecha_muestra";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "fecha_envio";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+				item = "responsable_muestra";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+
+			} else {
+
+				item = "no_toma_muestra";
+				valor = "";
+
+				// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+
+				actualizarCampoFicha(id_ficha, item, valor, tabla)
+			}
+
+		});
+
+		$("#nuevoNoTomaMuestra").change(function() {
+
+			item = "no_toma_muestra";
 			valor = $(this).val();
 			tabla = "laboratorios";
 
@@ -2429,730 +4325,85 @@ $(document).ready(function() {
 			actualizarCampoFicha(id_ficha, item, valor, tabla)
 
 		});
-    	
-    });
-
-
-	//VALIDANDO DATOS DE MODAL NUEVA PERSONA CONTACTO
-
-    $("#nuevoPersonaContacto").validate({
-
-    	rules: {
-    		nuevoPaternoContacto : { patron_texto: true},
-     		nuevoMaternoContacto: { patron_texto: true},
-     		nuevoNombreContacto: { required: true, patron_texto: true},
-     		nuevoRelacionContacto: { required: true, patron_numerosTexto: true},
-     		nuevoEdadContacto: { patron_numeros: true},
-     		nuevoTelefonoContacto: { minlength: 7, patron_numeros: true},
-     		nuevaDireccionContacto: { patron_textoEspecial: true},
-     		nuevoFechaContacto: { required: true},
-     		nuevoLugarContacto: { patron_numerosTexto: true}
-    	},
 
 	});
 
-	//GUARDANDO DATOS DE MODAL NUEVA PERSONA CONTACTO
-
-	$("#nuevoPersonaContacto").on("click", "#guardarPersonaContacto", function() {
-
-		if ($("#nuevoPersonaContacto").valid()) {
-
-			$('#modalNuevoPersonaContacto').modal('toggle');
-
-			console.log("AGREGAR PERSONA CONTACTO");
-
-			var paterno_contacto = $('#nuevoPaternoContacto').val();
-			var materno_contacto = $('#nuevoMaternoContacto').val();
-			var nombre_contacto = $('#nuevoNombreContacto').val();
-			var relacion_contacto = $('#nuevoRelacionContacto').val();
-			var edad_contacto = $('#nuevoEdadContacto').val();
-			var telefono_contacto = $('#nuevoTelefonoContacto').val();
-			var direccion_contacto = $('#nuevaDireccionContacto').val();
-			var fecha_contacto = $('#nuevoFechaContacto').val();
-			var lugar_contacto = $('#nuevoLugarContacto').val();
-			var id_ficha = $ ("#idFicha").val();
-
-			var datos = new FormData();
-			datos.append("guardarPersonasContactos", 'guardarPersonasContactos');
-			datos.append("paterno_contacto", paterno_contacto);
-			datos.append("materno_contacto", materno_contacto);
-			datos.append("nombre_contacto", nombre_contacto);
-			datos.append("relacion_contacto", relacion_contacto);
-			datos.append("edad_contacto", edad_contacto);
-			datos.append("telefono_contacto", telefono_contacto);
-			datos.append("direccion_contacto", direccion_contacto);
-			datos.append("fecha_contacto", fecha_contacto);
-			datos.append("lugar_contacto", lugar_contacto);
-			datos.append("id_ficha", id_ficha);
-
-			$.ajax({
-
-				url:"ajax/personas_contactos.ajax.php",
-				method: "POST",
-				data: datos,
-				cache: false,
-				contentType: false,
-				processData: false,
-				dataType: "html",
-				success: function(id_persona_contacto) {
-					console.log("id_persona_contacto", id_persona_contacto);
-				
-					if (id_persona_contacto != "error") {
-
-						swal.fire({
-							
-							icon: "success",
-							title: "¡Los datos se guardaron correctamente!",
-							showConfirmButton: true,
-							allowOutsideClick: false,
-							confirmButtonText: "Cerrar"
-
-						}).then((result) => {
-		  					
-		  					if (result.value) {
-
-		  						var datos2 = new FormData();
-								datos2.append("mostrarPersonaContacto", 'mostrarPersonaContacto');
-								datos2.append("id_persona_contacto", id_persona_contacto);
-
-		  						$.ajax({
-
-									url:"ajax/personas_contactos.ajax.php",
-									method: "POST",
-									data: datos2,
-									cache: false,
-									contentType: false,
-									processData: false,
-									dataType: "json",
-									success: function(respuesta) {
-										
-										$('#nuevoPaternoContacto').val("");
-										$('#nuevoMaternoContacto').val("");
-										$('#nuevoNombreContacto').val("");
-										$('#nuevoRelacionContacto').val("");
-										$('#nuevoEdadContacto').val("");
-										$('#nuevoTelefonoContacto').val("");
-										$('#nuevaDireccionContacto').val("");
-										$('#nuevoFechaContacto').val("");
-										$('#nuevoLugarContacto').val("");
-
-										$("#tablaPersonasContactos").append(
-
-											'<tr>'+
-												'<td>'+respuesta["paterno_contacto"]+' '+respuesta["materno_contacto"]+' '+respuesta["nombre_contacto"]+'</td>'+
-												'<td>'+respuesta["relacion_contacto"]+'</td>'+
-												'<td>'+respuesta["edad_contacto"]+'</td>'+
-												'<td>'+respuesta["telefono_contacto"]+'</td>'+
-												'<td>'+respuesta["direccion_contacto"]+'</td>'+
-												'<td>'+respuesta["fecha_contacto"]+'</td>'+
-												'<td>'+respuesta["lugar_contacto"]+'</td>'+
-												'<td>'+
-													'<div class="btn-group"><button class="btn btn-warning btnEditarPersonaContacto" idPersonaContacto="'+respuesta["id"]+'" data-toggle="modal" data-target="#modalEditarPersonaContacto" data-toggle="tooltip" title="Editar"><i class="fas fa-pencil-alt"></i></button><button class="btn btn-danger btnEliminarPersonaContacto" idPersonaContacto="'+respuesta["id"]+'" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></button>'+
-													'</div>'+
-												'</td>'+
-											'</tr>'		
-
-										)	
-
-									},
-									error: function(error) {
-
-								        console.log("No funciona2");
-								        
-								    }
-
-								});
-		  						
-							}
-
-						});
-
-					} else {
-
-						swal.fire({
-								
-							title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales!",
-							icon: "error",
-							allowOutsideClick: false,
-							confirmButtonText: "¡Cerrar!"
-
-						});
-						
-					}
-
-				},
-				error: function(error) {
-
-			        console.log("No funciona");
-			        
-			    }
-
-			});
-
-		}
-
-	});
-
-	//VALIDANDO DATOS DE LABORATORIO EN LA FICHA EPIDEMIOLOGICA
-
-    $("#fichaEpidemiologicaLab").validate({
-
-    	rules: {
-    		nuevoEstadoMuestra : { required: true},
-     		nuevoLugarMuestra: { required: true},
-     		nuevoTipoMuestra: { required: true, patron_texto: true},
-     		nuevoNombreLaboratorio: { patron_numerosTexto: true},
-     		nuevoFechaMuestra: { required: true},
-     		nuevoFechaEnvio: { required: true},
-     		nuevoCodLaboratorio: { required: true, patron_numerosLetras: true},
-     		nuevoResponsableMuestra: { required: true, patron_texto: true},
-     		nuevoObsMuestra: { patron_textoEspecial: true},
-     		nuevoResultadoLaboratorio: { required: true},
-     		nuevoFechaResultado: { required: true}
-    	},
-
-    	messages: {
-       		nuevoEstadoMuestra : "Elija una opción",
-       		nuevoLugarMuestra : "Elija una opción",
-       		nuevoResultadoLaboratorio : "Elija una opción"
-		},
-
-       	errorPlacement: function(label, element) {
-
-       		if (element.attr("name") == "nuevoResultadoLaboratorio" ) {
-            	
-            	label.addClass('errorMsq');
-           		element.parent().parent().append(label);
-
-			} else {
-
-				label.addClass('errorMsq');
-				element.parent().append(label);
-
-			}
-
-        },
-
-	});
-
-	//GUARDANDO DATOS DE LABORATORIO EN LA FICHA EPIDEMIOLOGICA
-
-	$("#fichaEpidemiologicaLab").on("click", ".btnGuardarLab", function() {
-
-		if ($("#fichaEpidemiologicaLab").valid()) {
-
-			console.log("GUARDAR LABORATORIO");
-
-			var estado_muestra = $("#nuevoEstadoMuestra").val();
-			var id_establecimiento = $("#nuevoLugarMuestra").val();
-			var tipo_muestra = $("#nuevoTipoMuestra").val();
-			var nombre_laboratorio = $("#nuevoNombreLaboratorio").val();
-			var fecha_muestra = $("#nuevoFechaMuestra").val();	
-			var fecha_envio = $("#nuevoFechaEnvio").val();
-			var cod_laboratorio = $("#nuevoCodLaboratorio").val();		
-			var responsable_muestra = $("#nuevoResponsableMuestra").val();
-			var observaciones_muestra = $("#nuevoObsMuestra").val();		
-			var resultado_laboratorio = $('input:radio[name="nuevoResultadoLaboratorio"]:checked').val();
-			var fecha_resultado = $("#nuevoFechaResultado").val();				
-			var id_ficha = $ ("#idFicha").val();
-			console.log("id_ficha", id_ficha);
-
-			var cod_asegurado = $("#nuevoCodAsegurado").val();
-			var cod_afiliado = $("#nuevoCodAfiliado").val();
-			var cod_empleador = $("#nuevoCodEmpleador").val();
-			var nombre_empleador = $("#nuevoNombreEmpleador").val();
-			var paterno = $("#nuevoPaternoPaciente").val();
-			var materno = $("#nuevoMaternoPaciente").val();
-			var nombre = $("#nuevoNombrePaciente").val();
-			var id_departamento = $("#nuevoDepartamentoPaciente").val();
-			var documento_ci = $("#nuevoNroDocumentoPaciente").val();
-			var sexo = $("#nuevoSexoPaciente").val();
-			var fecha_nacimiento = $("#nuevoFechaNacPaciente").val();
-			var telefono = $("#nuevoTelefonoPaciente").val();
-			var email = "";
-			var id_localidad = $("#nuevoLocalidadPaciente").val();
-			var zona = $("#nuevoZonaPaciente").val();
-			var calle = $("#nuevoCallePaciente").val();
-			var nro_calle = $("#nuevoNroCallePaciente").val();
-			var id_usuario = $("#idUsuario").val();
-			var foto = "vistas/img/covid_resultados/default/anonymous.png";
-
-			
-			var datos = new FormData();
-			datos.append("guardarLaboratorio", 'guardarLaboratorio');
-			datos.append("estado_muestra", estado_muestra);
-			datos.append("id_establecimiento", id_establecimiento);
-			datos.append("tipo_muestra", tipo_muestra);
-			datos.append("nombre_laboratorio", nombre_laboratorio);
-			datos.append("fecha_muestra", fecha_muestra);	
-			datos.append("fecha_envio", fecha_envio);
-			datos.append("cod_laboratorio", cod_laboratorio);	
-			datos.append("responsable_muestra", responsable_muestra);
-			datos.append("observaciones_muestra", observaciones_muestra);
-			datos.append("resultado_laboratorio", resultado_laboratorio);
-			datos.append("fecha_resultado", fecha_resultado);
-			datos.append("id_ficha", id_ficha);
-
-			datos.append("cod_asegurado", cod_asegurado);
-			datos.append("cod_afiliado", cod_afiliado);
-			datos.append("cod_empleador", cod_empleador);
-			datos.append("nombre_empleador", nombre_empleador);
-			datos.append("paterno", paterno);	
-			datos.append("materno", materno);
-			datos.append("nombre", nombre);	
-			datos.append("id_departamento", id_departamento);
-			datos.append("documento_ci", documento_ci);
-			datos.append("sexo", sexo);
-			datos.append("fecha_nacimiento", fecha_nacimiento);
-			datos.append("telefono", telefono);
-			datos.append("email", email);
-			datos.append("id_localidad", id_localidad);	
-			datos.append("zona", zona);
-			datos.append("calle", calle);
-			datos.append("nro_calle", nro_calle);
-			datos.append("id_usuario", id_usuario);
-			datos.append("foto", foto);
-
-			$.ajax({
-
-				url:"ajax/laboratorios.ajax.php",
-				method: "POST",
-				data: datos,
-				cache: false,
-				contentType: false,
-				processData: false,
-				dataType: "html",
-				success: function(respuesta) {
-					console.log("respuesta", respuesta);
-				
-					if (respuesta == "ok") {
-
-						swal.fire({
-							
-							icon: "success",
-							title: "¡Los datos se guardaron correctamente!",
-							showConfirmButton: true,
-							allowOutsideClick: false,
-							confirmButtonText: "Cerrar"
-
-						}).then((result) => {
-		  					
-		  					if (result.value) {
-
-		  						window.location = "ficha-epidemiologica";
-
-							}
-
-						});
-
-					} else {
-
-						swal.fire({
-								
-							title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales!",
-							icon: "error",
-							allowOutsideClick: false,
-							confirmButtonText: "¡Cerrar!"
-
-						});
-						
-					}
-
-				},
-				error: function(error) {
-
-			        console.log("No funciona");
-			        
-			    }
-
-			});
-
-		}
-
-		else {
-
-        	swal.fire({
-								
-				title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales, por favor revise el formulario!",
-				icon: "error",
-				allowOutsideClick: false,
-				confirmButtonText: "¡Cerrar!"
-
-			});
-        }
-
-	});
-
-	//CARGANDO DATOS AL FORMULARIO DE PERSONAS CONTACTO EN LA FICHA EPIDEMIOLOGICA
-
-	$(document).on("click", ".btnEditarPersonaContacto", function() {
-
-		console.log("CARGAR PERSONA CONTACTO");
-
-		var id_persona_contacto = $(this).attr("idPersonaContacto");
-		console.log("id_persona_contacto", id_persona_contacto);
-
-		var fila = $(this).parent().parent().parent().attr("id", "fila"+id_persona_contacto);
-		console.log("fila", fila);
-
-		var datos = new FormData();
-		datos.append("mostrarPersonaContacto", 'mostrarPersonaContacto');
-		datos.append("id_persona_contacto", id_persona_contacto);
-
-		$.ajax({
-
-			url: "ajax/personas_contactos.ajax.php",
-			method: "POST",
-			data: datos,
-			cache: false,
-			contentType: false,
-			processData: false,
-			dataType: "json",
-			success: function(respuesta) {
-
-				$('#editarPaternoContacto').val(respuesta["paterno_contacto"]);
-				$('#editarMaternoContacto').val(respuesta["materno_contacto"]);
-				$('#editarNombreContacto').val(respuesta["nombre_contacto"]);
-				$('#editarRelacionContacto').val(respuesta["relacion_contacto"]);
-				$('#editarEdadContacto').val(respuesta["edad_contacto"]);
-				$('#editarTelefonoContacto').val(respuesta["telefono_contacto"]);
-				$('#editarDireccionContacto').val(respuesta["direccion_contacto"]);
-				$('#editarFechaContacto').val(respuesta["fecha_contacto"]);
-				$('#editarLugarContacto').val(respuesta["lugar_contacto"]);
-				$('#editarIdPersonaContacto').val(respuesta["id"]);
-
-			},
-		    error: function(error){
-
-		      console.log("No funciona");
-		        
-		    }
-
-		});
-
-	});
-
-	//VALIDANDO DATOS DE MODAL EDITAR PERSONA CONTACTO 
-
-    $("#guardarEditarPersonaContacto").validate({
-
-    	rules: {
-    		editarPaternoContacto : { patron_texto: true},
-     		editarMaternoContacto: { patron_texto: true},
-     		editarNombreContacto: { required: true, patron_texto: true},
-     		editarRelacionContacto: { required: true, patron_numerosTexto: true},
-     		editarEdadContacto: { patron_numeros: true},
-     		editarTelefonoContacto: { minlength: 7, patron_numeros: true},
-     		nuevaDireccionContacto: { patron_textoEspecial: true},
-     		editarFechaContacto: { required: true},
-     		editarLugarContacto: { patron_numerosTexto: true}
-    	},
-
-	});
-
-	//EDITANDO DE MODAL EDITAR PERSONA CONTACTO 
-
-	$("#guardarEditarPersonaContacto").on("click", "#btnModificarPersonaContacto", function() {
-
-		if ($("#guardarEditarPersonaContacto").valid()) {
-
-			$('#modalEditarPersonaContacto').modal('toggle');
-
-			console.log("EDITAR PERSONA CONTACTO");
-
-			var id_persona_contacto = $('#editarIdPersonaContacto').val();
-			var paterno_contacto = $('#editarPaternoContacto').val();
-			var materno_contacto = $('#editarMaternoContacto').val();
-			var nombre_contacto = $('#editarNombreContacto').val();
-			var relacion_contacto = $('#editarRelacionContacto').val();
-			var edad_contacto = $('#editarEdadContacto').val();
-			var telefono_contacto = $('#editarTelefonoContacto').val();
-			var direccion_contacto = $('#editarDireccionContacto').val();
-			var fecha_contacto = $('#editarFechaContacto').val();
-			var lugar_contacto = $('#editarLugarContacto').val();
-			//var id_ficha = $ ("#idFicha").val();
-
-			var datos = new FormData();
-			datos.append("editarPersonasContactos", 'editarPersonasContactos');
-			datos.append("id_persona_contacto", id_persona_contacto);
-			datos.append("paterno_contacto", paterno_contacto);
-			datos.append("materno_contacto", materno_contacto);
-			datos.append("nombre_contacto", nombre_contacto);
-			datos.append("relacion_contacto", relacion_contacto);
-			datos.append("edad_contacto", edad_contacto);
-			datos.append("telefono_contacto", telefono_contacto);
-			datos.append("direccion_contacto", direccion_contacto);
-			datos.append("fecha_contacto", fecha_contacto);
-			datos.append("lugar_contacto", lugar_contacto);
-			//datos.append("id_ficha", id_ficha);
-
-			$.ajax({
-
-				url:"ajax/personas_contactos.ajax.php",
-				method: "POST",
-				data: datos,
-				cache: false,
-				contentType: false,
-				processData: false,
-				dataType: "html",
-				success: function(id_persona_contacto) {
-				
-					if (id_persona_contacto != "error") {
-
-						swal.fire({
-							
-							icon: "success",
-							title: "¡Los datos se modificaron correctamente!",
-							showConfirmButton: true,
-							allowOutsideClick: false,
-							confirmButtonText: "Cerrar"
-
-						}).then((result) => {
-		  					
-		  					if (result.value) {
-
-		  						// Eliminamos el contenido de la fila
-		  						$("#fila"+id_persona_contacto).empty();
-
-		  						var datos2 = new FormData();
-								datos2.append("mostrarPersonaContacto", 'mostrarPersonaContacto');
-								datos2.append("id_persona_contacto", id_persona_contacto);
-
-		  						$.ajax({
-
-									url:"ajax/personas_contactos.ajax.php",
-									method: "POST",
-									data: datos2,
-									cache: false,
-									contentType: false,
-									processData: false,
-									dataType: "json",
-									success: function(respuesta) {
-										
-										$('#editarPaternoContacto').val("");
-										$('#editarMaternoContacto').val("");
-										$('#editarNombreContacto').val("");
-										$('#editarRelacionContacto').val("");
-										$('#editarEdadContacto').val("");
-										$('#editarTelefonoContacto').val("");
-										$('#editarDireccionContacto').val("");
-										$('#editarFechaContacto').val("");
-										$('#editarLugarContacto').val("");
-
-										// Agregamos el contenido editado en la fila
-										$("#fila"+id_persona_contacto).append(
-
-											// '<tr>'+
-												'<td>'+respuesta["paterno_contacto"]+' '+respuesta["materno_contacto"]+' '+respuesta["nombre_contacto"]+'</td>'+
-												'<td>'+respuesta["relacion_contacto"]+'</td>'+
-												'<td>'+respuesta["edad_contacto"]+'</td>'+
-												'<td>'+respuesta["telefono_contacto"]+'</td>'+
-												'<td>'+respuesta["direccion_contacto"]+'</td>'+
-												'<td>'+respuesta["fecha_contacto"]+'</td>'+
-												'<td>'+respuesta["lugar_contacto"]+'</td>'+
-												'<td>'+
-													'<div class="btn-group"><button class="btn btn-warning btnEditarPersonaContacto" idPersonaContacto="'+respuesta["id"]+'" data-toggle="modal" data-target="#modalEditarPersonaContacto" data-toggle="tooltip" title="Editar"><i class="fas fa-pencil-alt"></i></button><button class="btn btn-danger btnEliminarPersonaContacto" idPersonaContacto="'+respuesta["id"]+'" data-toggle="tooltip" title="Eliminar"><i class="fas fa-times"></i></button>'+
-													'</div>'+
-												'</td>'
-											// '</tr>'		
-
-										)	
-
-									},
-									error: function(error) {
-
-								        console.log("No funciona2");
-								        
-								    }
-
-								});
-		  						
-							}
-
-						});
-
-					} else {
-
-						swal.fire({
-								
-							title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales!",
-							icon: "error",
-							allowOutsideClick: false,
-							confirmButtonText: "¡Cerrar!"
-
-						});
-						
-					}
-
-				},
-				error: function(error) {
-
-			        console.log("No funciona");
-			        
-			    }
-
-			});
-
-		}
-
-	});
-
-	//ELIMINADO UNA FILA DE LA TABLA DE PERSONAS CONTACTO EN LA FICHA EPIDEMIOLOGICA
-
-	$(document).on("click", ".btnEliminarPersonaContacto", function() {
-
-		swal.fire({
-
-			title: "¿Está seguro de borrar el registro?",
-			text: "¡Si no lo está puede cancelar la acción!",
-			icon: "warning",
-			showCancelButton: true,
-			confirmButtonColor: "#3085d6",
-			cancelButtonColor: "#d33",
-			cancelButtonText: "Cancelar",
-			confirmButtonText: "¡Si, borrar registro!"
-
-		}).then((result)=> {
-
-			if (result.value) {
-
-				console.log("ELIMINAR PERSONA CONTACTO");
-
-				var id_persona_contacto = $(this).attr("idPersonaContacto");
-				console.log("id_persona_contacto", id_persona_contacto);
-
-				var fila = $(this).parent().parent().parent().attr("id", "fila"+id_persona_contacto);
-				console.log("fila", fila);
-
-				var datos = new FormData();
-				datos.append("eliminarPersonaContacto", 'eliminarPersonaContacto');
-				datos.append("id_persona_contacto", id_persona_contacto);
-
-				$.ajax({
-
-					url: "ajax/personas_contactos.ajax.php",
-					method: "POST",
-					data: datos,
-					cache: false,
-					contentType: false,
-					processData: false,
-					dataType: "html",
-					success: function(respuesta) {
-						console.log("respuesta", respuesta);
-					
-						if (respuesta == "ok") {
-
-							swal.fire({
-								
-								icon: "success",
-								title: "¡Los datos se eliminaron correctamente!",
-								showConfirmButton: true,
-								allowOutsideClick: false,
-								confirmButtonText: "Cerrar"
-
-							}).then((result) => {
-			  					
-			  					if (result.value) {
-
-			  						// Eliminamos el contenido de la fila
-		  							$("#fila"+id_persona_contacto).empty();
-
-								}
-
-							});
-
-						} else {
-
-							swal.fire({
-									
-								title: "¡Erroe en la Transacción o conexión a la Base de Datos!",
-								icon: "error",
-								allowOutsideClick: false,
-								confirmButtonText: "¡Cerrar!"
-
-							});
-							
-						}
-
-					},
-					error: function(error) {
-
-				        console.log("No funciona");
-				        
-				    }
-
-				});
-
-			}
-
-		});
-
-	});
-
-	/*=============================================
-	FICHA CONTROL Y SEGUIMIENTO
-	=============================================*/	
-    
     //VALIDANDO DATOS DE FICHA CONTROL Y SEGUIMIENTO
 
     $("#fichaControlCentro").validate({
 
     	rules: {
     		// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
-    		nuevoEstablecimiento : { required: true},
-			nuevoDepartamento : { required: true},
-           	nuevoLocalidad : { required: true},
-			nuevoFechaNotificacion : { required: true},
-     		nuevoNroControl : { required: true},
+    		nuevoEstablecimiento : { required: true },
+    		nuevoDepartamento : { required: true },
+    		nuevoLocalidad : { required: true },
+    		nuevoFechaNotificacion : { required: true },
+    		nuevoNroControl : { required: true },
 
      		// 2. IDENTIFICACIÓN DEL CASO PACIENTE
-     		nuevoCodAsegurado : { required: true},
-			nuevoSexoPaciente : { required: true},
-			nuevoNroDocumentoPaciente : { required: true, patron_numerosLetras: true},
-			nuevoTelefonoPaciente : { patron_numeros: true},
+     		nuevoCodAsegurado : { required: true },
+     		nuevoSexoPaciente : { required: true },
+     		nuevoNroDocumentoPaciente : { required: true, patron_numerosLetras: true },
+     		nuevoTelefonoPaciente : { patron_numeros: true },
 
      		// 3. SEGUIMIENTO
-     		nuevoDiasNotificacion : { required: true},
-     		nuevoDiasSinSintomas : { patron_numeros: true},
-    		nuevoLugarAislamiento : { patron_numerosTexto: true},
-     		nuevoEstablecimientoInternacion : { patron_numerosTexto: true},
-     		nuevoLugarIngresoUTI : { patron_numerosTexto: true}, 
-     		nuevoVentilacionMecanica : { required: true},
-     		nuevoTratamientoOtros : { patron_numerosTexto: true},
+     		nuevoDiasNotificacion : { required: true },
+     		nuevoDiasSinSintomas : { patron_numeros: true },
+     		nuevoLugarAislamiento : { patron_numerosTexto: true },
+     		nuevoEstablecimientoInternacion : { patron_numerosTexto: true },
+     		nuevoLugarIngresoUTI : { patron_numerosTexto: true }, 
+     		nuevoVentilacionMecanica : { required: true },
+     		nuevoTratamientoOtros : { patron_numerosTexto: true },
 
      		// 4. LABORATORIO
-     		nuevoTipoMuestra: { required: true, patron_texto: true},
-     		nuevoFechaMuestra: { required: true},
-     		nuevoFechaEnvio: { required: true},
-     		nuevoResponsableMuestra: { required: true, patron_texto: true},
+     		nuevoEstadoMuestra: { required: true },
+     		nuevoTipoMuestra: { patron_texto: true },
+     		nuevoResponsableMuestra: { patron_texto: true },
+     		nuevoObsMuestra: { patron_textoEspecial: true},
 
      		// DATOS DEL PERSONAL QUE NOTIFICA
-     		nuevoPaternoNotif : { patron_texto: true},
-     		nuevoMaternoNotif : { patron_texto: true},
-     		nuevoNombreNotif : { required: true, patron_texto: true},
-     		nuevoTelefonoNotif : { minlength: 7, patron_numeros: true},
-     		nuevoCargoNotif : { patron_numerosTexto: true}
+     		nuevoPaternoNotif : { patron_texto: true },
+     		nuevoMaternoNotif : { patron_texto: true },
+     		nuevoNombreNotif : { required: true, patron_texto: true },
+     		nuevoTelefonoNotif : { minlength: 7, patron_numeros: true },
+     		nuevoCargoNotif : { patron_numerosTexto: true }
      		
-    	},
+     	},
 
-    	messages: {
+     	messages: {
     		// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
-       		nuevoEstablecimiento : "Elija un establecimiento",
-           	nuevoDepartamento : "Elija un departamento",
-           	nuevoLocalidad : "Elija una Localidad",
-           	nuevoNroControl : "Elija un valor",
+    		nuevoEstablecimiento : "Elija un establecimiento",
+    		nuevoDepartamento : "Elija un departamento",
+    		nuevoLocalidad : "Elija una Localidad",
+    		nuevoNroControl : "Elija un valor",
 
-           	// 2. IDENTIFICACIÓN DEL CASO PACIENTE
-           	nuevoCodAsegurado : "Elija un asegurado",
-           	nuevoSexoPaciente : "Elija un sexo",
+       	// 2. IDENTIFICACIÓN DEL CASO PACIENTE
+       	nuevoCodAsegurado : "Elija un asegurado",
+       	nuevoSexoPaciente : "Elija un sexo",
 
-           	// 3. SEGUIMIENTO
-           	nuevoDiasNotificacion : "Elija una opción",
-           	nuevoVentilacionMecanica : "Elija una opción",
+       	// 3. SEGUIMIENTO
+       	nuevoDiasNotificacion : "Elija una opción",
+       	nuevoVentilacionMecanica : "Elija una opción",
 
-		},
+       },
 
-	});
+       errorPlacement: function(label, element) {
+
+       	if (element.attr("name") == "enfEstado" ) {
+
+       		label.addClass('errorMsq');
+       		element.parent().parent().append(label);
+
+       	} else {
+
+       		label.addClass('errorMsq');
+       		element.parent().append(label);
+
+       	}
+
+       },
+
+     });
 
 	//GUARDANDO DATOS DE FICHA CONTROL Y SEGUIMIENTO
 
@@ -3160,18 +4411,18 @@ $(document).ready(function() {
 
 		console.log("GUARDAR FICHA CONTROL");
 
-        if ($("#fichaControlCentro").valid()) {
+		if ($("#fichaControlCentro").valid()) {
 
-        	console.log("VALIDADO FICHA CONTROL");
+			console.log("VALIDADO FICHA CONTROL");
 
-        	// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
-        	var id_ficha = $ ("#idFicha").val();
-        	var id_establecimiento = $("#nuevoEstablecimiento").val();	
-        	var id_consultorio = $("#nuevoConsultorio").val();	
-			var id_departamento = $ ("#nuevoDepartamento").val();
-			var id_localidad = $ ("#nuevoLocalidad").val();
-			var fecha_notificacion = $ ("#nuevoFechaNotificacion").val();
-			var nro_control = $ ("#nuevoNroControl").val();
+    	// 1. DATOS ESTABLECIMIENTO NOTIFICADOR
+    	var id_ficha = $ ("#idFicha").val();
+    	var id_establecimiento = $("#nuevoEstablecimiento").val();	
+    	var id_consultorio = $("#nuevoConsultorio").val();	
+    	var id_departamento = $ ("#nuevoDepartamento").val();
+    	var id_localidad = $ ("#nuevoLocalidad").val();
+    	var fecha_notificacion = $ ("#nuevoFechaNotificacion").val();
+    	var nro_control = $ ("#nuevoNroControl").val();
 
 			// 2. IDENTIFICACIÓN DEL CASO PACIENTE
 			var cod_asegurado = $("#nuevoCodAsegurado").val();
@@ -3184,9 +4435,9 @@ $(document).ready(function() {
 			var sexo = $("#nuevoSexoPaciente").val();
 			var nro_documento = $ ("#nuevoNroDocumentoPaciente").val();
 			var fecha_nacimiento = $ ("#nuevoFechaNacPaciente").val();
-			console.log("fecha_nacimiento", fecha_nacimiento);
 			var edad = $ ("#nuevoEdadPaciente").val();
 			var telefono = $ ("#nuevoTelefonoPaciente").val();
+			var email = $ ("#nuevoEmailPaciente").val();
 
 			// 3. SEGUIMIENTO
 			var dias_notificacion = $("#nuevoDiasNotificacion").val();
@@ -3211,6 +4462,8 @@ $(document).ready(function() {
 			var tratamiento_otros = $ ("#nuevoTratamientoOtros").val();
 
 			// 4. LABORATORIO
+			var estado_muestra = $("#nuevoEstadoMuestra").val();
+			var no_toma_muestra = $("#nuevoNoTomaMuestra").val();
 			var tipo_muestra = $("#nuevoTipoMuestra").val();
 			var fecha_muestra = $("#nuevoFechaMuestra").val();	
 			var fecha_envio = $("#nuevoFechaEnvio").val();
@@ -3247,7 +4500,8 @@ $(document).ready(function() {
 			datos.append("nro_documento", nro_documento);
 			datos.append("fecha_nacimiento", fecha_nacimiento);
 			datos.append("edad", edad);
-			datos.append("telefono", telefono);			
+			datos.append("telefono", telefono);	
+			datos.append("email", email);			
 
 			// 3. SEGUIMIENTO
 			datos.append("dias_notificacion", dias_notificacion);
@@ -3263,6 +4517,8 @@ $(document).ready(function() {
 			datos.append("tratamiento_otros", tratamiento_otros);
 
 			// 4. LABORATORIO
+			datos.append("estado_muestra", estado_muestra);
+			datos.append("no_toma_muestra", no_toma_muestra);
 			datos.append("tipo_muestra", tipo_muestra);
 			datos.append("fecha_muestra", fecha_muestra);	
 			datos.append("fecha_envio", fecha_envio);	
@@ -3286,7 +4542,7 @@ $(document).ready(function() {
 				dataType: "html",
 				success: function(respuesta) {
 					console.log("respuesta", respuesta);
-				
+
 					if (respuesta == "ok") {
 
 						swal.fire({
@@ -3298,10 +4554,10 @@ $(document).ready(function() {
 							confirmButtonText: "Cerrar"
 
 						}).then((result) => {
-		  					
-		  					if (result.value) {
 
-		  						window.location = "ficha-epidemiologica";
+							if (result.value) {
+
+								window.location = "ficha-epidemiologica";
 
 							}
 
@@ -3310,7 +4566,7 @@ $(document).ready(function() {
 					} else {
 
 						swal.fire({
-								
+
 							title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales!",
 							icon: "error",
 							allowOutsideClick: false,
@@ -3323,54 +4579,49 @@ $(document).ready(function() {
 				},
 				error: function(error) {
 
-			        console.log("No funciona");
-			        
-			    }
+					console.log("No funciona");
+
+				}
 
 			});
 
-        } 
+		} 
 
-        else {
+		else {
 
-        	swal.fire({
-								
+			swal.fire({
+
 				title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales, por favor revise el formulario!",
 				icon: "error",
 				allowOutsideClick: false,
 				confirmButtonText: "¡Cerrar!"
 
 			});
-        }
+		}
 
-    });
+	});
 
 	//VALIDANDO DATOS DE LABORATORIO EN LA FICHA CONTRO Y SEGUIMIENTO
 
-    $("#fichaControlLab").validate({
+	$("#fichaControlLab").validate({
 
-    	rules: {
-     		nuevoTipoMuestra: { required: true, patron_texto: true},
-     		nuevoNombreLaboratorio: { patron_numerosTexto: true},
-     		nuevoFechaMuestra: { required: true},
-     		nuevoFechaEnvio: { required: true},
-     		nuevoCodLaboratorio: { required: true, patron_numerosLetras: true},
-     		nuevoResponsableMuestra: { required: true, patron_texto: true},
-     		nuevoObsMuestra: { patron_textoEspecial: true},
-     		nuevoResultadoLaboratorio: { required: true},
-     		nuevoFechaResultado: { required: true}
-    	},
-
-    	messages: {
-       		nuevoResultadoLaboratorio : "Elija una opción"
+		rules: {
+			nuevoCodLaboratorio: { required: true, patron_numerosLetras: true },
+			nuevoMetodoDiagnostico : { required: true },
+			nuevoResultadoLaboratorio: { required: true },
+			nuevoFechaResultado: { required: true }
 		},
 
-       	errorPlacement: function(label, element) {
+		messages: {
+			nuevoResultadoLaboratorio : "Elija una opción"
+		},
 
-       		if (element.attr("name") == "nuevoResultadoLaboratorio" ) {
-            	
-            	label.addClass('errorMsq');
-           		element.parent().parent().append(label);
+		errorPlacement: function(label, element) {
+
+			if (element.attr("name") == "nuevoResultadoLaboratorio" ) {
+
+				label.addClass('errorMsq');
+				element.parent().parent().append(label);
 
 			} else {
 
@@ -3379,7 +4630,7 @@ $(document).ready(function() {
 
 			}
 
-        },
+		},
 
 	});
 
@@ -3391,18 +4642,19 @@ $(document).ready(function() {
 
 			console.log("GUARDAR LABORATORIO");
 
+			var estado_muestra = $("#nuevoEstadoMuestra").val();
+			var no_toma_muestra = $("#nuevoNoTomaMuestra").val();
 			var tipo_muestra = $("#nuevoTipoMuestra").val();
 			var nombre_laboratorio = $("#nuevoNombreLaboratorio").val();
 			var fecha_muestra = $("#nuevoFechaMuestra").val();	
 			var fecha_envio = $("#nuevoFechaEnvio").val();
-			var cod_laboratorio = $("#nuevoCodLaboratorio").val();		
+			var cod_laboratorio = $("#nuevoCodLaboratorio").val();
+			var metodo_diagnostico = $("#nuevoMetodoDiagnostico").val();		
 			var responsable_muestra = $("#nuevoResponsableMuestra").val();
 			var observaciones_muestra = $("#nuevoObsMuestra").val();		
 			var resultado_laboratorio = $('input:radio[name="nuevoResultadoLaboratorio"]:checked').val();
-			console.log("resultado_laboratorio", resultado_laboratorio);
 			var fecha_resultado = $("#nuevoFechaResultado").val();				
 			var id_ficha = $ ("#idFicha").val();
-			console.log("id_ficha", id_ficha);
 
 			var id_establecimiento = $("#nuevoEstablecimiento").val();
 			var cod_asegurado = $("#nuevoCodAsegurado").val();
@@ -3417,7 +4669,7 @@ $(document).ready(function() {
 			var sexo = $("#nuevoSexoPaciente").val();
 			var fecha_nacimiento = $("#nuevoFechaNacPaciente").val();
 			var telefono = $("#nuevoTelefonoPaciente").val();
-			var email = "";
+			var email = $("#nuevoEmailPaciente").val();
 			var id_localidad = $("#nuevoLocalidad").val();
 			var zona = "";
 			var calle = "";
@@ -3427,11 +4679,14 @@ $(document).ready(function() {
 
 			var datos = new FormData();
 			datos.append("guardarLaboratorioControl", 'guardarLaboratorioControl');
+			datos.append("estado_muestra", estado_muestra);
+			datos.append("no_toma_muestra", no_toma_muestra);
 			datos.append("tipo_muestra", tipo_muestra);
 			datos.append("nombre_laboratorio", nombre_laboratorio);
 			datos.append("fecha_muestra", fecha_muestra);	
 			datos.append("fecha_envio", fecha_envio);
 			datos.append("cod_laboratorio", cod_laboratorio);	
+			datos.append("metodo_diagnostico", metodo_diagnostico);	
 			datos.append("responsable_muestra", responsable_muestra);
 			datos.append("observaciones_muestra", observaciones_muestra);
 			datos.append("resultado_laboratorio", resultado_laboratorio);
@@ -3469,7 +4724,7 @@ $(document).ready(function() {
 				processData: false,
 				dataType: "html",
 				success: function(respuesta) {
-				
+
 					if (respuesta == "ok") {
 
 						swal.fire({
@@ -3481,10 +4736,10 @@ $(document).ready(function() {
 							confirmButtonText: "Cerrar"
 
 						}).then((result) => {
-		  					
-		  					if (result.value) {
 
-		  						window.location = "ficha-epidemiologica";
+							if (result.value) {
+
+								window.location = "ficha-epidemiologica";
 
 							}
 
@@ -3493,7 +4748,7 @@ $(document).ready(function() {
 					} else {
 
 						swal.fire({
-								
+
 							title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales!",
 							icon: "error",
 							allowOutsideClick: false,
@@ -3506,24 +4761,25 @@ $(document).ready(function() {
 				},
 				error: function(error) {
 
-			        console.log("No funciona");
-			        
-			    }
+					console.log("No funciona");
+
+				}
 
 			});
 
 		}
 		else {
 
-        	swal.fire({
-								
+			swal.fire({
+
 				title: "¡Los campos obligatorios no puede ir vacio o llevar caracteres especiales, por favor revise el formulario!",
 				icon: "error",
 				allowOutsideClick: false,
 				confirmButtonText: "¡Cerrar!"
 
 			});
-        }
+
+		}
 
 	});
 
@@ -3543,32 +4799,73 @@ function actualizarCampoFicha(id_ficha, item, valor, tabla) {
 	datos.append("valor", valor);
 	datos.append("tabla", tabla);
 
-  $.ajax({
+	$.ajax({
 
-   	url:"ajax/fichas.ajax.php",
-  	method: "POST",
-  	data: datos,
-  	cache: false,
-  	contentType: false,
-  	processData: false,
-  	dataType: "html",
-  	success: function(respuesta) {
+		url:"ajax/fichas.ajax.php",
+		method: "POST",
+		data: datos,
+		cache: false,
+		contentType: false,
+		processData: false,
+		dataType: "html",
+		success: function(respuesta) {
 
-	    if (respuesta == "ok") {
+			if (respuesta == "ok") {
 
-			toastr.success('El Dato se guardó correctamente.')
+				toastr.success('El Dato se guardó correctamente.')
 
-		} else {
+			} else {
 
-			toastr.warning('¡Error! Falla 1 en la consulta a BD, no se modificaron.')
+				toastr.warning('¡Error! Falla 1 en la consulta a BD, no se modificaron.')
+			}
+
+		},
+		error: function(error) {
+
+			toastr.warning('¡Error! Falla 2 en la conexión a BD, no se modificaron.')
+
 		}
 
-  	},
-	error: function(error) {
+	});
 
-      	toastr.warning('¡Error! Falla 2 en la conexión a BD, no se modificaron.')
-        
-    }
+}
+
+function actualizarCampoEmailFicha(id_ficha, item, valor, tabla) {
+
+	var datos = new FormData();
+
+	datos.append("guardarCampoEmailFicha", "guardarCampoEmailFicha");
+	datos.append("id_ficha", id_ficha);
+	datos.append("item", item);
+	datos.append("valor", valor);
+	datos.append("tabla", tabla);
+
+	$.ajax({
+
+		url:"ajax/fichas.ajax.php",
+		method: "POST",
+		data: datos,
+		cache: false,
+		contentType: false,
+		processData: false,
+		dataType: "html",
+		success: function(respuesta) {
+
+			if (respuesta == "ok") {
+
+				toastr.success('El Dato se guardó correctamente.')
+
+			} else {
+
+				toastr.warning('¡Error! Falla 1 en la consulta a BD, no se modificaron.')
+			}
+
+		},
+		error: function(error) {
+
+			toastr.warning('¡Error! Falla 2 en la conexión a BD, no se modificaron.')
+
+		}
 
 	});
 
@@ -3639,14 +4936,14 @@ $(document).on("click", "button.btnImprimirFichaEpidemiologica", function() {
 
 	//Para mostrar alerta personalizada de loading
 	swal.fire({
-        text: 'Procesando...',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        allowEnterKey: false,
-        onOpen: () => {
-            swal.showLoading()
-        }
-    });
+		text: 'Procesando...',
+		allowOutsideClick: false,
+		allowEscapeKey: false,
+		allowEnterKey: false,
+		onOpen: () => {
+			swal.showLoading()
+		}
+	});
 
 	$.ajax({
 
@@ -3668,7 +4965,7 @@ $(document).on("click", "button.btnImprimirFichaEpidemiologica", function() {
 
 			});	
 
-			PDFObject.embed("temp/ficha-"+idFicha+".pdf", "#view_pdf");
+			PDFObject.embed("ajax/temp/ficha-"+idFicha+".pdf", "#view_pdf");
 
 		}
 
@@ -3693,14 +4990,14 @@ $(document).on("click", "button.btnImprimirFichaControl", function() {
 
 	//Para mostrar alerta personalizada de loading
 	swal.fire({
-        text: 'Procesando...',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        allowEnterKey: false,
-        onOpen: () => {
-            swal.showLoading()
-        }
-    });
+		text: 'Procesando...',
+		allowOutsideClick: false,
+		allowEscapeKey: false,
+		allowEnterKey: false,
+		onOpen: () => {
+			swal.showLoading()
+		}
+	});
 
 	$.ajax({
 
@@ -3722,7 +5019,7 @@ $(document).on("click", "button.btnImprimirFichaControl", function() {
 
 			});	
 
-			PDFObject.embed("temp/ficha-"+idFicha+".pdf", "#view_pdf");
+			PDFObject.embed("ajax/temp/ficha-"+idFicha+".pdf", "#view_pdf");
 
 		}
 
@@ -3730,52 +5027,82 @@ $(document).on("click", "button.btnImprimirFichaControl", function() {
 
 });
 
-//GUARDANDO DATOS DE FICHA EPIDEMIOLOGICA DINAMICAMENTE
+/*=============================================
+ELIMINAR FICHA EPIDEMIOLOGICA
+=============================================*/
 
-// $("#fichaControlCentro").ready(function() {
+$(document).on("click", "button.btnEliminarFicha", function() {
 	
-// 	var id_ficha = $("#idFicha").val();
-// 	var item = "";
-// 	var valor = "";
-// 	var tabla = "";
+	var id_ficha = $(this).attr("idFicha");
+	console.log("id_ficha", id_ficha);
 
-// 	// 1. DATOS DEL ESTABLECIMIENTO NOTIFICADOR
+	var datos = new FormData();
 
-// 	$("#nuevoEstablecimiento").change(function() {
+	datos.append("eliminarFicha", 'eliminarFicha');
+	datos.append("id_ficha", id_ficha);
 
-// 		item = "id_establecimiento";
-// 		valor = $(this).val();
-// 		tabla = "fichas"
+	$.ajax({
 
-// 		// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+		url:"ajax/fichas.ajax.php",
+		method: "POST",
+		data: datos,
+		cache: false,
+		contentType: false,
+		processData: false,
+		dataType: "html",
+		success: function(respuesta) {
+			console.log("respuesta", respuesta);
 
-// 		actualizarCampoFicha(id_ficha, item, valor, tabla)
+			if (respuesta == "ok") {
 
-// 		// SI EL VALOR ELEGIDO ES DIFERENTE DE POLICLINICO 10 DE NOVIEMBRE SE BORRA EL VALOR DE CONSULTORIO
+				swal.fire({
+					
+					title: "¿Está seguro de borrar la ficha?",
+					text: "¡Si no lo está puede cancelar la acción!",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#3085d6",
+					cancelButtonColor: "#d33",
+					cancelButtonText: "Cancelar",
+					confirmButtonText: "¡Si, borrar ficha!"
 
-// 		if (valor != "2") {
+				}).then((result) => {
 
-// 			item = "id_consultorio";
-// 			valor = "";
+					if (result.value) {
 
-// 			// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+						tablafichas.ajax.reload( null, false );
 
-// 			actualizarCampoFicha(id_ficha, item, valor, tabla)
+					}
 
-// 		}
+				});
 
-// 	});
+			} else {
 
-// 	$("#nuevoConsultorio").change(function() {
+				swal.fire({
 
-// 		item = "id_consultorio";
-// 		valor = $(this).val();
-// 		tabla = "fichas"
+					title: "¡Error! Falla en la consulta a BD, no se elimino la ficha.",
+					icon: "error",
+					allowOutsideClick: false,
+					confirmButtonText: "¡Cerrar!"
 
-// 		// ACTUALIZA UN VALOR MODIFICADO DE LA FICHA
+				});
+				
+			}
 
-// 		actualizarCampoFicha(id_ficha, item, valor, tabla)
+		},
+		error: function(error) {
 
-// 	});
+			swal.fire({
 
-// });
+				title: "¡Error! Falla en la consulta a BD, no se elimino la ficha.",
+				icon: "error",
+				allowOutsideClick: false,
+				confirmButtonText: "¡Cerrar!"
+
+			});
+
+		}
+
+	});
+
+});

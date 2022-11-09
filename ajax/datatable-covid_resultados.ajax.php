@@ -16,213 +16,149 @@ require_once "../modelos/localidades.modelo.php";
 
 class TablaCovidResultados {
 
+	public $request;
+	public $perfil;
+
 	/*=============================================
-	MOSTRAR LA TABLA DE DE AFILIADOS CON RESULTADOS DE LABORATORIO COVID PARA LAB
+	MOSTRAR LA TABLA DE DE AFILIADOS CON RESULTADOS DE LABORATORIO COVID PARA LABORATORIO
 	=============================================*/
 		
 	public function mostrarTablaCovidResultadosLab() {
 
-		// $sql_details = array(
-		// 	'host' => 'localhost',
-		//     'user' => 'root',
-		//     'pass' => '3000REIVAJinf1976',
-		//     'db'   => 'bdcovid19cnspt'    
-		// );
+		$request = $this->request;
 
-		// $table = 'mostrar_covid_resultados';
- 
-		// $primaryKey = 'id';
-		 
-		// $columns = array(
-		//     array( 'db' => 'cod_laboratorio', 'dt' => 0 ),
-		//     array( 'db' => 'cod_asegurado',  'dt' => 1 ),
-		//     array( 'db' => 'cod_afiliado',   'dt' => 2 ),
-		//     array( 'db' => 'nombre_completo', 'dt' => 3 ),
-		//     array( 'db' => 'documento_ci', 'dt' => 4 ),
-		//     array( 'db' => 'fecha_muestra','dt' => 5,
-		//         'formatter' => function( $d, $row ) {
-		//             return date( 'd-m-Y', strtotime($d));
-		//         }
-		//     )
-		   
-		// );
-		 
-		 
-		// echo json_encode(
-		//     SSP::simple( $_GET, $sql_details, $table, $primaryKey, $columns )
-		// );
+		$col = array(
+		    0   =>  'id',
+		    1   =>  'cod_asegurado',
+		    2   =>  'nombre_completo',
+		    3   =>  'documento_ci'
+		);  //create column like table in database
 
-		// Database connection info 
-		$dbDetails = array( 
-		    'host' => 'localhost', 
-		    'user' => 'root', 
-		    'pass' => '3000REIVAJinf1976', 
-		    'db'   => 'bdcovid19cnspt' 
-		); 
-		 
-		// DB table to use 
-		$table = 'mostrar_covid_resultados'; 
-		 
-		// Table's primary key 
-		$primaryKey = 'id'; 
-		 
-		// Array of database columns which should be read and sent back to DataTables. 
-		// The `db` parameter represents the column name in the database.  
-		// The `dt` parameter represents the DataTables column identifier. 
-		$columns = array( 
-		    array( 'db' => 'cod_laboratorio',  'dt' => 0 ), 
-		    array( 'db' => 'cod_asegurado',    'dt' => 1 ), 
-		    array( 'db' => 'cod_afiliado',     'dt' => 2 ), 
-		    array( 'db' => 'nombre_completo',  'dt' => 3 ), 
-		    array( 'db' => 'documento_ci',     'dt' => 4 ), 
-		    array( 
-		        'db'        => 'fecha_recepcion', 
-		        'dt'        => 5, 
-		        'formatter' => function( $d, $row ) { 
-		            return date( 'd/m/Y', strtotime($d)); 
-		        } 
-		    ),
-		    array( 
-		        'db'        => 'fecha_muestra', 
-		        'dt'        => 6, 
-		        'formatter' => function( $d, $row ) { 
-		            return date( 'd/m/Y', strtotime($d)); 
-		        } 
-		    ),
-		    array( 'db' => 'tipo_muestra',     'dt' => 7 ), 
-		    array( 'db' => 'muestra_control',     'dt' => 8 ),
-		    array( 'db' => 'sexo',     'dt' => 9 )
-		    // array( 
-		    //     'db'        => 'status', 
-		    //     'dt'        => 6, 
-		    //     'formatter' => function( $d, $row ) { 
-		    //         return ($d == 1)?'Active':'Inactive'; 
-		    //     } 
-		    // ) 
-		); 
-		 
-		// Include SQL query processing class 
-		require '../modelos/ssp.class.php'; 
-		 
-		// Output data as json format 
-		echo json_encode(
-			SSP::simple( $_GET, $dbDetails, $table, $primaryKey, $columns )
+		// Devuelve el número de columnas que tiene la tabla
+		$totalData = ControladorCovidResultados::ctrContarCovidResultadosLab();
+
+		$totalFilter = $totalData;
+
+		// echo json_encode($totalData);
+
+		//Search
+		$sql = "";
+
+		if(!empty($request['search']['value'])) {
+
+		    $sql .= " AND (id Like '".$request['search']['value']."%' ";
+		    $sql .= " OR cod_asegurado Like '".$request['search']['value']."%' ";
+		    $sql .= " OR nombre_completo Like '".$request['search']['value']."%' ";
+		    $sql .= " OR documento_ci Like '".$request['search']['value']."%' )";
+
+		}
+
+		$totalFilter = ControladorCovidResultados::ctrContarFiltradoCovidResultadosLab($sql);
+
+		//Order
+		$sql.=" ORDER BY ".$col[$request['order'][0]['column']]."   ".$request['order'][0]['dir']."  LIMIT ".
+    	$request['start']."  ,".$request['length']."  ";
+
+
+    	$covidResultados = ControladorCovidResultados::ctrMostrarCovidResultadosLab($sql);
+
+  		$data = array();
+
+		for ($i = 0; $i < count($covidResultados); $i++) { 
+
+			/*=============================================
+			RESULTADO LABORATORIO
+			=============================================*/	
+
+			if ($covidResultados[$i]["resultado"] == "POSITIVO") {
+				
+				$resultado = "<button class='btn btn-danger' idCovidResultado='".$covidResultados[$i]["id"]."'>".$covidResultados[$i]["resultado"]."</button>";
+
+			} else {
+
+				$resultado = "<button class='btn btn-success' idCovidResultado='".$covidResultados[$i]["id"]."'>".$covidResultados[$i]["resultado"]."</button>";
+
+			}
+
+			/*=============================================
+			TRAEMOS LAS ACCIONES
+			=============================================*/
+
+			$botonEditar = "<button class='btn btn-warning btnEditarCovidResultado' idCovidResultado='".$covidResultados[$i]["id"]."' data-toggle='tooltip' title='Editar'><i class='fas fa-pencil-alt'></i></button>";
+
+			$botonEliminar ="<button class='btn btn-danger btnEliminarCovidResultado' idCovidResultado='".$covidResultados[$i]["id"]."' codAsegurado='".$covidResultados[$i]["cod_asegurado"]."' data-toggle='tooltip' title='Eliminar'><i class='fas fa-trash-alt'></i></button>";
+
+			if (isset($this->perfil) && $this->perfil == "ADMIN_SYSTEM") {
+
+				if ($covidResultados[$i]["estado"] != '0') {
+
+                    $botonPublicar = "<button class='btn btn-info btnPublicarCovidResultado' idCovidResultado='".$covidResultados[$i]["id"]."' estadoResultado='0' data-toggle='tooltip' title='Quitar Resultado Público'><i class='fas fa-download'></i></button>";
+
+                } else {
+
+                    $botonPublicar = "<button class='btn btn-info btnPublicarCovidResultado' idCovidResultado='".$covidResultados[$i]["id"]."' estadoResultado='1' data-toggle='tooltip' title='Publicar Resultado'><i class='fas fa-upload'></i></button>";
+
+                }
+
+                // Agrupamos los botones
+				$botones = "<div class='btn-group'>".$botonEditar.$botonEliminar.$botonPublicar."</div>";
+				
+			} else {
+
+				if ($covidResultados[$i]["estado"] != '0') {
+
+                    // Agrupamos los botones (Si se publico el resultado no se podra modificar por los usuarios)
+					$botones = "<div class='btn-group'></div>";
+
+                } else {
+
+                    $botonPublicar = "<button class='btn btn-info btnPublicarCovidResultado' idCovidResultado='".$covidResultados[$i]["id"]."' estadoResultado='1' data-toggle='tooltip' title='Publicar Resultado'><i class='fas fa-upload'></i></button>";
+
+                    // Agrupamos los botones
+					$botones = "<div class='btn-group'>".$botonEditar.$botonPublicar."</div>";
+
+                }
+
+			}
+
+			$subdata = array();
+		    $subdata[] = $covidResultados[$i]["cod_laboratorio"]; 
+		    $subdata[] = $covidResultados[$i]["cod_asegurado"];
+		    $subdata[] = $covidResultados[$i]["cod_afiliado"]; 
+		    $subdata[] = $covidResultados[$i]["nombre_completo"]; 
+		    $subdata[] = $covidResultados[$i]["documento_ci"]; 
+		    $subdata[] = date("d/m/Y", strtotime($covidResultados[$i]["fecha_recepcion"])); 
+		    $subdata[] = date("d/m/Y", strtotime($covidResultados[$i]["fecha_muestra"])); 
+		    $subdata[] = $covidResultados[$i]["tipo_muestra"]; 
+		    $subdata[] = $covidResultados[$i]["muestra_control"]; 
+		    $subdata[] = $covidResultados[$i]["nombre_depto"]; 
+		    $subdata[] = $covidResultados[$i]["nombre_establecimiento"]; 
+		    $subdata[] = $covidResultados[$i]["sexo"]; 
+		    $subdata[] = date("d/m/Y", strtotime($covidResultados[$i]["fecha_nacimiento"])); 
+		    $subdata[] = $covidResultados[$i]["telefono"]; 
+		    $subdata[] = $covidResultados[$i]["email"]; 
+		    $subdata[] = $covidResultados[$i]["nombre_localidad"]; 
+		    $subdata[] = $covidResultados[$i]["zona"]; 
+		    $subdata[] = $covidResultados[$i]["direccion"]; 
+		    $subdata[] = $covidResultados[$i]["metodo_diagnostico"]; 
+		    $subdata[] = $resultado; 
+		    $subdata[] = date("d/m/Y", strtotime($covidResultados[$i]["fecha_resultado"]));
+		    $subdata[] = $covidResultados[$i]["observaciones"]; 
+		    $subdata[] = $botones;
+		    $subdata[] = $covidResultados[$i]["estado"];
+
+		    $data[] = $subdata;
+
+		}	
+
+		$json_data = array(
+		    "draw"              =>  intval($request['draw']),
+		    "recordsTotal"      =>  intval($totalData),
+		    "recordsFiltered"   =>  intval($totalFilter),
+		    "data"              =>  $data
 		);
 
-		// require "../modelos/serverside.php";
-
-		// $table_data->get('mostrar_covid_resultados','id',array('cod_laboratorio','cod_asegurado','cod_afiliado','nombre_completo','documento_ci','fecha_muestra','fecha_recepcion','tipo_muestra','muestra_control','nombre_depto','nombre_establecimiento','sexo','fecha_nacimiento','telefono','email','nombre_localidad','zona','direccion','fecha_resultado','resultado','observaciones','id'));
-
-
-		// $item = null;
-		// $valor = null;
-
-		// $covidResultados = ControladorCovidResultados::ctrMostrarCovidResultadosLab($item, $valor);
-
-		// if ($covidResultados == null) {
-			
-		// 	$datosJson = '{
-		// 		"data": []
-		// 	}';
-
-		// } else {
-
-		// 	$datosJson = '{
-		// 	"data": [';
-
-		// 	for ($i = 0; $i < count($covidResultados); $i++) { 
-
-		// 		/*=============================================
-		// 		RESULTADO LABORATORIO
-		// 		=============================================*/	
-
-		// 		if ($covidResultados[$i]["resultado"] == "POSITIVO") {
-					
-		// 			$resultado = "<button class='btn btn-danger' idCovidResultado='".$covidResultados[$i]["id"]."'>".$covidResultados[$i]["resultado"]."</button>";
-
-		// 		} else {
-
-		// 			$resultado = "<button class='btn btn-success' idCovidResultado='".$covidResultados[$i]["id"]."'>".$covidResultados[$i]["resultado"]."</button>";
-
-		// 		}
-
-		// 		/*=============================================
-		// 		TRAEMOS LAS ACCIONES
-		// 		=============================================*/
-
-		// 		$botonEditar = "<button class='btn btn-warning btnEditarCovidResultado' idCovidResultado='".$covidResultados[$i]["id"]."' data-toggle='tooltip' title='Editar'><i class='fas fa-pencil-alt'></i></button>";
-
-		// 		$botonEliminar ="<button class='btn btn-danger btnEliminarCovidResultado' idCovidResultado='".$covidResultados[$i]["id"]."' codAsegurado='".$covidResultados[$i]["cod_asegurado"]."' foto='".$covidResultados[$i]["foto"]."' data-toggle='tooltip' title='Eliminar'><i class='fas fa-trash-alt'></i></button>";
-
-		// 		if (isset($_GET["perfilOculto"]) && $_GET["perfilOculto"] == "ADMIN_SYSTEM") {
-
-		// 			if ($covidResultados[$i]["estado"] != '0') {
-
-	 //                    $botonPublicar = "<button class='btn btn-info btnPublicarCovidResultado' idCovidResultado='".$covidResultados[$i]["id"]."' estadoResultado='0' data-toggle='tooltip' title='Quitar Resultado Público'><i class='fas fa-download'></i></button>";
-
-	 //                } else {
-
-	 //                    $botonPublicar = "<button class='btn btn-info btnPublicarCovidResultado' idCovidResultado='".$covidResultados[$i]["id"]."' estadoResultado='1' data-toggle='tooltip' title='Publicar Resultado'><i class='fas fa-upload'></i></button>";
-
-	 //                }
-
-	 //                // Agrupamos los botones
-		// 			$botones = "<div class='btn-group'>".$botonEditar.$botonEliminar.$botonPublicar."</div>";
-					
-		// 		} else {
-
-		// 			if ($covidResultados[$i]["estado"] != '0') {
-
-	 //                    // Agrupamos los botones (Si se publico el resultado no se podra modificar por los usuarios)
-		// 				$botones = "<div class='btn-group'></div>";
-
-	 //                } else {
-
-	 //                    $botonPublicar = "<button class='btn btn-info btnPublicarCovidResultado' idCovidResultado='".$covidResultados[$i]["id"]."' estadoResultado='1' data-toggle='tooltip' title='Publicar Resultado'><i class='fas fa-upload'></i></button>";
-
-	 //                    // Agrupamos los botones
-		// 				$botones = "<div class='btn-group'>".$botonEditar.$botonPublicar."</div>";
-
-	 //                }
-
-		// 		}
-
-		// 		$datosJson .='[
-		// 			"'.$covidResultados[$i]["cod_laboratorio"].'",	
-		// 			"'.$covidResultados[$i]["cod_asegurado"].'",
-		// 			"'.$covidResultados[$i]["cod_afiliado"].'",	
-		// 			"'.$covidResultados[$i]["nombre_completo"].'",
-		// 			"'.$covidResultados[$i]["documento_ci"].'",
-		// 			"'.date("d/m/Y", strtotime($covidResultados[$i]["fecha_recepcion"])).'",
-		// 			"'.date("d/m/Y", strtotime($covidResultados[$i]["fecha_muestra"])).'",
-		// 			"'.$covidResultados[$i]["tipo_muestra"].'",
-		// 			"'.$covidResultados[$i]["muestra_control"].'",
-		// 			"'.$covidResultados[$i]["nombre_depto"].'",
-		// 			"'.$covidResultados[$i]["nombre_establecimiento"].'",
-		// 			"'.$covidResultados[$i]["sexo"].'",
-		// 			"'.date("d/m/Y", strtotime($covidResultados[$i]["fecha_nacimiento"])).'",
-		// 			"'.$covidResultados[$i]["telefono"].'",
-		// 			"'.$covidResultados[$i]["email"].'",
-		// 			"'.$covidResultados[$i]["nombre_localidad"].'",
-		// 			"'.$covidResultados[$i]["zona"].'",
-		// 			"'.$covidResultados[$i]["direccion"].'",
-		// 			"'.$resultado.'",
-		// 			"'.date("d/m/Y", strtotime($covidResultados[$i]["fecha_resultado"])).'",
-		// 			"'.$covidResultados[$i]["observaciones"].'",
-		// 			"'.$botones.'",
-		// 			"'.$covidResultados[$i]["estado"].'"
-		// 		],';
-
-		// 	}
-
-		// 	$datosJson = substr($datosJson, 0, -1);
-
-		// 	$datosJson .= ']
-		// 	}';	
-
-		// }
-
-		// echo $datosJson;
+		echo json_encode($json_data);
 	
 	}
 
@@ -232,127 +168,115 @@ class TablaCovidResultados {
 		
 	public function mostrarTablaCovidResultadosCentro() {
 
-		$item = null;
-		$valor = null;
+		$request = $this->request;
 
-		$covidResultados = ControladorCovidResultados::ctrMostrarCovidResultados($item, $valor);
+		$col = array(
+		    0   =>  'id',
+		    1   =>  'cod_asegurado',
+		    2   =>  'nombre_completo',
+		    3   =>  'documento_ci'
+		);  //create column like table in database
 
-		if ($covidResultados == null) {
-			
-			$datosJson = '{
-				"data": []
-			}';
+		$totalData = ControladorCovidResultados::ctrContarCovidResultadosCentro();
 
-		} else {
+		$totalFilter = $totalData;
 
-			$datosJson = '{
-			"data": [';
+		// echo json_encode($totalData);
 
-			for ($i = 0; $i < count($covidResultados); $i++) { 
+		//Search
+		$sql = "";
 
-				/*=============================================
-				TRAEMOS EL DEPARTAMENTO
-				=============================================*/
+		if(!empty($request['search']['value'])) {
 
-				// $itemDepartamento = "id";
-				// $valorDepartamento = $covidResultados[$i]["id_departamento"];
-
-				// $departamentos = ControladorDepartamentos::ctrMostrarDepartamentos($itemDepartamento, $valorDepartamento);
-
-				/*=============================================
-				TRAEMOS EL ESTABLECIMIENTO
-				=============================================*/
-
-				// $itemEstablecimiento = "id";
-				// $valorEstablecimiento = $covidResultados[$i]["id_establecimiento"];
-
-				// $establecimientos = ControladorEstablecimientos::ctrMostrarEstablecimientos($itemEstablecimiento, $valorEstablecimiento);
-
-				/*=============================================
-				TRAEMOS LA LOCALIDAD
-				=============================================*/
-
-				// $itemLocalidad = "id";
-				// $valorLocalidad = $covidResultados[$i]["id_localidad"];
-
-				// $localidades = ControladorLocalidades::ctrMostrarLocalidades($itemLocalidad, $valorLocalidad);
-
-
-				/*=============================================
-				RESULTADO LABORATORIO
-				=============================================*/	
-
-				if ($covidResultados[$i]["resultado"] == "POSITIVO") {
-					
-					$resultado = "<button class='btn btn-danger' idCovidResultado='".$covidResultados[$i]["id"]."'>".$covidResultados[$i]["resultado"]."</button>";
-
-				} else {
-
-					$resultado = "<button class='btn btn-success' idCovidResultado='".$covidResultados[$i]["id"]."'>".$covidResultados[$i]["resultado"]."</button>";
-
-				}
-
-				/*=============================================
-				TRAEMOS LAS ACCIONES
-				=============================================*/		
-
-				$botonFormBaja = "<button class='btn btn-primary btnMostrarFormBaja' idCovidResultado='".$covidResultados[$i]["id"]."' data-toggle='modal' data-target='#modalFormBaja' data-toggle='tooltip' title='Formulario de Baja'><i class='fab fa-wpforms'></i></button>";
-
-				if ($covidResultados[$i]["resultado"] == "POSITIVO") {
-
-            		$botones = "<div class='btn-group'>".$botonFormBaja."</div>";
-
-            	} else {
-
-            		$botones = "<div class='btn-group'></div>";
-
-            	}		
-					
-
-				if (isset($_GET["perfilOculto"]) && $_GET["perfilOculto"] == "MEDICO" && $covidResultados[$i]["estado"] == "0") {
-
-				
-
-				} else {
-
-					$datosJson .='[
-						"'.$covidResultados[$i]["cod_laboratorio"].'",	
-						"'.$covidResultados[$i]["cod_asegurado"].'",
-						"'.$covidResultados[$i]["cod_afiliado"].'",	
-						"'.$covidResultados[$i]["nombre_completo"].'",
-						"'.$covidResultados[$i]["documento_ci"].'",
-						"'.date("d/m/Y", strtotime($covidResultados[$i]["fecha_recepcion"])).'",
-						"'.date("d/m/Y", strtotime($covidResultados[$i]["fecha_muestra"])).'",
-						"'.$covidResultados[$i]["tipo_muestra"].'",
-						"'.$covidResultados[$i]["muestra_control"].'",
-						"'.$covidResultados[$i]["nombre_depto"].'",
-						"'.$covidResultados[$i]["nombre_establecimiento"].'",
-						"'.$covidResultados[$i]["sexo"].'",
-						"'.date("d/m/Y", strtotime($covidResultados[$i]["fecha_nacimiento"])).'",
-						"'.$covidResultados[$i]["telefono"].'",
-						"'.$covidResultados[$i]["email"].'",
-						"'.$covidResultados[$i]["nombre_localidad"].'",
-						"'.$covidResultados[$i]["zona"].'",
-						"'.$covidResultados[$i]["direccion"].'",
-						"'.$resultado.'",
-						"'.date("d/m/Y", strtotime($covidResultados[$i]["fecha_resultado"])).'",
-						"'.$covidResultados[$i]["observaciones"].'",
-						"'.$botones.'",
-						"'.$covidResultados[$i]["estado"].'"
-					],';
-
-				}
-
-			}
-
-			$datosJson = substr($datosJson, 0, -1);
-
-			$datosJson .= ']
-			}';	
+		    $sql .= " AND (id Like '".$request['search']['value']."%' ";
+		    $sql .= " OR cod_asegurado Like '".$request['search']['value']."%' ";
+		    $sql .= " OR nombre_completo Like '".$request['search']['value']."%' ";
+		    $sql .= " OR documento_ci Like '".$request['search']['value']."%' )";
 
 		}
 
-		echo $datosJson;
+		$respuesta = ControladorCovidResultados::ctrContarFiltradoCovidResultadosCentro($sql);
+
+		//Order
+		$sql.=" ORDER BY ".$col[$request['order'][0]['column']]."   ".$request['order'][0]['dir']."  LIMIT ".
+    	$request['start']."  ,".$request['length']."  ";
+
+
+    	$covidResultados = ControladorCovidResultados::ctrMostrarCovidResultadosCentro($sql);
+
+  		$data = array();
+
+		for ($i = 0; $i < count($covidResultados); $i++) { 
+
+			/*=============================================
+			RESULTADO LABORATORIO
+			=============================================*/	
+	
+			if ($covidResultados[$i]["resultado"] == "POSITIVO") {
+				
+				$resultado = "<button class='btn btn-danger' idCovidResultado='".$covidResultados[$i]["id"]."'>".$covidResultados[$i]["resultado"]."</button>";
+
+			} else {
+
+				$resultado = "<button class='btn btn-success' idCovidResultado='".$covidResultados[$i]["id"]."'>".$covidResultados[$i]["resultado"]."</button>";
+
+			}
+
+			/*=============================================
+			TRAEMOS LAS ACCIONES
+			=============================================*/		
+
+			$botonFormBaja = "<button class='btn btn-primary btnMostrarFormBaja' idCovidResultado='".$covidResultados[$i]["id"]."' data-toggle='modal' data-target='#modalFormBaja' data-toggle='tooltip' title='Formulario de Baja'><i class='fab fa-wpforms'></i></button>";
+
+			if ($covidResultados[$i]["resultado"] == "POSITIVO") {
+
+        		// $botones = "<div class='btn-group'>".$botonFormBaja."</div>";
+        		$botones = "<div class='btn-group'></div>";
+
+        	} else {
+
+        		$botones = "<div class='btn-group'></div>";
+
+        	}		
+				
+			$subdata = array();
+		    $subdata[] = $covidResultados[$i]["cod_laboratorio"]; 
+		    $subdata[] = $covidResultados[$i]["cod_asegurado"];
+		    $subdata[] = $covidResultados[$i]["cod_afiliado"]; 
+		    $subdata[] = $covidResultados[$i]["nombre_completo"]; 
+		    $subdata[] = $covidResultados[$i]["documento_ci"]; 
+		    $subdata[] = date("d/m/Y", strtotime($covidResultados[$i]["fecha_recepcion"])); 
+		    $subdata[] = date("d/m/Y", strtotime($covidResultados[$i]["fecha_muestra"])); 
+		    $subdata[] = $covidResultados[$i]["tipo_muestra"]; 
+		    $subdata[] = $covidResultados[$i]["muestra_control"]; 
+		    $subdata[] = $covidResultados[$i]["nombre_depto"]; 
+		    $subdata[] = $covidResultados[$i]["nombre_establecimiento"]; 
+		    $subdata[] = $covidResultados[$i]["sexo"]; 
+		    $subdata[] = date("d/m/Y", strtotime($covidResultados[$i]["fecha_nacimiento"])); 
+		    $subdata[] = $covidResultados[$i]["telefono"]; 
+		    $subdata[] = $covidResultados[$i]["email"]; 
+		    $subdata[] = $covidResultados[$i]["nombre_localidad"]; 
+		    $subdata[] = $covidResultados[$i]["zona"]; 
+		    $subdata[] = $covidResultados[$i]["direccion"]; 
+		    $subdata[] = $covidResultados[$i]["metodo_diagnostico"]; 
+		    $subdata[] = $resultado; 
+		    $subdata[] = date("d/m/Y", strtotime($covidResultados[$i]["fecha_resultado"]));
+		    $subdata[] = $covidResultados[$i]["observaciones"];
+		    $subdata[] = $botones;
+		    $subdata[] = $covidResultados[$i]["estado"];
+
+		    $data[] = $subdata;
+
+		}
+
+		$json_data = array(
+		    "draw"              =>  intval($request['draw']),
+		    "recordsTotal"      =>  intval($totalData),
+		    "recordsFiltered"   =>  intval($totalFilter),
+		    "data"              =>  $data
+		);
+
+		echo json_encode($json_data);
 	
 	}
 
@@ -486,6 +410,7 @@ class TablaCovidResultados {
 					"'.$localidades["nombre_localidad"].'",
 					"'.$covidResultados[$i]["zona"].'",
 					"'.$covidResultados[$i]["calle"].' '.$covidResultados[$i]["nro_calle"].'",
+					"'.$covidResultados[$i]["metodo_diagnostico"].'", 
 					"'.$resultado.'",
 					"'.date("d/m/Y", strtotime($covidResultados[$i]["fecha_resultado"])).'",
 					"'.$covidResultados[$i]["observaciones"].'",
@@ -613,6 +538,7 @@ class TablaCovidResultados {
 						"'.$localidades["nombre_localidad"].'",
 						"'.$covidResultados[$i]["zona"].'",
 						"'.$covidResultados[$i]["calle"].' '.$covidResultados[$i]["nro_calle"].'",
+						"'.$covidResultados[$i]["metodo_diagnostico"].'", 
 						"'.$resultado.'",
 						"'.date("d/m/Y", strtotime($covidResultados[$i]["fecha_resultado"])).'",
 						"'.$covidResultados[$i]["observaciones"].'",
@@ -657,14 +583,36 @@ if (isset($_GET["actionCovidResultados"])) {
 		$activarCovidResultados -> fecha = $_GET["fecha"];
 		$activarCovidResultados -> mostrarTablaCovidResultadosFechaMuestra();
 
-	} else if ($_GET["actionCovidResultados"] == "lab") {
+	// } else if ($_GET["actionCovidResultados"] == "lab") {
+
+	// 	$activarCovidResultados = new TablaCovidResultados();
+	// 	$activarCovidResultados -> mostrarTablaCovidResultadosLab();
+
+	// } else if ($_GET["actionCovidResultados"] == "centro") {
+
+	// 	$activarCovidResultados = new TablaCovidResultados();
+	// 	$activarCovidResultados -> mostrarTablaCovidResultadosCentro();
+
+	}
+
+}
+
+if (isset($_POST["actionCovidResultados"])) { 
+
+	if ($_POST["actionCovidResultados"] == "lab") {
+
+		// var_dump($_REQUEST);
 
 		$activarCovidResultados = new TablaCovidResultados();
+		$activarCovidResultados -> request = $_REQUEST;
+		$activarCovidResultados -> perfil = $_POST["perfilOculto"];
 		$activarCovidResultados -> mostrarTablaCovidResultadosLab();
 
-	} else if ($_GET["actionCovidResultados"] == "centro") {
+	} else if ($_POST["actionCovidResultados"] == "centro") {
 
 		$activarCovidResultados = new TablaCovidResultados();
+		$activarCovidResultados -> request = $_REQUEST;
+		$activarCovidResultados -> perfil = $_POST["perfilOculto"];
 		$activarCovidResultados -> mostrarTablaCovidResultadosCentro();
 
 	}
